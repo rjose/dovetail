@@ -1,0 +1,37 @@
+<!doctype html>
+
+{% set name = project_details.get('name', '') %}
+{% set stats = project_details.get('stats', {}) %}
+{% set participants = project_details.get('participants', []) %}
+{% set tasks = project_details.get('tasks', []) %}
+
+<title>Project: {{ name }}</title>
+
+<h1>Project: {{ name }}</h1>
+
+<h2>Stats</h2>
+<ul>
+    <li>Target date: {{ stats.get('target_date', None)}} </li>
+    <li>Estimated date: {{ stats.get('est_date', None)}} </li>
+    <li>Total effort: {{ stats.get('total_effort', None)}} </li>
+</ul>
+
+<h2>Tasks</h2>
+<table>
+    {% for t in tasks %}
+    {% set a = t.get('assignee', {}) %}
+    <tr>
+        <td>[ ] {{ t.get('is_done', '')}}</td>
+        <td>{{ t.get('name', '') }}</td>
+        <td><img width=25 src={{ a.get('picture', '') }}>{{ a.get('name', '') }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+<h2>Participants</h2>
+<ul>
+    {% for p in participants %}
+    <li>{{ p.get('name', '') }}, {{ p.get('title', '') }}, {{ p.get('team', '') }}</li>
+    {% endfor %}
+</ul>

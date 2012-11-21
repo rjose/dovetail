@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def root():
-    return 'Root page'
+    return redirect(url_for('projects'))
 
 def get_phony_project_data():
     # TODO: Read this from a database
@@ -22,6 +22,27 @@ def get_phony_project_data():
         'key_dates': []}
     return [search_project, endorsements_project, rich_media_project, mentions_project]
 
+def get_project_details(project_id):
+    rino = {'name': 'Rino Jose',
+            'picture': 'https://m1-s.licdn.com/mpr/mpr/shrink_80_80/p/2/000/019/20e/2464c31.jpg'}
+    result = {
+        'name': 'Endorsements',
+        'stats': {
+            'target_date': 'Mar 15, 2012',
+            'est_date': 'Mar 20, 2012',
+            'total_effort': '40 man-days',
+            },
+        'participants': [
+            {'name': 'Rino Jose', 'title': "Engineering Manager", 'team': 'Mobile'}
+            ],
+        'tasks': [
+            {'name': 'Figure out the thing for the thing', 'is_done': 'Done: Oct 14, 2012', 'assignee': rino},
+            {'name': 'Do the actual work', 'assignee': rino},
+            {'name': 'Do more work', 'is_key': True, 'assignee': rino},
+            ]
+        }
+    return result
+
 # Projects
 @app.route('/projects', methods=['GET', 'POST'])
 def projects():
@@ -36,7 +57,7 @@ def projects():
 
 @app.route('/projects/<int:project_id>')
 def project(project_id):
-    return 'Details for project %s' % project_id
+    return render_template('project_details.html', project_details=get_project_details(project_id))
 
 @app.route('/projects/new')
 def projects_new():
