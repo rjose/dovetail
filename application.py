@@ -6,15 +6,28 @@ app = Flask(__name__)
 def root():
     return 'Root page'
 
+def get_phony_project_data():
+    # TODO: Add this to a database and read it out
+    search_project = {'title': 'Search', 'target_date': 'Feb 15, 2012', 'est_date': 'Feb 10, 2012',
+        'detail_url': '/projects/1',
+        'key_dates': [['Integration with PAL', 'Dec 15, 2012']]}
+    endorsements_project = {'title': 'Endorsements', 'target_date': 'Mar 15, 2012', 'est_date': 'Mar 20, 2012',
+        'detail_url': '/projects/2',
+        'key_dates': []}
+    rich_media_project = {'title': 'Rich Media', 'target_date': 'Mar 15, 2012', 'est_date': 'Mar 2, 2012',
+        'detail_url': '/projects/3',
+        'key_dates': []}
+    mentions_project = {'title': 'Mentions', 'target_date': 'Mar 25, 2012', 'est_date': 'Mar 25, 2012',
+        'detail_url': '/projects/4',
+        'key_dates': []}
+    return [search_project, endorsements_project, rich_media_project, mentions_project]
+
 # Projects
 @app.route('/projects')
 def projects():
     # TODO: Simulate getting data for different groupings and rendering it
     print '==> %s' % request.args.get('group', None)
-    search_project = {'title': 'Search', 'target_date': 'Feb 15, 2012', 'est_date': 'Feb 10, 2012',
-        'detail_url': '/projects/1',
-        'key_dates': [['Integration with PAL', 'Dec 15, 2012']]}
-    return render_template('projects.html', projects=[search_project])
+    return render_template('projects.html', projects=get_phony_project_data())
 
 @app.route('/projects/<int:project_id>')
 def project(project_id):
