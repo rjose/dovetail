@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
@@ -7,7 +7,7 @@ def root():
     return 'Root page'
 
 def get_phony_project_data():
-    # TODO: Add this to a database and read it out
+    # TODO: Read this from a database
     search_project = {'title': 'Search', 'target_date': 'Feb 15, 2012', 'est_date': 'Feb 10, 2012',
         'detail_url': '/projects/1',
         'key_dates': [['Integration with PAL', 'Dec 15, 2012']]}
@@ -23,11 +23,15 @@ def get_phony_project_data():
     return [search_project, endorsements_project, rich_media_project, mentions_project]
 
 # Projects
-@app.route('/projects')
+@app.route('/projects', methods=['GET', 'POST'])
 def projects():
-    # TODO: Simulate getting data for different groupings and rendering it
-    print '==> %s' % request.args.get('group', None)
-    return render_template('projects.html', projects=get_phony_project_data())
+    if request.method == 'POST':
+        # TODO: Implement the creation of the project
+        return redirect(url_for('project', project_id=2))
+    else:
+        # TODO: Simulate getting data for different groupings and rendering it
+        print '==> %s' % request.args.get('group', None)
+        return render_template('projects.html', projects=get_phony_project_data())
 
 @app.route('/projects/<int:project_id>')
 def project(project_id):
@@ -35,7 +39,7 @@ def project(project_id):
 
 @app.route('/projects/new')
 def projects_new():
-    return 'Create a new project'
+    return render_template('projects_new.html')
 
 # People
 @app.route('/people')
