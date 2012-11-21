@@ -27,6 +27,7 @@ def get_phony_project_data():
 def projects():
     if request.method == 'POST':
         # TODO: Implement the creation of the project
+        print "==> Project name: %s" % request.form['name']
         return redirect(url_for('project', project_id=2))
     else:
         # TODO: Simulate getting data for different groupings and rendering it
