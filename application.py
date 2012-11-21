@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -8,6 +9,8 @@ def root():
 # Projects
 @app.route('/projects')
 def projects():
+    # TODO: Simulate getting data for different groupings and rendering it
+    print '==> %s' % request.args.get('group', None)
     return render_template('projects.html')
 
 @app.route('/projects/<int:project_id>')
