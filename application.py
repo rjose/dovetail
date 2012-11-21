@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 app = Flask(__name__)
 
 @app.route('/')
@@ -8,7 +8,7 @@ def root():
 # Projects
 @app.route('/projects')
 def projects():
-    return 'List of all Projects'
+    return render_template('projects.html')
 
 @app.route('/projects/<int:project_id>')
 def project(project_id):
