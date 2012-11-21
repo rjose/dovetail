@@ -3,4 +3,20 @@
 
 <h1>All Projects</h1>
 
+<ul>
+{% for project in projects %}
+  <li><a href={{ project.get('detail_url', '') }}>{{ project.get('title', '') }}</a></li>
+    <ul>
+      <li>Estimated: {{ project.get('est_date', '') }}</li>
+      <li>Target: {{ project.get('target_date', '') }}</li>
+      <li>Key dates</li>
+      <ul>
+        {% for d in project.get('key_dates', []) %}
+          <li>{{ d[1] }}: {{ d[0] }}</li>
+        {% endfor %}
+      </ul>
+    </ul>
+{% endfor %}
+</ul>
+
 <a href='/projects/new'>New project</a>
