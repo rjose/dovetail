@@ -17,11 +17,15 @@
 </ul>
 
 <h2>Tasks</h2>
+<p>
+<a href='/tasks/edit?project=2'>Edit tasks</a>
+<a href='/tasks/new?project=2'>Add task</a>
+</p>
+
 <table>
     {% for t in tasks %}
     {% set a = t.get('assignee', {}) %}
     <tr>
-        <td>[ ] {{ t.get('is_done', '')}}</td>
         <td>{{ t.get('name', '') }}</td>
         <td><img width=25 src={{ a.get('picture', '') }}>{{ a.get('name', '') }}</td>
     </tr>
@@ -30,6 +34,10 @@
 
 
 <h2>Participants</h2>
+<p>
+<a href='/participants/new?project=2'>Add participant</a>
+</p>
+
 <ul>
     {% for p in participants %}
     <li>{{ p.get('name', '') }}, {{ p.get('title', '') }}, {{ p.get('team', '') }}</li>
