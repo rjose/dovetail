@@ -1,0 +1,20 @@
+<!doctype html>
+
+{% set project_name = project.get('project_name', '')  %}
+{% set project_id = project.get('project_id', '')  %}
+
+<title>Add work to {{ project_name }}</title>
+
+<h1>Add work to: {{ project_name }}</h1>
+
+<form action="/work?project={{ project_id }}" method='POST'>
+    <p>Name: <input type="text" name="name"><br></p>
+    <p>Assignee:
+        <select name="assignee">
+            <option value="1">Rino Jose</option>
+            <option value="2">Borvo Borvison</option>
+        </select>
+    </p>
+    <p>Estimate (d): <input type="text" name="estimate"><br></p>
+    <input type="submit">
+</form>
