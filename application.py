@@ -48,7 +48,7 @@ def get_project_details(project_id):
         'participants': [
             {'name': 'Rino Jose', 'title': "Engineering Manager", 'team': 'Mobile'}
             ],
-        'tasks': [
+        'work': [
             {'name': 'Figure out the thing for the thing', 'is_done': 'Done: Oct 14, 2012',
                 'assignee': rino},
             {'name': 'Do the actual work', 'assignee': rino},
