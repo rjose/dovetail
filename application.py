@@ -52,7 +52,7 @@ def get_project_details(project_id):
             {'name': 'Figure out the thing for the thing', 'is_done': 'Done: Oct 14, 2012',
                 'assignee': rino},
             {'name': 'Do the actual work', 'assignee': rino},
-            {'name': 'Do more work', 'is_key': True, 'assignee': rino},
+            {'name': 'Do more work', 'key_date': 'Dec 19, 2012', 'assignee': rino},
             ]
         }
     return result

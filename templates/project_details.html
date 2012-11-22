@@ -26,7 +26,14 @@
 <table>
     {% for w in work %}
     {% set a = w.get('assignee', {}) %}
+    {% set key_date =  w.get('key_date', False)%}
     <tr>
+        {% if w.get('key_date', False) %}
+        <td>{{ key_date }}</td>
+        {% else %}
+        <td></td>
+        {% endif %}
+
         <td>{{ w.get('name', '') }}</td>
         <td><img width=25 src={{ a.get('picture', '') }}>{{ a.get('name', '') }}</td>
     </tr>
