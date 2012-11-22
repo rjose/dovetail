@@ -78,6 +78,10 @@ def project(project_id):
 def projects_new():
     return render_template('projects_new.html')
 
+@app.route('/projects/edit')
+def projects_edit():
+    return 'Editing projects'
+
 # People
 @app.route('/people')
 def people():
