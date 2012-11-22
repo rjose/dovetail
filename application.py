@@ -87,6 +87,24 @@ def people():
 def people_new():
     return 'Create new person'
 
+# Participants
+@app.route('/participants/new')
+def participants_new():
+    project_id = request.args.get('project', None)
+    return "Add participant to project %s" % project_id
+
+
+# Work
+@app.route('/work/edit')
+def work_edit():
+    project_id = request.args.get('project', None)
+    return "Edit work for project %s" % project_id
+
+@app.route('/work/new')
+def work_new():
+    project_id = request.args.get('project', None)
+    return "Add work to project %s" % project_id
+
 if __name__ == '__main__':
     # TODO: Figure out how to set this via an environment variable
     app.run(debug=True)
