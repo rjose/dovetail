@@ -8,16 +8,20 @@ def root():
 
 def get_phony_project_data():
     # TODO: Read this from a database
-    search_project = {'title': 'Search', 'target_date': 'Feb 15, 2012', 'est_date': 'Feb 10, 2012',
+    search_project = {'title': 'Search', 'target_date': 'Feb 15, 2012',
+        'est_date': 'Feb 10, 2012',
         'detail_url': '/projects/1',
         'key_dates': [['Integration with PAL', 'Dec 15, 2012']]}
-    endorsements_project = {'title': 'Endorsements', 'target_date': 'Mar 15, 2012', 'est_date': 'Mar 20, 2012',
+    endorsements_project = {'title': 'Endorsements', 'target_date': 'Mar 15, 2012',
+        'est_date': 'Mar 20, 2012',
         'detail_url': '/projects/2',
         'key_dates': []}
-    rich_media_project = {'title': 'Rich Media', 'target_date': 'Mar 15, 2012', 'est_date': 'Mar 2, 2012',
+    rich_media_project = {'title': 'Rich Media', 'target_date': 'Mar 15, 2012',
+        'est_date': 'Mar 2, 2012',
         'detail_url': '/projects/3',
         'key_dates': []}
-    mentions_project = {'title': 'Mentions', 'target_date': 'Mar 25, 2012', 'est_date': 'Mar 25, 2012',
+    mentions_project = {'title': 'Mentions', 'target_date': 'Mar 25, 2012',
+        'est_date': 'Mar 25, 2012',
         'detail_url': '/projects/4',
         'key_dates': []}
     return [search_project, endorsements_project, rich_media_project, mentions_project]
@@ -36,7 +40,8 @@ def get_project_details(project_id):
             {'name': 'Rino Jose', 'title': "Engineering Manager", 'team': 'Mobile'}
             ],
         'tasks': [
-            {'name': 'Figure out the thing for the thing', 'is_done': 'Done: Oct 14, 2012', 'assignee': rino},
+            {'name': 'Figure out the thing for the thing', 'is_done': 'Done: Oct 14, 2012',
+                'assignee': rino},
             {'name': 'Do the actual work', 'assignee': rino},
             {'name': 'Do more work', 'is_key': True, 'assignee': rino},
             ]
@@ -57,7 +62,8 @@ def projects():
 
 @app.route('/projects/<int:project_id>')
 def project(project_id):
-    return render_template('project_details.html', project_details=get_project_details(project_id))
+    return render_template('project_details.html',
+            project_details=get_project_details(project_id))
 
 @app.route('/projects/new')
 def projects_new():
