@@ -8,19 +8,27 @@ def root():
 
 def get_phony_project_data():
     # TODO: Read this from a database
-    search_project = {'title': 'Search', 'target_date': 'Feb 15, 2012',
+    search_project = {'project_id': 1,
+        'title': 'Search',
+        'target_date': 'Feb 15, 2012',
         'est_date': 'Feb 10, 2012',
         'detail_url': '/projects/1',
         'key_dates': [['Integration with PAL', 'Dec 15, 2012']]}
-    endorsements_project = {'title': 'Endorsements', 'target_date': 'Mar 15, 2012',
+    endorsements_project = {'project_id': 2,
+        'title': 'Endorsements',
+        'target_date': 'Mar 15, 2012',
         'est_date': 'Mar 20, 2012',
         'detail_url': '/projects/2',
         'key_dates': []}
-    rich_media_project = {'title': 'Rich Media', 'target_date': 'Mar 15, 2012',
+    rich_media_project = {'project_id': 3,
+        'title': 'Rich Media',
+        'target_date': 'Mar 15, 2012',
         'est_date': 'Mar 2, 2012',
         'detail_url': '/projects/3',
         'key_dates': []}
-    mentions_project = {'title': 'Mentions', 'target_date': 'Mar 25, 2012',
+    mentions_project = {'project_id': 4,
+        'title': 'Mentions',
+        'target_date': 'Mar 25, 2012',
         'est_date': 'Mar 25, 2012',
         'detail_url': '/projects/4',
         'key_dates': []}
@@ -30,6 +38,7 @@ def get_project_details(project_id):
     rino = {'name': 'Rino Jose',
             'picture': 'https://m1-s.licdn.com/mpr/mpr/shrink_80_80/p/2/000/019/20e/2464c31.jpg'}
     result = {
+        'project_id': 2,
         'name': 'Endorsements',
         'stats': {
             'target_date': 'Mar 15, 2012',
