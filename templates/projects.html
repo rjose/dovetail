@@ -1,7 +1,7 @@
 <!doctype html>
 <title>Projects</title>
 
-<h1>All Projects</h1>
+<h1>Current Projects</h1>
 
 <p>
 <a href='/projects/edit'>Rank projects</a>
@@ -24,3 +24,15 @@
 {% endfor %}
 </ul>
 
+{# TODO: Only show this if there are projects completed in the past 30 days #}
+<h1>Completed (past 30 days)</h1>
+<ul>
+    <li><a href='/projects/5'>Splash page</a></li>
+    <ul>
+        <li>Completed: Aug 17, 2012</li>
+        <li>Target: Aug 1, 2012</li>
+    </ul>
+</ul>
+
+{# TODO: Only show this if there are older projects  #}
+<a href='/projects?older=true'>Older projects</a>
