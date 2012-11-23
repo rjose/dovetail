@@ -1,16 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
-
-# TODO: Convert into a package and move this into database.py
-engine = create_engine('sqlite:////Users/rjose/database/dovetail_dev.db',
-        convert_unicode=True)
-metadata = MetaData(bind=engine)
-
-people_table = Table('people', metadata,
-        Column('id', Integer, primary_key=True),
-        Column('name', String(50)),
-        Column('picture', String(200)),
-        Column('title', String(200)))
+from dovetail.database import engine, metadata, people_table
 
 metadata.create_all()
 
