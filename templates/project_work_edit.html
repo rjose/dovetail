@@ -1,0 +1,23 @@
+<!doctype html>
+
+{% set project_name = project.get('project_name', '')  %}
+{% set project_id = project.get('project_id', 0)  %}
+{% set participants = project.get('participants', [])  %}
+
+<title>Edit work for {{ project_name }}</title>
+
+<h1>Edit work for {{ project_name }}</h1>
+
+<form action="/project/{{ project_id }}/work" method='POST'>
+    <p>
+    <textarea name='work' rows=25 cols=100>{{ work_data  }}</textarea>
+    </p>
+    <input type="submit">
+</form>
+
+<h2>Participants</h2>
+<ul>
+    {% for p in participants %}
+    <li>{{ p.get('name', '') }}, {{ p.get('title', '') }}, {{ p.get('team', '') }}</li>
+    {% endfor %}
+</ul>

@@ -82,6 +82,22 @@ def projects_new():
 def projects_edit():
     return 'Editing projects'
 
+@app.route('/project/<int:project_id>/work/edit')
+def project_work_edit(project_id):
+    project = {'project_id': project_id, 'project_name': 'Endorsements',
+            'participants': [
+                {'name': 'Rino Jose', 'title': "Engineering Manager", 'team': 'Mobile'}
+            ] }
+    work_data = "[240, 'BB', '0.1d', 'A prerequisite', [], 'Dec 20, 2012']\n"
+    work_data += "[320, 'RJ', '1d', 'Another prerequisite', [], '']\n"
+    work_data += "[121, 'RJ', '2.5d', 'Figure out thing for thing', [240, 320], '']\n"
+    return render_template('project_work_edit.html', project=project, work_data = work_data)
+
+@app.route('/project/<int:project_id>/work', methods = ['POST'])
+def project_work(project_id):
+    # TODO: Update this work
+    return redirect(url_for('project', project_id=project_id))
+
 # People
 @app.route('/people')
 def people():
@@ -111,10 +127,6 @@ def work():
     else:
         return "TODO: Figure out what should go here"
 
-@app.route('/work/edit')
-def work_edit():
-    project_id = request.args.get('project', None)
-    return "Edit work for project %s" % project_id
 
 @app.route('/work/new')
 def work_new():
