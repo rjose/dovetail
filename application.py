@@ -78,9 +78,17 @@ def project(project_id):
 def projects_new():
     return render_template('projects_new.html')
 
-@app.route('/projects/edit')
+@app.route('/projects/edit', methods = ['GET', 'POST'])
 def projects_edit():
-    return 'Editing projects'
+    if request.method == 'GET':
+        project_data = "1 Search\n"
+        project_data += "2 Endorsements\n"
+        project_data += "3 Rich Media\n"
+        project_data += "4 Mentions\n"
+        return render_template('projects_edit.html', project_data=project_data)
+    else:
+        # TODO: Update the rankings
+        return redirect(url_for('projects'))
 
 @app.route('/projects/<int:project_id>/work/edit')
 def project_work_edit(project_id):
