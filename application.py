@@ -82,7 +82,7 @@ def projects_new():
 def projects_edit():
     return 'Editing projects'
 
-@app.route('/project/<int:project_id>/work/edit')
+@app.route('/projects/<int:project_id>/work/edit')
 def project_work_edit(project_id):
     project = {'project_id': project_id, 'project_name': 'Endorsements',
             'participants': [
@@ -93,7 +93,7 @@ def project_work_edit(project_id):
     work_data += "[121, 'RJ', '2.5d', 'Figure out thing for thing', [240, 320], '']\n"
     return render_template('project_work_edit.html', project=project, work_data = work_data)
 
-@app.route('/project/<int:project_id>/work', methods = ['POST'])
+@app.route('/projects/<int:project_id>/work', methods = ['POST'])
 def project_work(project_id):
     # TODO: Update this work
     return redirect(url_for('project', project_id=project_id))
