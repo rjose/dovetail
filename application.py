@@ -63,11 +63,10 @@ def projects():
     if request.method == 'POST':
         # TODO: Implement the creation of the project
         print "==> Project name: %s" % request.form['name']
-        return redirect(url_for('project', project_id=2))
     else:
         # TODO: Simulate getting data for different groupings and rendering it
         print '==> %s' % request.args.get('group', None)
-        return render_template('projects.html', projects=get_phony_project_data())
+    return render_template('projects.html', projects=get_phony_project_data())
 
 @app.route('/projects/<int:project_id>')
 def project(project_id):
