@@ -1,4 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
+
+# TODO: Convert into a package and move this into database.py
+engine = create_engine('sqlite:////Users/rjose/database/dovetail_dev.db',
+        convert_unicode=True)
+metadata = MetaData(bind=engine)
+
+people_table = Table('people', metadata,
+        Column('id', Integer, primary_key=True),
+        Column('name', String(50)),
+        Column('picture', String(200)),
+        Column('title', String(200)))
+
+metadata.create_all()
 
 app = Flask(__name__)
 
@@ -122,13 +136,26 @@ def project_participants(project_id):
         return "TODO: Figure out what should go here"
 
 # People
-@app.route('/people')
+@app.route('/people', methods=['GET', 'POST'])
 def people():
-    return 'List of all People'
+    # TODO: Move this to a before filter
+    connection = engine.connect()
+    if request.method == 'POST':
+        print "==> Person name: %s" % request.form['name']
+        print "==> Person title: %s" % request.form['title']
+        print "==> Person picture: %s" % request.form['picture']
+        connection.execute(people_table.insert(),
+               name = request.form['name'],
+               title = request.form['title'],
+               picture = request.form['picture'])
+    else:
+        pass
+    connection.close()
+    return render_template('people.html')
 
 @app.route('/people/new')
 def people_new():
-    return 'Create new person'
+    return render_template('people_new.html')
 
 # Work
 @app.route('/work', methods=['GET', 'POST'])
