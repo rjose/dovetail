@@ -1,9 +1,17 @@
-from flask import Flask, render_template, request, redirect, url_for
-from dovetail.database import engine, metadata, people_table
+from flask import Flask, render_template, request, redirect, url_for, g
+from dovetail.database import engine, metadata, people_table, projects_table
 
 metadata.create_all()
 
 app = Flask(__name__)
+
+@app.before_request
+def open_connection():
+    g.connection = engine.connect()
+
+@app.teardown_request
+def close_connection(exeption=None):
+    g.connection.close()
 
 @app.route('/')
 def root():
@@ -64,8 +72,12 @@ def get_project_details(project_id):
 @app.route('/projects', methods=['GET', 'POST'])
 def projects():
     if request.method == 'POST':
-        # TODO: Implement the creation of the project
+        # TODO: Convert date string to a date
         print "==> Project name: %s" % request.form['name']
+        print "==> Project target_date: %s" % request.form['target_date']
+        g.connection.execute(projects_table.insert(),
+               name = request.form['name'],
+               target_date = request.form['target_date'])
     else:
         # TODO: Simulate getting data for different groupings and rendering it
         print '==> %s' % request.args.get('group', None)
@@ -130,9 +142,6 @@ def people():
     # TODO: Move this to a before filter
     connection = engine.connect()
     if request.method == 'POST':
-        print "==> Person name: %s" % request.form['name']
-        print "==> Person title: %s" % request.form['title']
-        print "==> Person picture: %s" % request.form['picture']
         connection.execute(people_table.insert(),
                name = request.form['name'],
                title = request.form['title'],

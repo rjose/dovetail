@@ -10,3 +10,9 @@ people_table = Table('people', metadata,
         Column('name', String(50)),
         Column('picture', String(200)),
         Column('title', String(200)))
+
+projects_table = Table('projects', metadata,
+        Column('id', Integer, primary_key=True),
+        Column('name', String(50)),
+        Column('target_date', String(12))
+        )
