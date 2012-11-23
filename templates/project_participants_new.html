@@ -1,0 +1,20 @@
+<!doctype html>
+
+{% set project_name = project.get('project_name', '')  %}
+{% set project_id = project.get('project_id', '')  %}
+
+<title>Add participant to {{ project_name }}</title>
+
+<h1>Add participant to: {{ project_name }}</h1>
+
+<form action="/projects/{{ project_id }}/participants" method='POST'>
+    <p>Name: <input type="text" name="name"><br></p>
+    <p>Picture: <input type="text" name="picture"><br></p>
+    <p>Team:
+        <select name="team">
+            <option value="1">Mobile</option>
+            <option value="2">Search</option>
+        </select>
+    </p>
+    <input type="submit">
+</form>

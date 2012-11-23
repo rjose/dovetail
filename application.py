@@ -98,6 +98,22 @@ def project_work(project_id):
     # TODO: Update this work
     return redirect(url_for('project', project_id=project_id))
 
+@app.route('/projects/<int:project_id>/participants/new')
+def project_participants_new(project_id):
+    project = {'project_id': project_id, 'name': 'Endorsements'}
+    return render_template('project_participants_new.html', project=project)
+
+@app.route('/projects/<int:project_id>/participants', methods=['POST'])
+def project_participants(project_id):
+    if request.method == 'POST':
+        # TODO: Implement the creation of a participant
+        print "==> Participant name: %s" % request.form['name']
+        print "==> Participant picture: %s" % request.form['picture']
+        print "==> Participant team: %s" % request.form['team']
+        return redirect(url_for('project', project_id=project_id))
+    else:
+        return "TODO: Figure out what should go here"
+
 # People
 @app.route('/people')
 def people():
@@ -106,13 +122,6 @@ def people():
 @app.route('/people/new')
 def people_new():
     return 'Create new person'
-
-# Participants
-@app.route('/participants/new')
-def participants_new():
-    project_id = request.args.get('project', None)
-    return "Add participant to project %s" % project_id
-
 
 # Work
 @app.route('/work', methods=['GET', 'POST'])
