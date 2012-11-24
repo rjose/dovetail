@@ -40,15 +40,41 @@ def projects_edit():
         # TODO: Update the rankings
         return redirect(url_for('projects'))
 
+# TODO: Move this
+def format_prereqs(prereqs):
+    if prereqs:
+        return prereqs
+    else:
+        return "[]"
+
+# TODO: TDD this
+def shorten_name(name):
+    return name
+
+def format_effort_left(effort_left_d):
+    if effort_left_d:
+        return '%.2fd' % effort_left_d
+    else:
+        return '0.1d'
+
+
+
 @mod.route('/projects/<int:project_id>/work/edit')
 def project_work_edit(project_id):
-    project = {'project_id': project_id, 'project_name': 'Endorsements',
-            'participants': [
-                {'name': 'Rino Jose', 'title': "Engineering Manager", 'team': 'Mobile'}
-            ] }
-    work_data = "[240, 'BB', '0.1d', 'A prerequisite', [], 'Dec 20, 2012']\n"
-    work_data += "[320, 'RJ', '1d', 'Another prerequisite', [], '']\n"
-    work_data += "[121, 'RJ', '2.5d', 'Figure out thing for thing', [240, 320], '']\n"
+    project = models.get_project_details(g.connection, project_id)
+    work_data = ''
+    for w in project.get('work', []):
+        # TODO: Write a function for generating this properly
+        work_data += '[%d, "%s", "%s", "%s", %s, "%s"]' % (
+                w['id'],
+                shorten_name(w['assignee']['name']),
+                format_effort_left(w['effort_left_d']),
+                w['title'],
+                format_prereqs(w['prereqs']),
+                database.format_date(w['key_date']))
+    # work_data = "[240, 'BB', '0.1d', 'A prerequisite', [], 'Dec 20, 2012']\n"
+    # work_data += "[320, 'RJ', '1d', 'Another prerequisite', [], '']\n"
+    # work_data += "[121, 'RJ', '2.5d', 'Figure out thing for thing', [240, 320], '']\n"
     return render_template('projects/edit_work.html', project=project, work_data = work_data)
 
 @mod.route('/projects/<int:project_id>/work', methods = ['POST'])
