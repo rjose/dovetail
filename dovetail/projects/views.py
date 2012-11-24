@@ -58,11 +58,10 @@ def project_work(project_id):
 
 @mod.route('/projects/<int:project_id>/participants/new')
 def project_participants_new(project_id):
-    people_data = g.connection.execute('select id, name from people order by name')
-    people = [{'id': row['id'], 'name': row['name']} for row in people_data]
     project = models.get_project_details(g.connection, project_id)
-    return render_template('projects/new_participant.html', project=project,
-            people = people)
+    return render_template('projects/new_participant.html',
+            project = project,
+            people = database.get_people(g.connection))
 
 @mod.route('/projects/<int:project_id>/participants', methods=['POST'])
 def project_participants(project_id):
