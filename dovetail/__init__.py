@@ -164,8 +164,11 @@ def project_work(project_id):
 
 @app.route('/projects/<int:project_id>/participants/new')
 def project_participants_new(project_id):
-    project = {'project_id': project_id, 'name': 'Endorsements'}
-    return render_template('project_participants_new.html', project=project)
+    people_data = g.connection.execute('select id, name from people order by name')
+    people = [{'id': row['id'], 'name': row['name']} for row in people_data]
+    project = get_project_details(project_id)
+    return render_template('project_participants_new.html', project=project,
+            people = people)
 
 @app.route('/projects/<int:project_id>/participants', methods=['POST'])
 def project_participants(project_id):
