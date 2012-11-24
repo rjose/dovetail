@@ -3,6 +3,7 @@ from datetime import datetime
 
 import dovetail.database as database
 import dovetail.projects.models as models
+import dovetail.work.models as work
 
 mod = Blueprint('projects', __name__)
 
@@ -40,25 +41,6 @@ def projects_edit():
         # TODO: Update the rankings
         return redirect(url_for('projects'))
 
-# TODO: Move this
-def format_prereqs(prereqs):
-    if prereqs:
-        return prereqs
-    else:
-        return "[]"
-
-# TODO: TDD this
-def shorten_name(name):
-    return name
-
-def format_effort_left(effort_left_d):
-    if effort_left_d:
-        return '%.2fd' % effort_left_d
-    else:
-        return '0.1d'
-
-
-
 @mod.route('/projects/<int:project_id>/work/edit')
 def project_work_edit(project_id):
     project = models.get_project_details(g.connection, project_id)
@@ -67,10 +49,10 @@ def project_work_edit(project_id):
         # TODO: Write a function for generating this properly
         work_data += '[%d, "%s", "%s", "%s", %s, "%s"]' % (
                 w['id'],
-                shorten_name(w['assignee']['name']),
-                format_effort_left(w['effort_left_d']),
+                models.shorten_name(w['assignee']['name']),
+                work.format_effort_left(w['effort_left_d']),
                 w['title'],
-                format_prereqs(w['prereqs']),
+                models.format_prereqs(w['prereqs']),
                 database.format_date(w['key_date']))
     # work_data = "[240, 'BB', '0.1d', 'A prerequisite', [], 'Dec 20, 2012']\n"
     # work_data += "[320, 'RJ', '1d', 'Another prerequisite', [], '']\n"

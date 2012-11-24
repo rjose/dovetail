@@ -18,3 +18,9 @@ def get_work_for_project(connection, project_id):
              for w in work_data]
     return result
 
+def format_effort_left(effort_left_d):
+    if effort_left_d:
+        return '%.2fd' % effort_left_d
+    else:
+        return '0.1d'
+

@@ -84,3 +84,14 @@ def get_phony_project_details(project_id):
             ]
         }
     return result
+
+def format_prereqs(prereqs):
+    if prereqs:
+        return prereqs
+    else:
+        return "[]"
+
+# TODO: TDD this
+def shorten_name(name):
+    return name
+
