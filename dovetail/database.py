@@ -26,8 +26,25 @@ project_participants = Table('project_participants', metadata,
         Column('person_id', Integer)
         )
 
+work = Table('work', metadata,
+        Column('id', Integer, primary_key=True),
+        Column('title', String(200)),
+        Column('assignee_id', Integer),
+        Column('effort_left_d', Float),
+
+        Column('key_date', Date()),
+        Column('prereqs', String(200))
+        )
+
 def format_date(date):
     if date == None:
         return "?"
     else:
         return datetime.strftime(date, "%b %d, %Y")
+
+# TODO: Move this to people/models.py
+def get_people(connection):
+    people_data = connection.execute('select id, name from people order by name')
+    result = [{'id': row['id'], 'name': row['name']} for row in people_data]
+    return result
+
