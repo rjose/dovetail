@@ -18,7 +18,7 @@ def close_connection(exeption=None):
 
 @app.route('/')
 def root():
-    return redirect(url_for('projects'))
+    return redirect('/projects')
 
 # Project routes
 app.register_blueprint(dovetail.projects.views.mod)
