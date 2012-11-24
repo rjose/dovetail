@@ -3,6 +3,7 @@ from datetime import datetime
 
 import dovetail.database as database
 import dovetail.projects.views
+import dovetail.people.views
 
 database.metadata.create_all()
 
@@ -20,27 +21,10 @@ def close_connection(exeption=None):
 def root():
     return redirect('/projects')
 
-# Project routes
+# Register blueprints
+app.register_blueprint(dovetail.people.views.mod)
 app.register_blueprint(dovetail.projects.views.mod)
 
-# People
-@app.route('/people', methods=['GET', 'POST'])
-def people():
-    if request.method == 'POST':
-        g.connection.execute(database.people.insert(),
-               name = request.form['name'],
-               title = request.form['title'],
-               team = request.form['team'],
-               picture = request.form['picture'])
-    else:
-        pass
-    people_data = g.connection.execute('select id, name from people')
-    people = [{'id': p['id'], 'name': p['name']} for p in people_data]
-    return render_template('people.html', people = people)
-
-@app.route('/people/new')
-def people_new():
-    return render_template('people_new.html')
 
 # Work
 @app.route('/work', methods=['GET', 'POST'])
