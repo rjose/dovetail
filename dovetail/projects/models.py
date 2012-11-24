@@ -1,4 +1,6 @@
 import dovetail.database as database
+import dovetail.work.models as work
+import dovetail.people.models as people
 
 def get_projects_data(connection):
     data = connection.execute(database.projects.select())
@@ -44,29 +46,9 @@ def get_phony_project_data():
     return [search_project, endorsements_project, rich_media_project, mentions_project]
 
 def get_project_details(connection, project_id):
-    # TODO: Order by priority (from algo)
-    work_data = connection.execute(
-            '''select w.id, w.title, people.name as assignee, people.picture as picture,
-               w.effort_left_d, w.key_date, w.prereqs
-               from work as w
-               inner join people on people.id = w.assignee_id
-               where w.project_id = %d
-            ''' % int(project_id))
-    work = [{'id': w['id'], 'title': w['title'],
-        'assignee': {'name': w['assignee'], 'picture': w['picture']},
-        'effort_left_d': w['effort_left_d'], 'key_date': w['key_date'],
-        'prereqs': w['prereqs']} for w in work_data]
-
-    particpants_data = connection.execute(
-            '''select id, name, title, team, picture from people
-               inner join project_participants on project_participants.person_id = people.id
-               where project_participants.project_id= %d
-               order by name''' % int(project_id))
-    participants = [{'id': p['id'], 'name': p['name'], 'title': p['title'],
-        'team': p['team'], 'picture': p['picture']}
-            for p in particpants_data]
     data = connection.execute(database.projects.select(
         database.projects.c.id == project_id)).first()
+
     result = {
         'project_id': data['id'],
         'name': data['name'],
@@ -75,10 +57,9 @@ def get_project_details(connection, project_id):
             'est_date': database.format_date(data['est_date']),
             'total_effort': 'TODO',
             },
-        'participants': participants,
-        'work': work
+        'participants': people.get_participants_for_project(connection, project_id),
+        'work': work.get_work_for_project(connection, project_id)
         }
-
     return result
 
 def get_phony_project_details(project_id):
