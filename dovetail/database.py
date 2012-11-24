@@ -15,5 +15,6 @@ people_table = Table('people', metadata,
 projects_table = Table('projects', metadata,
         Column('id', Integer, primary_key=True),
         Column('name', String(50)),
-        Column('target_date', Date())
+        Column('target_date', Date()),
+        Column('est_date', Date())
         )

@@ -18,15 +18,23 @@ def close_connection(exeption=None):
 def root():
     return redirect(url_for('projects'))
 
+# TODO: Move this to the database.py file
+def format_date(date):
+    if date == None:
+        return "?"
+    else:
+        return datetime.strftime(date, "%b %d, %Y")
+
 def get_projects_data():
     data = g.connection.execute(projects_table.select())
     result = []
     for row in data:
+        format_date(row['est_date'])
         p = {
                 'project_id': row['id'],
                 'title': row['name'],
-                'target_date': datetime.strftime(row['target_date'], "%b %d, %Y"),
-                'est_date': "?",
+                'target_date': format_date(row['target_date']),
+                'est_date': format_date(row['est_date']),
                 'detail_url': '/projects/%d' % row['id'],
                 'key_dates': []
             }
