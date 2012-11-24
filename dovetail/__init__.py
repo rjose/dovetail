@@ -73,11 +73,12 @@ def get_phony_project_data():
 
 def get_project_details(project_id):
     particpants_data = g.connection.execute(
-            '''select id, name from people
+            '''select id, name, title, team, picture from people
                inner join project_participants on project_participants.person_id = people.id
                where project_participants.project_id=1
                order by name''')
-    participants = [{'id': p['id'], 'name': p['name'], 'title': 'Add title to people table'}
+    participants = [{'id': p['id'], 'name': p['name'], 'title': p['title'],
+        'team': p['team'], 'picture': p['picture']}
             for p in particpants_data]
     data = g.connection.execute(projects_table.select(
         projects_table.c.id == project_id)).first()
@@ -190,17 +191,17 @@ def project_participants(project_id):
 # People
 @app.route('/people', methods=['GET', 'POST'])
 def people():
-    # TODO: Move this to a before filter
-    connection = engine.connect()
     if request.method == 'POST':
-        connection.execute(people_table.insert(),
+        g.connection.execute(people_table.insert(),
                name = request.form['name'],
                title = request.form['title'],
+               team = request.form['team'],
                picture = request.form['picture'])
     else:
         pass
-    connection.close()
-    return render_template('people.html')
+    people_data = g.connection.execute('select id, name from people')
+    people = [{'id': p['id'], 'name': p['name']} for p in people_data]
+    return render_template('people.html', people = people)
 
 @app.route('/people/new')
 def people_new():

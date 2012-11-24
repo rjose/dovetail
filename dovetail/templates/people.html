@@ -7,3 +7,9 @@
 <a href='/people/new'>Add person</a>
 </p>
 
+<ul>
+    {% for p in people %}
+    <li>{{ p.get('name', '') }}
+    </li>
+    {% endfor %}
+</ul>
