@@ -13,6 +13,7 @@ def work():
         g.connection.execute(database.work.insert(),
                title = request.form['title'],
                assignee_id = request.form['assignee'],
+               project_id = project_id,
                effort_left_d = request.form['estimate'])
         return redirect('/projects/%d' % project_id)
     else:

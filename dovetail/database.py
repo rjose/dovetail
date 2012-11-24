@@ -30,6 +30,7 @@ work = Table('work', metadata,
         Column('id', Integer, primary_key=True),
         Column('title', String(200)),
         Column('assignee_id', Integer),
+        Column('project_id', Integer),
         Column('effort_left_d', Float),
 
         Column('key_date', Date()),
