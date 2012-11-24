@@ -18,6 +18,22 @@ def close_connection(exeption=None):
 def root():
     return redirect(url_for('projects'))
 
+def get_projects_data():
+    data = g.connection.execute(projects_table.select())
+    result = []
+    for row in data:
+        p = {
+                'project_id': row['id'],
+                'title': row['name'],
+                'target_date': datetime.strftime(row['target_date'], "%b %d, %Y"),
+                'est_date': "?",
+                'detail_url': '/projects/%d' % row['id'],
+                'key_dates': []
+            }
+        result.append(p)
+    return result + get_phony_project_data()
+
+# TODO: Delete this
 def get_phony_project_data():
     # TODO: Read this from a database
     search_project = {'project_id': 1,
@@ -78,9 +94,8 @@ def projects():
                name = request.form['name'],
                target_date = target_date)
     else:
-        # TODO: Simulate getting data for different groupings and rendering it
-        print '==> %s' % request.args.get('group', None)
-    return render_template('projects.html', projects=get_phony_project_data())
+        pass
+    return render_template('projects.html', projects=get_projects_data())
 
 @app.route('/projects/<int:project_id>')
 def project(project_id):
