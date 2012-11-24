@@ -95,3 +95,18 @@ def format_prereqs(prereqs):
 def shorten_name(name):
     return name
 
+def work_to_string(work_data):
+    # TODO: Delete this example data
+    # work_data = "[240, 'BB', '0.1d', 'A prerequisite', [], 'Dec 20, 2012']\n"
+    # work_data += "[320, 'RJ', '1d', 'Another prerequisite', [], '']\n"
+    # work_data += "[121, 'RJ', '2.5d', 'Figure out thing for thing', [240, 320], '']\n"
+    result = ''
+    for w in work_data:
+        result += '[%d, "%s", "%s", "%s", %s, "%s"]' % (
+                w['id'],
+                shorten_name(w['assignee']['name']),
+                work.format_effort_left(w['effort_left_d']),
+                w['title'],
+                format_prereqs(w['prereqs']),
+                database.format_date(w['key_date']))
+    return result

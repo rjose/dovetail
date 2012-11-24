@@ -44,20 +44,9 @@ def projects_edit():
 @mod.route('/projects/<int:project_id>/work/edit')
 def project_work_edit(project_id):
     project = models.get_project_details(g.connection, project_id)
-    work_data = ''
-    for w in project.get('work', []):
-        # TODO: Write a function for generating this properly
-        work_data += '[%d, "%s", "%s", "%s", %s, "%s"]' % (
-                w['id'],
-                models.shorten_name(w['assignee']['name']),
-                work.format_effort_left(w['effort_left_d']),
-                w['title'],
-                models.format_prereqs(w['prereqs']),
-                database.format_date(w['key_date']))
-    # work_data = "[240, 'BB', '0.1d', 'A prerequisite', [], 'Dec 20, 2012']\n"
-    # work_data += "[320, 'RJ', '1d', 'Another prerequisite', [], '']\n"
-    # work_data += "[121, 'RJ', '2.5d', 'Figure out thing for thing', [240, 320], '']\n"
-    return render_template('projects/edit_work.html', project=project, work_data = work_data)
+    return render_template('projects/edit_work.html',
+            project = project,
+            work_data = models.work_to_string(project.get('work', [])))
 
 @mod.route('/projects/<int:project_id>/work', methods = ['POST'])
 def project_work(project_id):
