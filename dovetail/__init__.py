@@ -26,7 +26,7 @@ def format_date(date):
         return datetime.strftime(date, "%b %d, %Y")
 
 def get_projects_data():
-    data = g.connection.execute(database.projects_table.select())
+    data = g.connection.execute(database.projects.select())
     result = []
     for row in data:
         format_date(row['est_date'])
@@ -79,8 +79,8 @@ def get_project_details(project_id):
     participants = [{'id': p['id'], 'name': p['name'], 'title': p['title'],
         'team': p['team'], 'picture': p['picture']}
             for p in particpants_data]
-    data = g.connection.execute(database.projects_table.select(
-        database.projects_table.c.id == project_id)).first()
+    data = g.connection.execute(database.projects.select(
+        database.projects.c.id == project_id)).first()
     result = {
         'project_id': data['id'],
         'name': data['name'],
@@ -124,7 +124,7 @@ def get_phony_project_details(project_id):
 def projects():
     if request.method == 'POST':
         target_date = datetime.strptime(request.form['target_date'], "%b %d, %Y")
-        g.connection.execute(database.projects_table.insert(),
+        g.connection.execute(database.projects.insert(),
                name = request.form['name'],
                target_date = target_date)
     else:
@@ -179,7 +179,7 @@ def project_participants_new(project_id):
 @app.route('/projects/<int:project_id>/participants', methods=['POST'])
 def project_participants(project_id):
     if request.method == 'POST':
-        g.connection.execute(database.project_participants_table.insert(),
+        g.connection.execute(database.project_participants.insert(),
                project_id = project_id,
                person_id = request.form['person']
                )
@@ -191,7 +191,7 @@ def project_participants(project_id):
 @app.route('/people', methods=['GET', 'POST'])
 def people():
     if request.method == 'POST':
-        g.connection.execute(database.people_table.insert(),
+        g.connection.execute(database.people.insert(),
                name = request.form['name'],
                title = request.form['title'],
                team = request.form['team'],
