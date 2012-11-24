@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, g
-import dovetail.database as database
 from datetime import datetime
+
+import dovetail.database as database
+import dovetail.projects as projects
 
 database.metadata.create_all()
 
@@ -18,110 +20,9 @@ def close_connection(exeption=None):
 def root():
     return redirect(url_for('projects'))
 
-# TODO: Move this to the database.py file
-def format_date(date):
-    if date == None:
-        return "?"
-    else:
-        return datetime.strftime(date, "%b %d, %Y")
-
-def get_projects_data():
-    data = g.connection.execute(database.projects.select())
-    result = []
-    for row in data:
-        format_date(row['est_date'])
-        p = {
-                'project_id': row['id'],
-                'title': row['name'],
-                'target_date': format_date(row['target_date']),
-                'est_date': format_date(row['est_date']),
-                'detail_url': '/projects/%d' % row['id'],
-                'key_dates': []
-            }
-        result.append(p)
-    return result + get_phony_project_data()
-
-# TODO: Delete this
-def get_phony_project_data():
-    # TODO: Read this from a database
-    search_project = {'project_id': 1,
-        'title': 'Search',
-        'target_date': 'Feb 15, 2012',
-        'est_date': 'Feb 10, 2012',
-        'detail_url': '/projects/1',
-        'key_dates': [['Integration with PAL', 'Dec 15, 2012']]}
-    endorsements_project = {'project_id': 2,
-        'title': 'Endorsements',
-        'target_date': 'Mar 15, 2012',
-        'est_date': 'Mar 20, 2012',
-        'detail_url': '/projects/2',
-        'key_dates': []}
-    rich_media_project = {'project_id': 3,
-        'title': 'Rich Media',
-        'target_date': 'Mar 15, 2012',
-        'est_date': 'Mar 2, 2012',
-        'detail_url': '/projects/3',
-        'key_dates': []}
-    mentions_project = {'project_id': 4,
-        'title': 'Mentions',
-        'target_date': 'Mar 25, 2012',
-        'est_date': 'Mar 25, 2012',
-        'detail_url': '/projects/4',
-        'key_dates': []}
-    return [search_project, endorsements_project, rich_media_project, mentions_project]
-
-def get_project_details(project_id):
-    particpants_data = g.connection.execute(
-            '''select id, name, title, team, picture from people
-               inner join project_participants on project_participants.person_id = people.id
-               where project_participants.project_id=1
-               order by name''')
-    participants = [{'id': p['id'], 'name': p['name'], 'title': p['title'],
-        'team': p['team'], 'picture': p['picture']}
-            for p in particpants_data]
-    data = g.connection.execute(database.projects.select(
-        database.projects.c.id == project_id)).first()
-    result = {
-        'project_id': data['id'],
-        'name': data['name'],
-        'stats': {
-            'target_date': format_date(data['target_date']),
-            'est_date': format_date(data['est_date']),
-            'total_effort': 'TODO',
-            },
-        'participants': participants,
-        'work': [
-            ]
-        }
-
-    return result
-
-def get_phony_project_details(project_id):
-    rino = {'name': 'Rino Jose',
-            'picture': 'https://m1-s.licdn.com/mpr/mpr/shrink_80_80/p/2/000/019/20e/2464c31.jpg'}
-    result = {
-        'project_id': 2,
-        'name': 'Endorsements',
-        'stats': {
-            'target_date': 'Mar 15, 2012',
-            'est_date': 'Mar 20, 2012',
-            'total_effort': '40 man-days',
-            },
-        'participants': [
-            {'name': 'Rino Jose', 'title': "Engineering Manager", 'team': 'Mobile'}
-            ],
-        'work': [
-            {'name': 'Figure out the thing for the thing', 'is_done': 'Done: Oct 14, 2012',
-                'assignee': rino},
-            {'name': 'Do the actual work', 'assignee': rino},
-            {'name': 'Do more work', 'key_date': 'Dec 19, 2012', 'assignee': rino},
-            ]
-        }
-    return result
-
 # Projects
 @app.route('/projects', methods=['GET', 'POST'])
-def projects():
+def projects_route():
     if request.method == 'POST':
         target_date = datetime.strptime(request.form['target_date'], "%b %d, %Y")
         g.connection.execute(database.projects.insert(),
@@ -129,12 +30,13 @@ def projects():
                target_date = target_date)
     else:
         pass
-    return render_template('projects.html', projects=get_projects_data())
+    return render_template('projects.html', 
+            projects = projects.get_projects_data(g.connection))
 
 @app.route('/projects/<int:project_id>')
 def project(project_id):
     return render_template('project_details.html',
-            project_details=get_project_details(project_id))
+            project_details = projects.get_project_details(g.connection, project_id))
 
 @app.route('/projects/new')
 def projects_new():
@@ -172,7 +74,7 @@ def project_work(project_id):
 def project_participants_new(project_id):
     people_data = g.connection.execute('select id, name from people order by name')
     people = [{'id': row['id'], 'name': row['name']} for row in people_data]
-    project = get_project_details(project_id)
+    project = projects.get_project_details(g.connection, project_id)
     return render_template('project_participants_new.html', project=project,
             people = people)
 

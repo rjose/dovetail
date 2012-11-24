@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy import (create_engine, MetaData, Table, Column,
     Integer, String, Date)
 
@@ -24,3 +25,9 @@ project_participants= Table('project_participants', metadata,
         Column('project_id', Integer),
         Column('person_id', Integer)
         )
+
+def format_date(date):
+    if date == None:
+        return "?"
+    else:
+        return datetime.strftime(date, "%b %d, %Y")
