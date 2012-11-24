@@ -71,6 +71,26 @@ def get_phony_project_data():
     return [search_project, endorsements_project, rich_media_project, mentions_project]
 
 def get_project_details(project_id):
+    data = g.connection.execute(projects_table.select(
+        projects_table.c.id == project_id)).first()
+    result = {
+        'project_id': data['id'],
+        'name': data['name'],
+        'stats': {
+            'target_date': format_date(data['target_date']),
+            'est_date': format_date(data['est_date']),
+            'total_effort': 'TODO',
+            },
+        # TODO: Add participants to projects table
+        'participants': [
+            ],
+        'work': [
+            ]
+        }
+
+    return result
+
+def get_phony_project_details(project_id):
     rino = {'name': 'Rino Jose',
             'picture': 'https://m1-s.licdn.com/mpr/mpr/shrink_80_80/p/2/000/019/20e/2464c31.jpg'}
     result = {
