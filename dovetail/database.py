@@ -18,3 +18,8 @@ projects_table = Table('projects', metadata,
         Column('target_date', Date()),
         Column('est_date', Date())
         )
+
+project_participants_table = Table('project_participants', metadata,
+        Column('project_id', Integer),
+        Column('person_id', Integer)
+        )

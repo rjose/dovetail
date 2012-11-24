@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, g
-from dovetail.database import engine, metadata, people_table, projects_table
+from dovetail.database import (engine, metadata,
+        people_table, projects_table, project_participants_table)
 from datetime import datetime
 
 metadata.create_all()
@@ -71,6 +72,13 @@ def get_phony_project_data():
     return [search_project, endorsements_project, rich_media_project, mentions_project]
 
 def get_project_details(project_id):
+    particpants_data = g.connection.execute(
+            '''select id, name from people
+               inner join project_participants on project_participants.person_id = people.id
+               where project_participants.project_id=1
+               order by name''')
+    participants = [{'id': p['id'], 'name': p['name'], 'title': 'Add title to people table'}
+            for p in particpants_data]
     data = g.connection.execute(projects_table.select(
         projects_table.c.id == project_id)).first()
     result = {
@@ -81,9 +89,7 @@ def get_project_details(project_id):
             'est_date': format_date(data['est_date']),
             'total_effort': 'TODO',
             },
-        # TODO: Add participants to projects table
-        'participants': [
-            ],
+        'participants': participants,
         'work': [
             ]
         }
@@ -173,10 +179,10 @@ def project_participants_new(project_id):
 @app.route('/projects/<int:project_id>/participants', methods=['POST'])
 def project_participants(project_id):
     if request.method == 'POST':
-        # TODO: Implement the creation of a participant
-        print "==> Participant name: %s" % request.form['name']
-        print "==> Participant picture: %s" % request.form['picture']
-        print "==> Participant team: %s" % request.form['team']
+        g.connection.execute(project_participants_table.insert(),
+               project_id = project_id,
+               person_id = request.form['person']
+               )
         return redirect(url_for('project', project_id=project_id))
     else:
         return "TODO: Figure out what should go here"
