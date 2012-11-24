@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, g
 from dovetail.database import engine, metadata, people_table, projects_table
+from datetime import datetime
 
 metadata.create_all()
 
@@ -72,12 +73,10 @@ def get_project_details(project_id):
 @app.route('/projects', methods=['GET', 'POST'])
 def projects():
     if request.method == 'POST':
-        # TODO: Convert date string to a date
-        print "==> Project name: %s" % request.form['name']
-        print "==> Project target_date: %s" % request.form['target_date']
+        target_date = datetime.strptime(request.form['target_date'], "%b %d, %Y")
         g.connection.execute(projects_table.insert(),
                name = request.form['name'],
-               target_date = request.form['target_date'])
+               target_date = target_date)
     else:
         # TODO: Simulate getting data for different groupings and rendering it
         print '==> %s' % request.args.get('group', None)

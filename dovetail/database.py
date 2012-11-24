@@ -1,4 +1,5 @@
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
+from sqlalchemy import (create_engine, MetaData, Table, Column,
+    Integer, String, Date)
 
 # TODO: Use an environment/config variable for this
 engine = create_engine('sqlite:////Users/rjose/database/dovetail_dev.db',
@@ -14,5 +15,5 @@ people_table = Table('people', metadata,
 projects_table = Table('projects', metadata,
         Column('id', Integer, primary_key=True),
         Column('name', String(50)),
-        Column('target_date', String(12))
+        Column('target_date', Date())
         )
