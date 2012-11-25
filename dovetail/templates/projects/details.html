@@ -29,7 +29,7 @@
     {% set key_date =  w.get('key_date', False)%}
     <tr>
         {% if w.get('key_date', False) %}
-        <td>{{ key_date }}</td>
+        <td>{{ database.format_date(key_date) }}</td>
         {% else %}
         <td></td>
         {% endif %}

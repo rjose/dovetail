@@ -23,6 +23,7 @@ def projects_route():
 @mod.route('/projects/<int:project_id>')
 def project(project_id):
     return render_template('projects/details.html',
+            database = database,
             project_details = models.get_project_details(g.connection, project_id))
 
 @mod.route('/projects/new')
