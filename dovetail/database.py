@@ -40,6 +40,8 @@ work = Table('work', metadata,
 def format_date(date):
     if date == None:
         return "?"
+    elif type(date) == str:
+        return date
     else:
         return datetime.strftime(date, "%b %d, %Y")
 
