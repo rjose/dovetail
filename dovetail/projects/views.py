@@ -52,18 +52,21 @@ def project_work_edit(project_id):
 
 @mod.route('/projects/<int:project_id>/work', methods = ['POST'])
 def project_work(project_id):
-    # TODO: Do some error handling here
     worklines = request.form['work'].split('\n')
     for workline in worklines:
-        work_data = models.parse_workline(g.connection, workline)
-        fields = work_data['fields']
-        fields.update(project_id = project_id)
+        try:
+            work_data = models.parse_workline(g.connection, workline)
+            fields = work_data['fields']
+            fields.update(project_id = project_id)
 
-        # Update the work table
-        statement = database.work.update().\
-            where(database.work.c.id == work_data['id']).\
-            values(fields)
-        g.connection.execute(statement)
+            # Update the work table
+            statement = database.work.update().\
+                where(database.work.c.id == work_data['id']).\
+                values(fields)
+            g.connection.execute(statement)
+        except:
+            # TODO: Log someething
+            pass
     return redirect('/projects/%d' % int(project_id))
 
 @mod.route('/projects/<int:project_id>/participants/new')

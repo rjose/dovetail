@@ -103,7 +103,7 @@ def work_to_string(work_data):
     # work_data += "[121, 'RJ', '2.5d', 'Figure out thing for thing', [240, 320], '']\n"
     result = ''
     for w in work_data:
-        result += '[%d, "%s", "%s", "%s", %s, "%s"]' % (
+        result += '[%d, "%s", "%s", "%s", %s, "%s"]\n' % (
                 w['id'],
                 shorten_name(w['assignee']['name']),
                 work.format_effort_left(w['effort_left_d']),
