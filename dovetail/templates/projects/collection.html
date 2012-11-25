@@ -20,7 +20,7 @@
       <li>Key dates</li>
       <ul>
         {% for d in key_dates %}
-          <li>{{ d[1] }}: {{ d[0] }}</li>
+          <li>{{ database.format_date(d[1]) }}: {{ d[0] }}</li>
         {% endfor %}
       </ul>
       {% endif  %}

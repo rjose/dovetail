@@ -18,6 +18,7 @@ def projects_route():
     else:
         pass
     return render_template('projects/collection.html',
+            database = database,
             projects = models.get_projects_data(g.connection))
 
 @mod.route('/projects/<int:project_id>')

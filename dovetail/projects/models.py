@@ -13,7 +13,7 @@ def get_projects_data(connection):
                 'target_date': database.format_date(row['target_date']),
                 'est_date': database.format_date(row['est_date']),
                 'detail_url': '/projects/%d' % row['id'],
-                'key_dates': []
+                'key_dates': work.get_key_work_for_project(connection, row['id'])
             }
         result.append(p)
     return result + get_phony_project_data()

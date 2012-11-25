@@ -32,3 +32,12 @@ def format_effort_left(effort_left_d):
     else:
         return '0.1 d'
 
+
+def get_key_work_for_project(connection, project_id):
+    work_data = connection.execute(
+            '''select id, title, key_date
+               from work
+               where project_id = %d AND key_date NOT NULL
+               order by key_date ASC
+            ''' % int(project_id))
+    return [[w['title'], condition_date(w['key_date'])] for w in work_data]
