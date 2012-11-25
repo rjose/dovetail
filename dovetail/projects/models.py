@@ -122,10 +122,12 @@ def parse_workline(workline):
 
     result = {
             'id': data[0],
-            'assignee': data[1],
-            'effort_left_d': effort_left_d,
-            'title': data[3],
-            'prereqs': data[4],
-            'key_date': key_date
+            'fields': {
+                'assignee': data[1],
+                'effort_left_d': effort_left_d,
+                'title': data[3],
+                'prereqs': data[4],
+                'key_date': key_date
+                }
             }
     return result
