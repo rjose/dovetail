@@ -1,3 +1,4 @@
+import json
 import dovetail.database as database
 import dovetail.work.models as work
 import dovetail.people.models as people
@@ -109,4 +110,22 @@ def work_to_string(work_data):
                 w['title'],
                 format_prereqs(w['prereqs']),
                 database.format_date(w['key_date']))
+    return result
+
+def parse_workline(workline):
+    data = json.loads(workline)
+    # TODO: Do some error handling here
+    effort_left_d = float(data[2].split()[0])
+    key_date = None
+    if data[5] != '?':
+        key_date = database.parse_date(data[5])
+
+    result = {
+            'id': data[0],
+            'assignee': data[1],
+            'effort_left_d': effort_left_d,
+            'title': data[3],
+            'prereqs': data[4],
+            'key_date': key_date
+            }
     return result
