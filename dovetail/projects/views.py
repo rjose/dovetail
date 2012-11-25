@@ -50,8 +50,19 @@ def project_work_edit(project_id):
 
 @mod.route('/projects/<int:project_id>/work', methods = ['POST'])
 def project_work(project_id):
-    # TODO: Update this work
-    return redirect(url_for('project', project_id=project_id))
+    # TODO: Do some error handling here
+    worklines = request.form['work'].split('\n')
+    for workline in worklines:
+        work_data = models.parse_workline(g.connection, workline)
+        fields = work_data['fields']
+        fields.update(project_id = project_id)
+
+        # Update the work table
+        statement = database.work.update().\
+            where(database.work.c.id == work_data['id']).\
+            values(fields)
+        g.connection.execute(statement)
+    return redirect('/projects/%d' % int(project_id))
 
 @mod.route('/projects/<int:project_id>/participants/new')
 def project_participants_new(project_id):

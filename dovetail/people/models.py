@@ -1,3 +1,5 @@
+import dovetail.database as database
+
 def get_participants_for_project(connection, project_id):
     particpants_data = connection.execute(
             '''select id, name, title, team, picture from people
@@ -8,3 +10,8 @@ def get_participants_for_project(connection, project_id):
         'team': p['team'], 'picture': p['picture']}
             for p in particpants_data]
     return result
+
+def get_person_from_name(connection, name):
+    person_data = connection.execute(database.people.select(
+        database.people.c.name == name)).first()
+    return person_data

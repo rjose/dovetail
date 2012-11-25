@@ -112,9 +112,10 @@ def work_to_string(work_data):
                 database.format_date(w['key_date']))
     return result
 
-def parse_workline(workline):
+def parse_workline(connection, workline):
     data = json.loads(workline)
     # TODO: Do some error handling here
+    person = people.get_person_from_name(connection, data[1])
     effort_left_d = float(data[2].split()[0])
     key_date = None
     if data[5] != '?':
@@ -123,10 +124,10 @@ def parse_workline(workline):
     result = {
             'id': data[0],
             'fields': {
-                'assignee': data[1],
+                'assignee_id': person['id'],
                 'effort_left_d': effort_left_d,
                 'title': data[3],
-                'prereqs': data[4],
+                'prereqs': str(data[4]),
                 'key_date': key_date
                 }
             }

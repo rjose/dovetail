@@ -1,3 +1,11 @@
+from datetime import datetime
+
+def condition_date(d):
+    if d:
+        return datetime.strptime(d, '%Y-%m-%d')
+    else:
+        return d
+
 def get_work_for_project(connection, project_id):
     # TODO: Order by priority (from algo)
     work_data = connection.execute(
@@ -12,7 +20,7 @@ def get_work_for_project(connection, project_id):
               'title': w['title'],
               'assignee': {'name': w['assignee'], 'picture': w['picture']},
               'effort_left_d': w['effort_left_d'], 
-              'key_date': w['key_date'],
+              'key_date': condition_date(w['key_date']),
               'prereqs': w['prereqs']
               } 
              for w in work_data]
