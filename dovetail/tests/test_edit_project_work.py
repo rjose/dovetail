@@ -14,10 +14,10 @@ class TestEditProjectWork(unittest.TestCase):
         work_data = projects.parse_workline(connection, workline)
         fields = work_data['fields']
         self.assertEqual(work_data['id'], 1)
-        self.assertEqual(fields['assignee'], 21)
+        self.assertEqual(fields['assignee_id'], 21)
         self.assertEqual(fields['effort_left_d'], 0.2)
         self.assertEqual(fields['title'], 'Make title longer')
-        self.assertEqual(fields['prereqs'], [])
+        self.assertEqual(fields['prereqs'], '[]')
         self.assertEqual(fields['key_date'], None)
 
 
