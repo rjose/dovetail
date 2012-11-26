@@ -17,6 +17,7 @@ people = Table('people', metadata,
 projects = Table('projects', metadata,
         Column('id', Integer, primary_key=True),
         Column('name', String(50)),
+        Column('value', Float),
         Column('target_date', Date()),
         Column('est_date', Date())
         )
@@ -33,7 +34,10 @@ work = Table('work', metadata,
         Column('project_id', Integer),
         Column('effort_left_d', Float),
 
+        Column('topo_order', Integer),
         Column('key_date', Date()),
+        Column('start_date', Date()),
+        Column('end_date', Date()),
         Column('prereqs', String(200))
         )
 
