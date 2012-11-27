@@ -4,6 +4,10 @@ from datetime import timedelta
 def update_days(start_day, width):
     return start_day, start_day + width
 
+def increment_date(date):
+    delta1 = timedelta(1) # 1 day
+    return date + delta1
+
 class Timeline():
 
     def __init__(self, cur_date):
@@ -39,14 +43,13 @@ class Timeline():
         if date < self.cur_date:
             return None
         if self.need_to_add_dates(date):
-            self.add_dates(date)
+            self.add_dates_to(date)
 
         # Keep incrementing date until we find one in the timeline.
         # This is guaranteed because add_dates will add at least one date
         # at or after the specified date.
-        delta1 = timedelta(1) # 1 day
         while not date in self.dates:
-            date += delta1
+            date = increment_date(date)
         return self.dates.index(date)
 
     def need_to_add_dates(self, date):
@@ -61,11 +64,11 @@ class Timeline():
             result = True
         return result
 
-    def add_dates(self, end_date):
+    def add_dates_to(self, end_date, min_dates_added = 1):
         if end_date < self.cur_date:
             return
 
-        has_added_date = False
+        num_dates_added = 0
         delta1 = timedelta(1) # 1 day
         date = None
         if self.dates == []:
@@ -77,8 +80,20 @@ class Timeline():
             date += delta1
             if self.is_workday(date):
                 self.dates.append(date)
-                has_added_date = True
-            elif date == end_date and has_added_date == False:
+                num_dates_added += 1
+            if date == end_date and num_dates_added < min_dates_added:
                 end_date += delta1
         return
 
+    def add_days_to(self, day):
+        num_days_to_add = day - len(self.dates) + 1
+        if num_days_to_add <= 0:
+            return
+
+        start_date = None
+        if self.dates == []:
+            start_date = self.cur_date
+        else:
+            start_date = increment_date(self.dates[-1])
+        self.add_dates_to(start_date, num_days_to_add)
+        return

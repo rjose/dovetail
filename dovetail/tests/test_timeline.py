@@ -24,25 +24,25 @@ class TestTimeline(unittest.TestCase):
         self.assertEqual([Slot(0, 4), Slot(4.5, float('inf'))], timeline.slots)
         return
 
-    def test_add_dates(self):
+    def test_add_dates_to(self):
         nov1 = datetime.strptime("Nov 1, 2012", "%b %d, %Y") # Thu
         nov2 = datetime.strptime("Nov 2, 2012", "%b %d, %Y") # Fri
         nov3 = datetime.strptime("Nov 3, 2012", "%b %d, %Y") # Sat
         nov5 = datetime.strptime("Nov 5, 2012", "%b %d, %Y") # Mon
 
         timeline = Timeline(nov1)
-        timeline.add_dates(nov1)
+        timeline.add_dates_to(nov1)
         self.assertEqual([nov1], timeline.dates)
 
-        timeline.add_dates(nov2)
+        timeline.add_dates_to(nov2)
         self.assertEqual([nov1, nov2], timeline.dates)
 
         # Check idempotent
-        timeline.add_dates(nov2)
+        timeline.add_dates_to(nov2)
         self.assertEqual([nov1, nov2], timeline.dates)
 
         # Skip until next workday
-        timeline.add_dates(nov3)
+        timeline.add_dates_to(nov3)
         self.assertEqual([nov1, nov2, nov5], timeline.dates)
         return
 
@@ -60,6 +60,24 @@ class TestTimeline(unittest.TestCase):
         self.assertEqual(2, timeline.day_from_date(nov4))
         self.assertEqual(2, timeline.day_from_date(nov5))
         return
+
+    def test_add_days(self):
+       nov1 = datetime.strptime("Nov 1, 2012", "%b %d, %Y") # Thu
+       nov2 = datetime.strptime("Nov 2, 2012", "%b %d, %Y") # Fri
+       nov3 = datetime.strptime("Nov 3, 2012", "%b %d, %Y") # Sat
+       nov5 = datetime.strptime("Nov 5, 2012", "%b %d, %Y") # Mon
+
+       timeline = Timeline(nov1)
+       timeline.add_days_to(0)
+       self.assertEqual([nov1], timeline.dates)
+
+       timeline.add_days_to(2)
+       self.assertEqual([nov1, nov2, nov5], timeline.dates)
+       return
+
+    def test_date_from_day(self):
+        # TODO: We'll need to add days similar to how we added dates
+        pass
 
         
 if __name__ == '__main__':
