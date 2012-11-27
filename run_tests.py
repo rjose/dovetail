@@ -9,4 +9,6 @@ suite_slot = unittest.TestLoader().loadTestsFromTestCase(TestSlot)
 suite_timeline = unittest.TestLoader().loadTestsFromTestCase(TestTimeline)
 suite_work = unittest.TestLoader().loadTestsFromTestCase(TestWork)
 
-unittest.TextTestRunner(verbosity=2).run(suite_timeline)
+alltests = unittest.TestSuite([suite_edit_project_work, suite_slot, suite_timeline, suite_work])
+
+unittest.TextTestRunner(verbosity=2).run(alltests)
