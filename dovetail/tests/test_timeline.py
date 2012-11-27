@@ -76,8 +76,14 @@ class TestTimeline(unittest.TestCase):
        return
 
     def test_date_from_day(self):
-        # TODO: We'll need to add days similar to how we added dates
-        pass
+       nov1 = datetime.strptime("Nov 1, 2012", "%b %d, %Y") # Thu
+       nov2 = datetime.strptime("Nov 2, 2012", "%b %d, %Y") # Fri
+       nov3 = datetime.strptime("Nov 3, 2012", "%b %d, %Y") # Sat
+       nov5 = datetime.strptime("Nov 5, 2012", "%b %d, %Y") # Mon
+
+       timeline = Timeline(nov1)
+       self.assertEqual(nov5, timeline.date_from_day(2))
+       return
 
         
 if __name__ == '__main__':

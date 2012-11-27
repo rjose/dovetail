@@ -95,3 +95,9 @@ class Timeline():
             start_date = increment_date(self.dates[-1])
         self.add_dates_to(start_date, num_days_to_add)
         return
+
+    def date_from_day(self, day):
+        if day < 0:
+            return
+        self.add_days_to(day)
+        return self.dates[day]
