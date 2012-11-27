@@ -107,3 +107,9 @@ class Timeline():
             return
         self.add_days_to(day)
         return self.dates[day]
+
+    def find_slot_with_ending_date(self, end_date, width):
+        # Target ending halfway through the end date
+        end_day = self.day_from_date(end_date) + 0.5
+        start_day = end_day - width
+        return self.find_slot(start_day, width)
