@@ -65,10 +65,16 @@ class TestTimeline(unittest.TestCase):
 
        timeline = Timeline(nov1)
        self.assertEqual(nov5, timeline.date_from_day(2))
+       self.assertEqual(nov5, timeline.date_from_day(2.9))
        return
 
     def test_find_slot(self):
-        timeline = Timeline(datetime.now())
+        nov1 = datetime.strptime("Nov 1, 2012", "%b %d, %Y") # Thu
+        nov2 = datetime.strptime("Nov 2, 2012", "%b %d, %Y") # Fri
+        nov6 = datetime.strptime("Nov 6, 2012", "%b %d, %Y") # Tue
+        nov7 = datetime.strptime("Nov 7, 2012", "%b %d, %Y") # Wed
+        nov9 = datetime.strptime("Nov 9, 2012", "%b %d, %Y") # Fri
+        timeline = Timeline(nov1)
         my_slot, containing_slot_index = timeline.find_slot(4, 0.5)
         self.assertEqual(Slot(4, 4.5), my_slot)
         self.assertEqual(0, containing_slot_index)
@@ -78,6 +84,11 @@ class TestTimeline(unittest.TestCase):
         my_slot, containing_slot_index = timeline.find_slot(0, 2.5)
         self.assertEqual(Slot(4, 6.5), my_slot)
         self.assertEqual(1, containing_slot_index)
+
+        # Check that the slot dates are correct
+        self.assertEqual(nov7, my_slot.start_date)
+        self.assertEqual(nov9, my_slot.end_date)
+        return
 
     def test_claim_slot(self):
         timeline = Timeline(datetime.now())

@@ -31,6 +31,9 @@ class Timeline():
             else:
                 modify_start_date = True
 
+        # Set slot dates
+        new_slot.start_date = self.date_from_day(new_slot.start_day)
+        new_slot.end_date = self.date_from_day(new_slot.end_day)
         return new_slot, containing_slot_index
 
     # index is the index of the containing slot
@@ -97,6 +100,9 @@ class Timeline():
         return
 
     def date_from_day(self, day):
+        # int() takes the floor of a float. This is what we want here since
+        # integers correspond to the start of a day.
+        day = int(day)
         if day < 0:
             return
         self.add_days_to(day)

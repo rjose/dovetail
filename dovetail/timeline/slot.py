@@ -7,6 +7,8 @@ def sort_pair(start_day, end_day):
 class Slot():
     def __init__(self, start_day, end_day):
         self.start_day, self.end_day = sort_pair(start_day, end_day)
+        self.start_date = None
+        self.end_date = None
 
     def contains(self, start_day, end_day):
         result = False
