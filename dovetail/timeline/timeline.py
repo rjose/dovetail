@@ -18,18 +18,18 @@ class Timeline():
     def find_slot(self, earliest_start_day, width):
         new_slot = None
         containing_slot_index = None
-        update_start_date_from_slot = False
+        modify_start_date = False
 
         start_day, end_day = update_days(earliest_start_day, width)
         for i, s in enumerate(self.slots):
-            if update_start_date_from_slot:
+            if modify_start_date:
                 start_day, end_day = update_days(s.start_day, width)
             if s.contains(start_day, end_day):
                 new_slot = Slot(start_day, end_day)
                 containing_slot_index = i
                 break
             else:
-                update_start_date_from_slot = True
+                modify_start_date = True
 
         return new_slot, containing_slot_index
 
@@ -57,7 +57,6 @@ class Timeline():
 
     def is_workday(self, date):
         # TODO: Check holiday or OOO
-        result = True
         if date.weekday() in [5, 6]:
             result = False
         else:
@@ -70,7 +69,6 @@ class Timeline():
 
         num_dates_added = 0
         delta1 = timedelta(1) # 1 day
-        date = None
         if self.dates == []:
             date = self.cur_date - delta1
         else:
