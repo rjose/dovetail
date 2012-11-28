@@ -21,13 +21,6 @@ def get_work_for_project(connection, project_id):
              for w in work_data]
     return result
 
-# TODO: Move this to a util file
-def format_effort_left(effort_left_d):
-    if effort_left_d:
-        return '%.2f d' % effort_left_d
-    else:
-        return '0.1 d'
-
 
 def get_key_work_for_project(connection, project_id):
     work_data = connection.execute(

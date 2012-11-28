@@ -9,4 +9,9 @@ def condition_date(d):
     else:
         return d
 
+def format_effort_left(effort_left_d):
+    if effort_left_d:
+        return '%.2f d' % effort_left_d
+    else:
+        return '0.1 d'
 

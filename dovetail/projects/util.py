@@ -26,7 +26,7 @@ def project_work_to_string(work_data):
         result += '[%d, "%s", "%s", "%s", %s, "%s"]\n' % (
                 w['id'],
                 shorten_name(w['assignee']['name']),
-                work_db.format_effort_left(w['effort_left_d']),
+                dovetail.util.format_effort_left(w['effort_left_d']),
                 w['title'],
                 format_prereqs(w['prereqs']),
                 database.format_date(w['key_date']))
