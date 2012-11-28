@@ -4,7 +4,7 @@ from datetime import datetime
 import dovetail.database as database
 
 import dovetail.projects.controller
-import dovetail.people.views
+import dovetail.people.controller
 import dovetail.work.views
 
 database.metadata.create_all()
@@ -24,7 +24,7 @@ def root():
     return redirect('/projects')
 
 # Register blueprints
-app.register_blueprint(dovetail.people.views.mod)
+app.register_blueprint(dovetail.people.controller.mod)
 app.register_blueprint(dovetail.projects.controller.mod)
 app.register_blueprint(dovetail.work.views.mod)
 
