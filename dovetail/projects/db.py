@@ -38,3 +38,10 @@ def insert_project(connection, name, target_date):
            name = name,
            target_date = target_date)
     return
+
+def add_project_participant(connection, project_id, person_id):
+    # TODO: Handle case where participant is already part of the project
+    connection.execute(database.project_participants.insert(),
+           project_id = project_id,
+           person_id = person_id)
+    return

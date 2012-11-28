@@ -105,13 +105,13 @@ def project_work(project_id):
             fields = work_data['fields']
             fields.update(project_id = project_id)
 
-            # Update the work table
+            #TODO: Move this work/db.py (when it exists)
             statement = database.work.update().\
                 where(database.work.c.id == work_data['id']).\
                 values(fields)
             g.connection.execute(statement)
         except:
-            # TODO: Log someething
+            # TODO: Log something
             pass
     return redirect('/projects/%d' % int(project_id))
 
@@ -125,10 +125,7 @@ def project_participants_new(project_id):
 @mod.route('/projects/<int:project_id>/participants', methods=['POST'])
 def project_participants(project_id):
     if request.method == 'POST':
-        g.connection.execute(database.project_participants.insert(),
-               project_id = project_id,
-               person_id = request.form['person']
-               )
-        return redirect(url_for('project', project_id=project_id))
+        projects_db.add_project_participant(g.connection, project_id, request.form['person'])
+        return redirect('/projects/%d' % int(project_id))
     else:
         return "TODO: Figure out what should go here"
