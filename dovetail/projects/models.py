@@ -11,7 +11,7 @@ def get_projects_data(connection):
                 'project_id': row['id'],
                 'title': row['name'],
                 'target_date': database.format_date(row['target_date']),
-                'est_date': database.format_date(row['est_date']),
+                'est_date': database.format_date(row['est_end_date']),
                 'detail_url': '/projects/%d' % row['id'],
                 'key_dates': work.get_key_work_for_project(connection, row['id'])
             }
@@ -55,7 +55,7 @@ def get_project_details(connection, project_id):
         'name': data['name'],
         'stats': {
             'target_date': database.format_date(data['target_date']),
-            'est_date': database.format_date(data['est_date']),
+            'est_date': database.format_date(data['est_end_date']),
             'total_effort': 'TODO',
             },
         'participants': people.get_participants_for_project(connection, project_id),
