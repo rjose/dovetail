@@ -1,6 +1,6 @@
 import dovetail.database as database
 
-def get_participants_for_project(connection, project_id):
+def select_project_participants(connection, project_id):
     particpants_data = connection.execute(
             '''select id, name, title, team, picture from people
                inner join project_participants on project_participants.person_id = people.id
