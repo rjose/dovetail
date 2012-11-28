@@ -19,7 +19,7 @@ projects = Table('projects', metadata,
         Column('name', String(50)),
         Column('value', Float),
         Column('target_date', Date()),
-        Column('est_date', Date())
+        Column('est_end_date', Date())
         )
 
 project_participants = Table('project_participants', metadata,
