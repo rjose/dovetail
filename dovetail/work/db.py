@@ -1,10 +1,5 @@
 from datetime import datetime
-
-def condition_date(d):
-    if d:
-        return datetime.strptime(d, '%Y-%m-%d')
-    else:
-        return d
+import dovetail.util
 
 def get_work_for_project(connection, project_id):
     # TODO: Order by priority (from algo)
@@ -20,12 +15,13 @@ def get_work_for_project(connection, project_id):
               'title': w['title'],
               'assignee': {'name': w['assignee'], 'picture': w['picture']},
               'effort_left_d': w['effort_left_d'], 
-              'key_date': condition_date(w['key_date']),
+              'key_date': dovetail.util.condition_date(w['key_date']),
               'prereqs': w['prereqs']
               } 
              for w in work_data]
     return result
 
+# TODO: Move this to a util file
 def format_effort_left(effort_left_d):
     if effort_left_d:
         return '%.2f d' % effort_left_d
@@ -40,4 +36,4 @@ def get_key_work_for_project(connection, project_id):
                where project_id = %d AND key_date NOT NULL
                order by key_date ASC
             ''' % int(project_id))
-    return [[w['title'], condition_date(w['key_date'])] for w in work_data]
+    return [[w['title'], dovetail.util.condition_date(w['key_date'])] for w in work_data]
