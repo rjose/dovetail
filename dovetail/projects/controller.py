@@ -59,10 +59,8 @@ def parse_workline(connection, workline):
 @mod.route('/projects', methods=['GET', 'POST'])
 def projects_route():
     if request.method == 'POST':
-        target_date = datetime.strptime(request.form['target_date'], "%b %d, %Y")
-        g.connection.execute(database.projects.insert(),
-               name = request.form['name'],
-               target_date = target_date)
+        target_date = database.parse_date(request.form['target_date'])
+        projects_db.insert_project(g.connection, request.form['name'], target_date)
     else:
         pass
     return render_template('projects/collection.html',

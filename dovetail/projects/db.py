@@ -32,3 +32,9 @@ def select_project(connection, project_id):
         'work': work.get_work_for_project(connection, project_id)
         }
     return result
+
+def insert_project(connection, name, target_date):
+    connection.execute(database.projects.insert(),
+           name = name,
+           target_date = target_date)
+    return
