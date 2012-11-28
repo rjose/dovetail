@@ -3,7 +3,7 @@ from datetime import datetime
 
 import dovetail.database as database
 
-import dovetail.projects.views
+import dovetail.projects.controller
 import dovetail.people.views
 import dovetail.work.views
 
@@ -25,7 +25,7 @@ def root():
 
 # Register blueprints
 app.register_blueprint(dovetail.people.views.mod)
-app.register_blueprint(dovetail.projects.views.mod)
+app.register_blueprint(dovetail.projects.controller.mod)
 app.register_blueprint(dovetail.work.views.mod)
 
 if __name__ == '__main__':
