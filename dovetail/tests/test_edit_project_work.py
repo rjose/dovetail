@@ -7,7 +7,7 @@ class TestEditProjectWork(unittest.TestCase):
 
     def test_parse_workline(self):
         # Mock out person lookup
-        people_db.get_person_from_name = MagicMock(return_value = {'id': 21})
+        people_db.select_person_by_name = MagicMock(return_value = {'id': 21})
         connection = None
 
         workline = '[1, "Borvo Borvison", "0.20 d", "Make title longer", [], "?"]'

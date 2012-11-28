@@ -34,7 +34,7 @@ def project_work_to_string(work_data):
 def parse_workline(connection, workline):
     data = json.loads(workline)
     # TODO: Do some error handling here
-    person = people_db.get_person_from_name(connection, data[1])
+    person = people_db.select_person_by_name(connection, data[1])
     effort_left_d = float(data[2].split()[0])
     key_date = None
     if data[5] != '?':

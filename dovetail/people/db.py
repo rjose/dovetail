@@ -11,7 +11,7 @@ def get_participants_for_project(connection, project_id):
             for p in particpants_data]
     return result
 
-def get_person_from_name(connection, name):
+def select_person_by_name(connection, name):
     person_data = connection.execute(database.people.select(
         database.people.c.name == name)).first()
     return person_data
