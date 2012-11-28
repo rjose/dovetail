@@ -1,7 +1,7 @@
 import json
 
 # TODO: Get rid of this import
-import dovetail.work.models as work
+import dovetail.work.db as work_db
 import dovetail.database as database
 import dovetail.people.db as people_db
 
@@ -25,7 +25,7 @@ def project_work_to_string(work_data):
         result += '[%d, "%s", "%s", "%s", %s, "%s"]\n' % (
                 w['id'],
                 shorten_name(w['assignee']['name']),
-                work.format_effort_left(w['effort_left_d']),
+                work_db.format_effort_left(w['effort_left_d']),
                 w['title'],
                 format_prereqs(w['prereqs']),
                 database.format_date(w['key_date']))

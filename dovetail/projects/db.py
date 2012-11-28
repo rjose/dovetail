@@ -1,6 +1,6 @@
 import json
 import dovetail.database as database
-import dovetail.work.models as work
+import dovetail.work.db as work_db
 import dovetail.people.db as people_db
 
 def select_project_collection(connection):
@@ -11,7 +11,7 @@ def select_project_collection(connection):
             'target_date': database.format_date(row['target_date']),
             'est_date': database.format_date(row['est_end_date']),
             'detail_url': '/projects/%d' % row['id'],
-            'key_dates': work.get_key_work_for_project(connection, row['id'])
+            'key_dates': work_db.get_key_work_for_project(connection, row['id'])
             } for row in data]
     return result
 
@@ -30,7 +30,7 @@ def select_project(connection, project_id):
             'total_effort': 'TODO',
             },
         'participants': people_db.select_project_participants(connection, project_id),
-        'work': work.get_work_for_project(connection, project_id)
+        'work': work_db.get_work_for_project(connection, project_id)
         }
     return result
 

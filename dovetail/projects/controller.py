@@ -3,7 +3,6 @@ from datetime import datetime
 
 import dovetail.util
 import dovetail.database as database
-import dovetail.work.models as work
 import dovetail.projects.db as projects_db
 from dovetail.projects.util import project_work_to_string, parse_workline
 
