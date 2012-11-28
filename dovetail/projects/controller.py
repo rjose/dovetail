@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, g
 from datetime import datetime
 
 import dovetail.database as database
-import dovetail.projects.models as models
+import dovetail.projects.db as projects_db
 import dovetail.work.models as work
 
 mod = Blueprint('projects', __name__)
@@ -19,13 +19,13 @@ def projects_route():
         pass
     return render_template('projects/collection.html',
             database = database,
-            projects = models.get_projects_data(g.connection))
+            projects = projects_db.get_projects_data(g.connection))
 
 @mod.route('/projects/<int:project_id>')
 def project(project_id):
     return render_template('projects/details.html',
             database = database,
-            project_details = models.get_project_details(g.connection, project_id))
+            project_details = projects_db.get_project_details(g.connection, project_id))
 
 @mod.route('/projects/new')
 def projects_new():
@@ -45,17 +45,17 @@ def projects_edit():
 
 @mod.route('/projects/<int:project_id>/work/edit')
 def project_work_edit(project_id):
-    project = models.get_project_details(g.connection, project_id)
+    project = projects_db.get_project_details(g.connection, project_id)
     return render_template('projects/edit_work.html',
             project = project,
-            work_data = models.work_to_string(project.get('work', [])))
+            work_data = projects_db.work_to_string(project.get('work', [])))
 
 @mod.route('/projects/<int:project_id>/work', methods = ['POST'])
 def project_work(project_id):
     worklines = request.form['work'].split('\n')
     for workline in worklines:
         try:
-            work_data = models.parse_workline(g.connection, workline)
+            work_data = projects_db.parse_workline(g.connection, workline)
             fields = work_data['fields']
             fields.update(project_id = project_id)
 
@@ -71,7 +71,7 @@ def project_work(project_id):
 
 @mod.route('/projects/<int:project_id>/participants/new')
 def project_participants_new(project_id):
-    project = models.get_project_details(g.connection, project_id)
+    project = projects_db.get_project_details(g.connection, project_id)
     return render_template('projects/new_participant.html',
             project = project,
             people = database.get_people(g.connection))

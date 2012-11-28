@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, redirect, url_for, g
 from datetime import datetime
 
 import dovetail.database as database
-import dovetail.projects.models as models
 
 mod = Blueprint('people', __name__)
 

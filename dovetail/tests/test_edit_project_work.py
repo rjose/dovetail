@@ -1,6 +1,6 @@
 import unittest
 from mock import MagicMock
-import dovetail.projects.models as projects
+import dovetail.projects.db as projects
 import dovetail.people.models as people
 
 class TestEditProjectWork(unittest.TestCase):

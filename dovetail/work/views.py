@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, g
 from datetime import datetime
 
 import dovetail.database as database
-import dovetail.projects.models as projects
+import dovetail.projects.db as projects
 
 mod = Blueprint('work', __name__)
 
