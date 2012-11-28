@@ -16,6 +16,12 @@ class TestScheduler(unittest.TestCase):
         return
     
     def test_schedule_project(self):
+        nov1 = datetime.strptime("Nov 1, 2012", "%b %d, %Y")
+        nov2 = datetime.strptime("Nov 2, 2012", "%b %d, %Y")
+        nov5 = datetime.strptime("Nov 5, 2012", "%b %d, %Y")
+        nov6 = datetime.strptime("Nov 6, 2012", "%b %d, %Y")
+        nov15 = datetime.strptime("Nov 15, 2012", "%b %d, %Y")
+
         # Assignees
         person_id1 = 101
         person_id2 = 102
@@ -25,7 +31,8 @@ class TestScheduler(unittest.TestCase):
         p1 = Project()
         p1_w1 = Work(1, "p1 w1", 1.0, [], person_id1, None)
         p1_w2 = Work(2, "p1 w2", 1.0, [], person_id1, None)
-        p1.work = [p1_w1, p1_w2]
+        p1_w3 = Work(5, "p1 w3", 0.1, [], person_id1, nov15)
+        p1.work = [p1_w1, p1_w2, p1_w3]
 
         p2 = Project()
         p2_w1 = Work(3, "p2 w1", 1.0, [], person_id2, None)
@@ -33,10 +40,6 @@ class TestScheduler(unittest.TestCase):
         p2.work = [p2_w1, p2_w2]
 
         # Scheduler
-        nov1 = datetime.strptime("Nov 1, 2012", "%b %d, %Y")
-        nov2 = datetime.strptime("Nov 2, 2012", "%b %d, %Y")
-        nov5 = datetime.strptime("Nov 5, 2012", "%b %d, %Y")
-        nov6 = datetime.strptime("Nov 6, 2012", "%b %d, %Y")
         scheduler = Scheduler(nov1)
         projects = scheduler.schedule_projects([p1, p2])
 
@@ -47,7 +50,7 @@ class TestScheduler(unittest.TestCase):
         self.assertEqual(nov6, p2_w2.est_end_date())
 
         # Check project end dates
-        self.assertEqual(nov5, p1.est_end_date)
+        self.assertEqual(nov15, p1.est_end_date)
         self.assertEqual(nov6, p2.est_end_date)
         return
 

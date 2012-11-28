@@ -21,11 +21,12 @@ class Scheduler:
     def schedule_work(self, work):
         timeline = self.get_assignee_timeline(work.assignee_id)
         if work.key_date:
-            pass
+            slot = timeline.schedule_at_end_date(work.key_date, work.effort_left_d)
         else:
             start_date = earliest_start_date(work, self.work_dict, self.cur_date)
             slot = timeline.schedule_at_start_date(start_date, work.effort_left_d)
-            work.schedule(slot)
+
+        work.schedule(slot)
         return
 
 

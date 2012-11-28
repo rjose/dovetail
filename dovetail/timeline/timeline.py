@@ -121,3 +121,8 @@ class Timeline():
         slot, parent_index = self.find_slot(day, effort_left_d)
         slot = self.claim_slot(slot, parent_index)
         return slot
+
+    def schedule_at_end_date(self, end_date, effort_left_d):
+        slot, index = self.find_slot_with_ending_date(end_date, effort_left_d)
+        slot = self.claim_slot(slot, index)
+        return slot
