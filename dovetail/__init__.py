@@ -5,7 +5,7 @@ import dovetail.database as database
 
 import dovetail.projects.controller
 import dovetail.people.controller
-import dovetail.work.views
+import dovetail.work.controller
 
 database.metadata.create_all()
 
@@ -26,7 +26,7 @@ def root():
 # Register blueprints
 app.register_blueprint(dovetail.people.controller.mod)
 app.register_blueprint(dovetail.projects.controller.mod)
-app.register_blueprint(dovetail.work.views.mod)
+app.register_blueprint(dovetail.work.controller.mod)
 
 if __name__ == '__main__':
     # TODO: Figure out how to set this via an environment variable
