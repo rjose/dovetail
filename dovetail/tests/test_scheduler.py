@@ -28,13 +28,13 @@ class TestScheduler(unittest.TestCase):
         person_id3 = 103
 
         # Projects
-        p1 = Project()
+        p1 = Project(1)
         p1_w1 = Work(1, "p1 w1", 1.0, [], person_id1, None)
         p1_w2 = Work(2, "p1 w2", 1.0, [], person_id1, None)
         p1_w3 = Work(5, "p1 w3", 0.1, [], person_id1, nov15)
         p1.work = [p1_w1, p1_w2, p1_w3]
 
-        p2 = Project()
+        p2 = Project(2)
         p2_w1 = Work(3, "p2 w1", 1.0, [], person_id2, None)
         p2_w2 = Work(4, "p2 w2", 1.0, [2], person_id3, None)
         p2.work = [p2_w1, p2_w2]

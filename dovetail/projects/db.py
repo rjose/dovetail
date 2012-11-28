@@ -46,3 +46,12 @@ def add_project_participant(connection, project_id, person_id):
            project_id = project_id,
            person_id = person_id)
     return
+
+def update_project_and_work_dates(connection, projects):
+    # TODO: Implement this
+    return
+
+def select_all_project_ids(connection):
+    data = connection.execute('select id from projects order by value desc')
+    result = [row['id'] for row in data]
+    return result

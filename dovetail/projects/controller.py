@@ -6,6 +6,10 @@ import dovetail.database as database
 import dovetail.projects.db as projects_db
 from dovetail.projects.util import project_work_to_string, parse_workline
 
+from dovetail.scheduler import Scheduler
+from dovetail.projects.project import get_projects_for_scheduling
+import pdb
+
 mod = Blueprint('projects', __name__)
 
 # Projects
@@ -82,3 +86,12 @@ def project_participants(project_id):
         return redirect('/projects/%d' % int(project_id))
     else:
         return "TODO: Figure out what should go here"
+
+@mod.route('/projects/reschedule', methods=['POST'])
+def reschedule_projects():
+    scheduler = Scheduler(datetime.now())
+    projects = get_projects_for_scheduling(g.connection)
+    projects = scheduler.schedule_projects(projects)
+    projects_db.update_project_and_work_dates(g.connection, projects)
+    return redirect('/projects')
+
