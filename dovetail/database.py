@@ -55,5 +55,3 @@ def get_people(connection):
     result = [{'id': row['id'], 'name': row['name']} for row in people_data]
     return result
 
-def parse_date(date_string):
-    return datetime.strptime(date_string, "%b %d, %Y")

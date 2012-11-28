@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, g
 from datetime import datetime
 
+import dovetail.util
 import dovetail.database as database
 import dovetail.projects.db as projects_db
 import dovetail.work.models as work
@@ -40,7 +41,7 @@ def parse_workline(connection, workline):
     effort_left_d = float(data[2].split()[0])
     key_date = None
     if data[5] != '?':
-        key_date = database.parse_date(data[5])
+        key_date = dovetail.util.parse_date(data[5])
 
     result = {
             'id': data[0],
@@ -59,7 +60,7 @@ def parse_workline(connection, workline):
 @mod.route('/projects', methods=['GET', 'POST'])
 def projects_route():
     if request.method == 'POST':
-        target_date = database.parse_date(request.form['target_date'])
+        target_date = dovetail.util.parse_date(request.form['target_date'])
         projects_db.insert_project(g.connection, request.form['name'], target_date)
     else:
         pass
