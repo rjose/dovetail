@@ -11,6 +11,11 @@ suite_timeline = unittest.TestLoader().loadTestsFromTestCase(TestTimeline)
 suite_work = unittest.TestLoader().loadTestsFromTestCase(TestWork)
 suite_scheduler = unittest.TestLoader().loadTestsFromTestCase(TestScheduler)
 
-alltests = unittest.TestSuite([suite_edit_project_work, suite_slot, suite_timeline, suite_work, suite_scheduler])
+alltests = unittest.TestSuite([
+    suite_edit_project_work,
+    suite_slot,
+    suite_timeline,
+    suite_work,
+    suite_scheduler])
 
 unittest.TextTestRunner(verbosity=2).run(alltests)
