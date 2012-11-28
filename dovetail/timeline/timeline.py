@@ -16,10 +16,12 @@ class Timeline():
         self.dates = []
 
     def find_slot(self, earliest_start_day, width):
-        new_slot = None
-        containing_slot_index = None
-        modify_start_date = False
+        # Default to the last, infinite slot
+        start_day, end_day = update_days(self.slots[-1].start_day, width)
+        new_slot = Slot(start_day, end_day)
+        containing_slot_index = len(self.slots) - 1
 
+        modify_start_date = False
         start_day, end_day = update_days(earliest_start_day, width)
         for i, s in enumerate(self.slots):
             if modify_start_date:

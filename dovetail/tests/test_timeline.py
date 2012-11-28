@@ -90,6 +90,16 @@ class TestTimeline(unittest.TestCase):
         self.assertEqual(nov9, my_slot.end_date)
         return
 
+    # This tests the case where the final, infinite slot needs to be used
+    # but the desired slot does not fit without modification (smoke test)
+    def test_find_slot_at_end(self):
+        nov1 = datetime.strptime("Nov 1, 2012", "%b %d, %Y") # Thu
+        timeline = Timeline(nov1)
+        timeline.claim_slot(Slot(0, 1.0), 0)
+        my_slot, containing_slot_index = timeline.find_slot(0, 1.0)
+        return
+
+
     def test_claim_slot(self):
         nov1 = datetime.strptime("Nov 1, 2012", "%b %d, %Y") # Thu
         timeline = Timeline(nov1)
