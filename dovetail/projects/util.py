@@ -4,6 +4,7 @@ import json
 import dovetail.work.db as work_db
 import dovetail.database as database
 import dovetail.people.db as people_db
+import dovetail.util
 
 def shorten_name(name):
     return name
