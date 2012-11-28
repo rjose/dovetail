@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, g
 from datetime import datetime
 
 import dovetail.database as database
-import dovetail.projects.db as projects
+import dovetail.projects.db as projects_db
 
 mod = Blueprint('work', __name__)
 
@@ -25,7 +25,7 @@ def work_new():
     project_id = request.args.get('project', 0)
 
     # TODO: Do some error handling if we don't have a project id
-    project = projects.get_project_details(g.connection, project_id)
+    project = projects_db.select_project(g.connection, project_id)
     return render_template('work/new.html', 
             project = project,
             people = database.get_people(g.connection))
