@@ -1,7 +1,7 @@
 from datetime import datetime
 import dovetail.util
 
-def get_work_for_project(connection, project_id):
+def select_work_for_project(connection, project_id):
     # TODO: Order by priority (from algo)
     work_data = connection.execute(
             '''select w.id, w.title, people.name as assignee, people.picture as picture,
@@ -22,7 +22,7 @@ def get_work_for_project(connection, project_id):
     return result
 
 
-def get_key_work_for_project(connection, project_id):
+def select_key_work_for_project(connection, project_id):
     work_data = connection.execute(
             '''select id, title, key_date
                from work
