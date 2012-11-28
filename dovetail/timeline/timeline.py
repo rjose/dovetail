@@ -115,3 +115,9 @@ class Timeline():
         end_day = self.day_from_date(end_date) + 0.5
         start_day = end_day - width
         return self.find_slot(start_day, width)
+
+    def schedule_at_start_date(self, start_date, effort_left_d):
+        day = self.day_from_date(start_date)
+        slot, parent_index = self.find_slot(day, effort_left_d)
+        slot = self.claim_slot(slot, parent_index)
+        return slot

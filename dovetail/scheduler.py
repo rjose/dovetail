@@ -23,11 +23,8 @@ class Scheduler:
         if work.key_date:
             pass
         else:
-            # TODO: Make this into a single function call
             start_date = earliest_start_date(work, self.work_dict, self.cur_date)
-            day = timeline.day_from_date(start_date)
-            slot, parent_index = timeline.find_slot(day, work.effort_left_d)
-            slot = timeline.claim_slot(slot, parent_index)
+            slot = timeline.schedule_at_start_date(start_date, work.effort_left_d)
             work.schedule(slot)
         return
 
