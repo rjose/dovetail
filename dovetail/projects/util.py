@@ -1,6 +1,9 @@
+import json
+
 # TODO: Get rid of this import
 import dovetail.work.models as work
 import dovetail.database as database
+import dovetail.people.db as people_db
 
 def shorten_name(name):
     return name
@@ -31,7 +34,7 @@ def project_work_to_string(work_data):
 def parse_workline(connection, workline):
     data = json.loads(workline)
     # TODO: Do some error handling here
-    person = people.get_person_from_name(connection, data[1])
+    person = people_db.get_person_from_name(connection, data[1])
     effort_left_d = float(data[2].split()[0])
     key_date = None
     if data[5] != '?':

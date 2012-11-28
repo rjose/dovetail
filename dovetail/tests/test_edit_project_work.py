@@ -1,17 +1,17 @@
 import unittest
 from mock import MagicMock
-import dovetail.projects.db as projects
-import dovetail.people.models as people
+from dovetail.projects.util import parse_workline
+import dovetail.people.db as people_db
 
 class TestEditProjectWork(unittest.TestCase):
 
     def test_parse_workline(self):
         # Mock out person lookup
-        people.get_person_from_name = MagicMock(return_value = {'id': 21})
+        people_db.get_person_from_name = MagicMock(return_value = {'id': 21})
         connection = None
 
         workline = '[1, "Borvo Borvison", "0.20 d", "Make title longer", [], "?"]'
-        work_data = projects.parse_workline(connection, workline)
+        work_data = parse_workline(connection, workline)
         fields = work_data['fields']
         self.assertEqual(work_data['id'], 1)
         self.assertEqual(fields['assignee_id'], 21)
