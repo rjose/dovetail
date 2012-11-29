@@ -6,6 +6,8 @@ import dovetail.database as database
 import dovetail.projects.db as projects_db
 import dovetail.work.db as work_db
 from dovetail.projects.util import project_work_to_string, parse_workline
+from dovetail.projects.project import Project
+from dovetail.work.work import Work
 
 from dovetail.scheduler import Scheduler
 from dovetail.projects.project import get_projects_for_scheduling
@@ -60,18 +62,35 @@ def project_work_edit(project_id):
             project = project,
             work_data = project_work_to_string(project.get('work', [])))
 
+# TODO: Move this
+def to_work(fields):
+    result = Work(fields['id'], fields['title'], fields['effort_left_d'],
+            dovetail.util.condition_prereqs(fields['prereqs']),
+            fields['assignee_id'], fields['key_date'])
+    return result
+
 @mod.route('/projects/<int:project_id>/work', methods = ['POST'])
 def project_work(project_id):
     worklines = request.form['work'].split('\n')
+    work = []
     for workline in worklines:
+        # We have this here to skip lines that cannot be parsed (like empty lines)
         try:
+            # TODO: Change these so they return Work objects
             work_data = parse_workline(g.connection, workline)
             fields = work_data['fields']
             fields.update(project_id = project_id)
             work_db.update_work(g.connection, work_data)
+            fields.update(id = work_data['id'])
+            work.append(to_work(fields))
         except:
-            # TODO: Log something
             pass
+
+    project = Project(project_id)
+    project.work = work
+    project.topo_sort_work()
+    work_db.update_work_topo_order(g.connection, project.work)
+
     reschedule_world(g.connection)
     return redirect('/projects/%d' % int(project_id))
 
