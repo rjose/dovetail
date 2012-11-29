@@ -12,6 +12,13 @@ from dovetail.projects.project import get_projects_for_scheduling
 
 mod = Blueprint('projects', __name__)
 
+def reschedule_world(connection):
+    scheduler = Scheduler(datetime.now())
+    projects = get_projects_for_scheduling(connection)
+    projects = scheduler.schedule_projects(projects)
+    projects_db.update_project_and_work_dates(connection, projects)
+    return
+
 # Projects
 @mod.route('/projects', methods=['GET', 'POST'])
 def projects():
@@ -65,6 +72,7 @@ def project_work(project_id):
         except:
             # TODO: Log something
             pass
+    reschedule_world(g.connection)
     return redirect('/projects/%d' % int(project_id))
 
 @mod.route('/projects/<int:project_id>/participants/new')
@@ -84,9 +92,6 @@ def project_participants(project_id):
 
 @mod.route('/projects/reschedule', methods=['POST'])
 def reschedule_projects():
-    scheduler = Scheduler(datetime.now())
-    projects = get_projects_for_scheduling(g.connection)
-    projects = scheduler.schedule_projects(projects)
-    projects_db.update_project_and_work_dates(g.connection, projects)
+    reschedule_world(g.connection)
     return redirect('/projects')
 
