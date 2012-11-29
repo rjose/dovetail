@@ -1,3 +1,4 @@
+import dovetail.database as database
 from datetime import datetime
 import json
 import dovetail.util
@@ -52,3 +53,10 @@ def select_key_work_for_project(connection, project_id):
                order by key_date ASC
             ''' % int(project_id))
     return [[w['title'], dovetail.util.condition_date(w['key_date'])] for w in work_data]
+
+def update_work(connection, work_data):
+    statement = database.work.update().\
+        where(database.work.c.id == work_data['id']).\
+        values(work_data['fields'])
+    connection.execute(statement)
+    return

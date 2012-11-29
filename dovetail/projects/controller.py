@@ -4,6 +4,7 @@ from datetime import datetime
 import dovetail.util
 import dovetail.database as database
 import dovetail.projects.db as projects_db
+import dovetail.work.db as work_db
 from dovetail.projects.util import project_work_to_string, parse_workline
 
 from dovetail.scheduler import Scheduler
@@ -60,12 +61,7 @@ def project_work(project_id):
             work_data = parse_workline(g.connection, workline)
             fields = work_data['fields']
             fields.update(project_id = project_id)
-
-            #TODO: Move this work/db.py (when it exists)
-            statement = database.work.update().\
-                where(database.work.c.id == work_data['id']).\
-                values(fields)
-            g.connection.execute(statement)
+            work_db.update_work(g.connection, work_data)
         except:
             # TODO: Log something
             pass
