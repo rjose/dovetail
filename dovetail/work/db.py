@@ -4,7 +4,6 @@ import json
 import dovetail.util
 
 def select_work_for_project(connection, project_id):
-    # TODO: Order by priority (from algo)
     work_data = connection.execute(
             '''select w.id, w.title,
                people.id as person_id, people.name as assignee, people.picture as picture,
@@ -12,6 +11,7 @@ def select_work_for_project(connection, project_id):
                from work as w
                inner join people on people.id = w.assignee_id
                where w.project_id = %d
+               order by topo_order ASC
             ''' % int(project_id))
     result = [{
               'id': w['id'], 
