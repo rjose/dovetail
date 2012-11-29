@@ -46,6 +46,7 @@ class Timeline():
         return slot
 
     def day_from_date(self, date):
+        date = dovetail.util.standardize_date(date)
         if date < self.cur_date:
             return None
         if self.need_to_add_dates(date):
@@ -59,6 +60,7 @@ class Timeline():
         return self.dates.index(date)
 
     def need_to_add_dates(self, date):
+        date = dovetail.util.standardize_date(date)
         return self.dates == [] or date > self.dates[-1]
 
     def is_workday(self, date):
@@ -73,12 +75,18 @@ class Timeline():
         if end_date < self.cur_date:
             return
 
+        end_date = dovetail.util.standardize_date(end_date)
+
         num_dates_added = 0
         delta1 = timedelta(1) # 1 day
         if self.dates == []:
             date = self.cur_date - delta1
         else:
             date = self.dates[-1]
+
+        # Push end date out until it's a workday
+        while not self.is_workday(end_date):
+            end_date += delta1
 
         while date < end_date:
             date += delta1
@@ -112,18 +120,22 @@ class Timeline():
         return self.dates[day]
 
     def find_slot_with_ending_date(self, end_date, width):
+        end_date = dovetail.util.standardize_date(end_date)
+
         # Target ending halfway through the end date
         end_day = self.day_from_date(end_date) + 0.5
         start_day = end_day - width
         return self.find_slot(start_day, width)
 
     def schedule_at_start_date(self, start_date, effort_left_d):
+        start_date = dovetail.util.standardize_date(start_date)
         day = self.day_from_date(start_date)
         slot, parent_index = self.find_slot(day, effort_left_d)
         slot = self.claim_slot(slot, parent_index)
         return slot
 
     def schedule_at_end_date(self, end_date, effort_left_d):
+        end_date = dovetail.util.standardize_date(end_date)
         slot, index = self.find_slot_with_ending_date(end_date, effort_left_d)
         slot = self.claim_slot(slot, index)
         return slot
