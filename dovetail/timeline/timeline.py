@@ -1,3 +1,4 @@
+import dovetail.util
 from dovetail.timeline.slot import Slot
 from datetime import timedelta
 
@@ -12,7 +13,7 @@ class Timeline():
 
     def __init__(self, cur_date):
         self.slots = [Slot(0, float('inf'))]
-        self.cur_date = cur_date
+        self.cur_date = dovetail.util.standardize_date(cur_date)
         self.dates = []
 
     def find_slot(self, earliest_start_day, width):

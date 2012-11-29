@@ -8,7 +8,6 @@ from dovetail.projects.util import project_work_to_string, parse_workline
 
 from dovetail.scheduler import Scheduler
 from dovetail.projects.project import get_projects_for_scheduling
-import pdb
 
 mod = Blueprint('projects', __name__)
 

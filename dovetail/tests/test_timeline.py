@@ -3,6 +3,7 @@ from mock import MagicMock
 from datetime import datetime
 from dovetail.timeline.timeline import Timeline
 from dovetail.timeline.slot import Slot
+from datetime import timedelta
 
 class TestTimeline(unittest.TestCase):
 
@@ -123,6 +124,16 @@ class TestTimeline(unittest.TestCase):
         nov7 = datetime.strptime("Nov 7, 2012", "%b %d, %Y") # Wed 4
         nov9 = datetime.strptime("Nov 9, 2012", "%b %d, %Y") # Fri 5
         timeline = Timeline(nov1)
+        my_slot, containing_slot_index = timeline.find_slot_with_ending_date(nov7, 0.1)
+        self.assertEqual(Slot(4.4, 4.5), my_slot)
+        return
+
+    def test_find_slot_with_ending_date2(self):
+        # This tests an infinite loop case
+        delta1 = timedelta(0.25)
+        nov1 = datetime.strptime("Nov 1, 2012", "%b %d, %Y") # Thu 0
+        nov7 = datetime.strptime("Nov 7, 2012", "%b %d, %Y") # Wed 4
+        timeline = Timeline(nov1 + delta1)
         my_slot, containing_slot_index = timeline.find_slot_with_ending_date(nov7, 0.1)
         self.assertEqual(Slot(4.4, 4.5), my_slot)
         return

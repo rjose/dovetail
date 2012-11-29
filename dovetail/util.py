@@ -1,5 +1,9 @@
 from datetime import datetime
 
+def standardize_date(date):
+    result = datetime(date.year, date.month, date.day)
+    return result
+
 def parse_date(date_string):
     return datetime.strptime(date_string, "%b %d, %Y")
 
