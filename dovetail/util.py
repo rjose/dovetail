@@ -19,3 +19,8 @@ def format_effort_left(effort_left_d):
     else:
         return '0.1 d'
 
+def condition_prereqs(prereqs):
+    result = []
+    if prereqs:
+        result = json.loads(prereqs)
+    return result

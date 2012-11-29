@@ -24,6 +24,7 @@ def select_work_for_project(connection, project_id):
              for w in work_data]
     return result
 
+
 def select_work_for_project2(connection, project_id):
     # TODO: Order by priority (from algo)
     work_data = connection.execute(
@@ -34,13 +35,14 @@ def select_work_for_project2(connection, project_id):
                inner join people on people.id = w.assignee_id
                where w.project_id = %d
             ''' % int(project_id))
+
     result = [{
               'id': w['id'],
               'title': w['title'],
               'assignee': {'id': w['person_id'], 'name': w['assignee'], 'picture': w['picture']},
               'effort_left_d': w['effort_left_d'],
               'key_date': dovetail.util.condition_date(w['key_date']),
-              'prereqs': json.loads(w['prereqs'])
+              'prereqs': dovetail.util.condition_prereqs(w['prereqs'])
               }
              for w in work_data]
     return result
