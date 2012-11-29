@@ -60,3 +60,11 @@ def update_work(connection, work_data):
         values(work_data['fields'])
     connection.execute(statement)
     return
+
+def update_work_dates(connection, work_collection):
+    for w in work_collection:
+        statement = database.work.update().\
+            where(database.work.c.id == w.work_id).\
+            values({'start_date': w.est_start_date(), 'end_date': w.est_end_date()})
+        connection.execute(statement)
+    return

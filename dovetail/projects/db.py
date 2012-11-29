@@ -48,7 +48,12 @@ def add_project_participant(connection, project_id, person_id):
     return
 
 def update_project_and_work_dates(connection, projects):
-    # TODO: Implement this
+    for p in projects:
+        statement = database.projects.update().\
+            where(database.projects.c.id == p.project_id).\
+            values({'est_end_date': p.est_end_date})
+        connection.execute(statement)
+        work_db.update_work_dates(connection, p.work)
     return
 
 def select_all_project_ids(connection):
