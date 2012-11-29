@@ -38,7 +38,7 @@ def parse_workline(connection, workline):
     person = people_db.select_person_by_name(connection, data[1])
     effort_left_d = float(data[2].split()[0])
     key_date = None
-    if data[5] != '?':
+    if data[5] not in ['?', '']:
         key_date = dovetail.util.parse_date(data[5])
 
     result = {
