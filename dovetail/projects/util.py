@@ -40,7 +40,7 @@ def parse_workline(connection, workline):
     result = {
             'id': data[0],
             'fields': {
-                'assignee_id': person['id'],
+                'assignee_id': person.person_id,
                 'effort_left_d': effort_left_d,
                 'title': data[3],
                 'prereqs': str(data[4]),

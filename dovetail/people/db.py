@@ -1,4 +1,5 @@
 import dovetail.database as database
+from dovetail.people.person import Person
 
 def select_project_participants(connection, project_id):
     particpants_data = connection.execute(
@@ -14,4 +15,9 @@ def select_project_participants(connection, project_id):
 def select_person_by_name(connection, name):
     person_data = connection.execute(database.people.select(
         database.people.c.name == name)).first()
-    return person_data
+    result = Person(person_data['id'])
+    result.name = person_data['name']
+    result.picture = person_data['picture']
+    result.team = person_data['team']
+    result.title = person_data['title']
+    return result
