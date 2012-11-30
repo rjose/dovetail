@@ -3,19 +3,21 @@ import dovetail.util
 import dovetail.database as database
 import dovetail.work.db as work_db
 import dovetail.people.db as people_db
+
 from dovetail.projects.project import Project
 from dovetail.work.work import Work
 
+# This adds 'key_work' to each project as well
 def select_project_collection(connection):
     data = connection.execute(database.projects.select())
-    result = [{
-            'project_id': row['id'],
-            'title': row['name'],
-            'target_date': dovetail.util.format_date(row['target_date']),
-            'est_date': dovetail.util.format_date(row['est_end_date']),
-            'detail_url': '/projects/%d' % row['id'],
-            'key_dates': work_db.select_key_work_for_project(connection, row['id'])
-            } for row in data]
+    result = []
+    for row in data:
+        p = Project(row['id'])
+        p.name = row['name']
+        p.target_date = row['target_date']
+        p.est_end_date = row['est_end_date']
+        p.key_work = work_db.select_key_work_for_project(connection, row['id'])
+        result.append(p)
     return result
 
 

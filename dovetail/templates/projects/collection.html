@@ -9,18 +9,17 @@
 </p>
 
 <ul>
-{% for project in projects %}
-    {% set key_dates = project.get('key_dates', [])  %}
-  <li><a href={{ project.get('detail_url', '') }}>{{ project.get('title', '') }}</a></li>
+{% for project in project_data %}
+  <li><a href={{ project.detail_url }}>{{ project.name }}</a></li>
     <ul>
-      <li>Estimated: {{ project.get('est_date', '') }}</li>
-      <li>Target: {{ project.get('target_date', '') }}</li>
+      <li>Estimated: {{ project.est_end_date }}</li>
+      <li>Target: {{ project.target_date }}</li>
 
-      {% if key_dates  %}
+      {% if project.key_work  %}
       <li>Key dates</li>
       <ul>
-        {% for d in key_dates %}
-          <li>{{ database.format_date(d[1]) }}: {{ d[0] }}</li>
+        {% for w in project.key_work %}
+          <li>{{ w.key_date }}: {{ w.title }}</li>
         {% endfor %}
       </ul>
       {% endif  %}

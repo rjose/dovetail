@@ -28,10 +28,24 @@ def projects():
         projects_db.insert_project(g.connection, request.form['name'], target_date)
     else:
         pass
-    # TODO: Change this when we update select_project_collection
-    return render_template('projects/collection.html',
-            database = dovetail.util,
-            projects = projects_db.select_project_collection(g.connection))
+
+    projects = projects_db.select_project_collection(g.connection)
+    data = []
+    for p in projects:
+        d = {
+                'project_id': p.project_id,
+                'name': p.name,
+                'target_date': dovetail.util.format_date(p.target_date),
+                'est_end_date': dovetail.util.format_date(p.est_end_date),
+                'detail_url': '/projects/%d' % p.project_id,
+                # TODO: Change this when we hit the work_db
+                'key_work': [{
+                    'date': dovetail.util.format_date(w[1]),
+                    'title': w[0]
+                    } for w in work_db.select_key_work_for_project(g.connection, p.project_id)]
+            }
+        data.append(d)
+    return render_template('projects/collection.html', project_data = data)
 
 @mod.route('/projects/<int:project_id>')
 def project(project_id):
