@@ -3,7 +3,7 @@ from mock import MagicMock
 from datetime import datetime
 from dovetail.timeline.timeline import Timeline
 from dovetail.timeline.slot import Slot
-from dovetail.work.work import Work, earliest_start_date
+from dovetail.work.work import Work
 
 class TestWork(unittest.TestCase):
 
@@ -36,5 +36,5 @@ class TestWork(unittest.TestCase):
         w3 = Work(3, 'w3', 1.0, [1, 2], 200, None)
 
         work_dict = {1: w1, 2: w2, 3: w3}
-        self.assertEqual(nov7, earliest_start_date(w3, work_dict, nov1))
+        self.assertEqual(nov7, w3.earliest_start_date(work_dict, nov1))
         return

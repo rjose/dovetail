@@ -1,5 +1,4 @@
 from dovetail.timeline.timeline import Timeline
-from dovetail.work.work import earliest_start_date
 
 class Scheduler:
 
@@ -23,7 +22,7 @@ class Scheduler:
         if work.key_date:
             slot = timeline.schedule_at_end_date(work.key_date, work.effort_left_d)
         else:
-            start_date = earliest_start_date(work, self.work_dict, self.cur_date)
+            start_date = work.earliest_start_date(self.work_dict, self.cur_date)
             slot = timeline.schedule_at_start_date(start_date, work.effort_left_d)
 
         work.schedule(slot)
