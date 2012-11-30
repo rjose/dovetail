@@ -36,12 +36,19 @@ def select_work_for_project(connection, project_id):
 
 def select_key_work_for_project(connection, project_id):
     work_data = connection.execute(
-            '''select id, title, key_date
+            '''select id, title, effort_left_d, prereqs, assignee_id, key_date
                from work
                where project_id = %d AND key_date NOT NULL
                order by key_date ASC
             ''' % int(project_id))
-    return [[w['title'], dovetail.util.condition_date(w['key_date'])] for w in work_data]
+    result = [Work(w['id'],
+                 w['title'],
+                 w['effort_left_d'],
+                 dovetail.util.condition_prereqs(w['prereqs']),
+                 w['assignee_id'],
+                 dovetail.util.condition_date(w['key_date']))
+             for w in work_data]
+    return result
 
 def update_work(connection, work_data):
     statement = database.work.update().\

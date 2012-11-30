@@ -38,10 +38,9 @@ def projects():
                 'target_date': dovetail.util.format_date(p.target_date),
                 'est_end_date': dovetail.util.format_date(p.est_end_date),
                 'detail_url': '/projects/%d' % p.project_id,
-                # TODO: Change this when we hit the work_db
                 'key_work': [{
-                    'date': dovetail.util.format_date(w[1]),
-                    'title': w[0]
+                    'date': dovetail.util.format_date(w.key_date),
+                    'title': w.title
                     } for w in work_db.select_key_work_for_project(g.connection, p.project_id)]
             }
         data.append(d)
