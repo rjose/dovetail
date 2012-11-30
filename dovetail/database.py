@@ -46,13 +46,6 @@ work = Table('work', metadata,
         Column('prereqs', String(200))
         )
 
-def format_date(date):
-    if date == None:
-        return "?"
-    elif type(date) == str:
-        return date
-    else:
-        return datetime.strftime(date, "%b %d, %Y")
 
 # TODO: Move this to people/models.py
 def get_people(connection):

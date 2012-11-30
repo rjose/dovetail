@@ -28,8 +28,9 @@ def projects():
         projects_db.insert_project(g.connection, request.form['name'], target_date)
     else:
         pass
+    # TODO: Change this when we update select_project_collection
     return render_template('projects/collection.html',
-            database = database,
+            database = dovetail.util,
             projects = projects_db.select_project_collection(g.connection))
 
 @mod.route('/projects/<int:project_id>')
@@ -38,14 +39,14 @@ def project(project_id):
     project_data = {
             'project_id': project.project_id,
             'name': project.name,
-            'target_date': database.format_date(project.target_date),
-            'est_end_date': database.format_date(project.est_end_date),
+            'target_date': dovetail.util.format_date(project.target_date),
+            'est_end_date': dovetail.util.format_date(project.est_end_date),
             'total_effort': dovetail.util.format_effort_left(project.total_effort()),
             'work': project.work,
             'participants': project.participants
             }
     return render_template('projects/details.html',
-            database = database,
+            database = dovetail.util,
             project_data = project_data)
 
 @mod.route('/projects/new')

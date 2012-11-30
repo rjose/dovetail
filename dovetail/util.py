@@ -1,6 +1,14 @@
 from datetime import datetime
 import json
 
+def format_date(date):
+    if date == None:
+        return "?"
+    elif type(date) == str:
+        return date
+    else:
+        return datetime.strftime(date, "%b %d, %Y")
+
 def standardize_date(date):
     result = datetime(date.year, date.month, date.day)
     return result

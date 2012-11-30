@@ -1,4 +1,5 @@
 import json
+import dovetail.util
 import dovetail.database as database
 import dovetail.work.db as work_db
 import dovetail.people.db as people_db
@@ -10,8 +11,8 @@ def select_project_collection(connection):
     result = [{
             'project_id': row['id'],
             'title': row['name'],
-            'target_date': database.format_date(row['target_date']),
-            'est_date': database.format_date(row['est_end_date']),
+            'target_date': dovetail.util.format_date(row['target_date']),
+            'est_date': dovetail.util.format_date(row['est_end_date']),
             'detail_url': '/projects/%d' % row['id'],
             'key_dates': work_db.select_key_work_for_project(connection, row['id'])
             } for row in data]
@@ -24,8 +25,8 @@ def select_project(connection, project_id):
         database.projects.c.id == project_id)).first()
 
     result.name = data['name']
-    result.target_date = database.format_date(data['target_date'])
-    result.est_end_date = database.format_date(data['est_end_date'])
+    result.target_date = dovetail.util.format_date(data['target_date'])
+    result.est_end_date = dovetail.util.format_date(data['est_end_date'])
     result.participants = people_db.select_project_participants(connection, project_id)
     result.work = work_db.select_work_for_project(connection, project_id)
     return result
