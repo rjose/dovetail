@@ -34,9 +34,19 @@ def projects():
 
 @mod.route('/projects/<int:project_id>')
 def project(project_id):
+    project = projects_db.select_project(g.connection, project_id)
+    project_data = {
+            'project_id': project.project_id,
+            'name': project.name,
+            'target_date': database.format_date(project.target_date),
+            'est_end_date': database.format_date(project.est_end_date),
+            'total_effort': dovetail.util.format_effort_left(project.total_effort()),
+            'work': project.work,
+            'participants': project.participants
+            }
     return render_template('projects/details.html',
             database = database,
-            project_details = projects_db.select_project(g.connection, project_id))
+            project_data = project_data)
 
 @mod.route('/projects/new')
 def projects_new():
@@ -57,9 +67,13 @@ def projects_edit():
 @mod.route('/projects/<int:project_id>/work/edit')
 def project_work_edit(project_id):
     project = projects_db.select_project(g.connection, project_id)
-    return render_template('projects/edit_work.html',
-            project = project,
-            work_data = project_work_to_string(project.get('work', [])))
+    project_data = {
+            'project_id': project.project_id,
+            'name': project.name,
+            'participants': project.participants,
+            'work': project_work_to_string(project.work)
+            }
+    return render_template('projects/edit_work.html', project_data = project_data)
 
 # TODO: Move this
 def to_work(fields):
@@ -96,8 +110,12 @@ def project_work(project_id):
 @mod.route('/projects/<int:project_id>/participants/new')
 def project_participants_new(project_id):
     project = projects_db.select_project(g.connection, project_id)
+    project_data = {
+            'project_id': project.project_id,
+            'name': project.name
+            }
     return render_template('projects/new_participant.html',
-            project = project,
+            project_data = project_data,
             people = database.get_people(g.connection))
 
 @mod.route('/projects/<int:project_id>/participants', methods=['POST'])

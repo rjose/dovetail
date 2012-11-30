@@ -6,7 +6,14 @@ class Project:
     def __init__(self, project_id):
         self.project_id = project_id
         self.work = []
+        self.name = None
+        self.participants = []
+        self.target_date = None
         self.est_end_date = None
+        return
+
+    def total_effort(self):
+        return 0.0
 
     def topo_sort_work(self):
         # Reverse work to preserver initial order among items of same rank

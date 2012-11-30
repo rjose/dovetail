@@ -1,13 +1,10 @@
 <!doctype html>
 
-{% set project_name = project.get('name', '')  %}
-{% set project_id = project.get('project_id', '')  %}
+<title>Add participant to {{ project_data.name }}</title>
 
-<title>Add participant to {{ project_name }}</title>
+<h1>Add participant to: {{ project_data.name }}</h1>
 
-<h1>Add participant to: {{ project_name }}</h1>
-
-<form action="/projects/{{ project_id }}/participants" method='POST'>
+<form action="/projects/{{ project_data.project_id }}/participants" method='POST'>
     <p>Person:
         <select name="person">
             {% for p in people %}

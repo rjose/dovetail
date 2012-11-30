@@ -19,21 +19,15 @@ def select_project_collection(connection):
 
 
 def select_project(connection, project_id):
-    # TODO: Use a single query to get the project participants as well
+    result = Project(project_id)
     data = connection.execute(database.projects.select(
         database.projects.c.id == project_id)).first()
 
-    result = {
-        'project_id': data['id'],
-        'name': data['name'],
-        'stats': {
-            'target_date': database.format_date(data['target_date']),
-            'est_date': database.format_date(data['est_end_date']),
-            'total_effort': 'TODO',
-            },
-        'participants': people_db.select_project_participants(connection, project_id),
-        'work': work_db.select_work_for_project(connection, project_id)
-        }
+    result.name = data['name']
+    result.target_date = database.format_date(data['target_date'])
+    result.est_end_date = database.format_date(data['est_end_date'])
+    result.participants = people_db.select_project_participants(connection, project_id)
+    result.work = work_db.select_work_for_project(connection, project_id)
     return result
 
 def insert_project(connection, name, target_date):
