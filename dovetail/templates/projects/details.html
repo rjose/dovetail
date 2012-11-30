@@ -41,6 +41,6 @@
 
 <ul>
     {% for p in project_data.participants %}
-    <li>{{ p.get('name', '') }}, {{ p.get('title', '') }}, {{ p.get('team', '') }}</li>
+    <li>{{ p.name }}, {{ p.title }}, {{ p.team }}</li>
     {% endfor %}
 </ul>

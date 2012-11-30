@@ -7,9 +7,14 @@ def select_project_participants(connection, project_id):
                inner join project_participants on project_participants.person_id = people.id
                where project_participants.project_id= %d
                order by name''' % int(project_id))
-    result = [{'id': p['id'], 'name': p['name'], 'title': p['title'],
-        'team': p['team'], 'picture': p['picture']}
-            for p in particpants_data]
+    result = []
+    for d in particpants_data:
+        p = Person(d['id'])
+        p.name = d['name']
+        p.title = d['title']
+        p.team = d['team']
+        p.picture = d['picture']
+        result.append(p)
     return result
 
 def select_person_by_name(connection, name):
