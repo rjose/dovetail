@@ -10,13 +10,12 @@ from dovetail.projects.project import Project
 from dovetail.work.work import Work
 
 from dovetail.scheduler import Scheduler
-from dovetail.projects.project import get_projects_for_scheduling
 
 mod = Blueprint('projects', __name__)
 
 def reschedule_world(connection):
     scheduler = Scheduler(datetime.now())
-    projects = get_projects_for_scheduling(connection)
+    projects = projects_db.get_projects_for_scheduling(connection)
     projects = scheduler.schedule_projects(projects)
     projects_db.update_project_and_work_dates(connection, projects)
     return

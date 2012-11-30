@@ -2,6 +2,8 @@ import json
 import dovetail.database as database
 import dovetail.work.db as work_db
 import dovetail.people.db as people_db
+from dovetail.projects.project import Project
+from dovetail.work.work import Work
 
 def select_project_collection(connection):
     data = connection.execute(database.projects.select())
@@ -60,3 +62,13 @@ def select_all_project_ids(connection):
     data = connection.execute('select id from projects order by value desc')
     result = [row['id'] for row in data]
     return result
+
+def get_projects_for_scheduling(connection):
+    project_ids = select_all_project_ids(connection)
+    projects = [Project(project_id) for project_id in project_ids]
+    for p in projects:
+        work_data = work_db.select_work_for_project2(connection, p.project_id)
+        p.work = [Work(w['id'], w['title'], w['effort_left_d'], w['prereqs'],
+            w['assignee']['id'], w['key_date']) for w in work_data]
+    return projects
+
