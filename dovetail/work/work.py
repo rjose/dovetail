@@ -24,7 +24,6 @@ class Work():
         else:
             return None
 
-
     def earliest_start_date(self, work_dict, cur_day):
         result = cur_day
         for work_id in self.prereqs:

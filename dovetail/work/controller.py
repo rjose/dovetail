@@ -24,7 +24,6 @@ def work():
 def work_new():
     project_id = request.args.get('project', 0)
 
-    # TODO: Do some error handling if we don't have a project id
     project = projects_db.select_project(g.connection, project_id)
     return render_template('work/new.html', 
             project = project,
