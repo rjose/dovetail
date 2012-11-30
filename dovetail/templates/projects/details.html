@@ -19,17 +19,16 @@
 
 <table>
     {% for w in project_data.work %}
-    {% set a = w.get('assignee', {}) %}
-    {% set key_date =  w.get('key_date', False)%}
+    {% set a = w.assignee %}
     <tr>
-        {% if w.get('key_date', False) %}
-        <td>{{ database.format_date(key_date) }}</td>
+        {% if w.key_date %}
+        <td>{{ database.format_date(w.key_date) }}</td>
         {% else %}
         <td></td>
         {% endif %}
 
-        <td>{{ w.get('title', '') }}</td>
-        <td><img width=25 src={{ a.get('picture', '') }}>{{ a.get('name', '') }}</td>
+        <td>{{ w.title }}</td>
+        <td><img width=25 src={{ a.picture }}>{{ a.name }}</td>
     </tr>
     {% endfor %}
 </table>

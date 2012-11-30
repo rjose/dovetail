@@ -13,8 +13,7 @@ class Project:
         return
 
     def total_effort(self):
-        # TODO: Update this when work_db returns Work
-        return reduce(lambda x, y: x + y, [w['effort_left_d'] for w in self.work], 0)
+        return reduce(lambda x, y: x + y, [w.effort_left_d for w in self.work], 0)
 
     def topo_sort_work(self):
         # Reverse work to preserver initial order among items of same rank

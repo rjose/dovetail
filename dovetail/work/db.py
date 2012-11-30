@@ -1,27 +1,36 @@
-import dovetail.database as database
 from datetime import datetime
 import json
 import dovetail.util
+import dovetail.database as database
+from dovetail.work.work import Work
+from dovetail.people.person import Person
 
+# This augments work with an assignee Person object
 def select_work_for_project(connection, project_id):
     work_data = connection.execute(
             '''select w.id, w.title,
-               people.id as person_id, people.name as assignee, people.picture as picture,
-               w.effort_left_d, w.key_date, w.prereqs
+               people.id as person_id, people.name as assignee_name,
+               people.picture as assignee_picture, w.effort_left_d, w.key_date, w.prereqs
                from work as w
                inner join people on people.id = w.assignee_id
                where w.project_id = %d
                order by topo_order ASC
             ''' % int(project_id))
-    result = [{
-              'id': w['id'], 
-              'title': w['title'],
-              'assignee': {'id': w['person_id'], 'name': w['assignee'], 'picture': w['picture']},
-              'effort_left_d': w['effort_left_d'], 
-              'key_date': dovetail.util.condition_date(w['key_date']),
-              'prereqs': w['prereqs']
-              } 
-             for w in work_data]
+
+    result = []
+    for w in work_data:
+        work = Work(w['id'],
+                    w['title'],
+                    w['effort_left_d'],
+                    dovetail.util.condition_prereqs(w['prereqs']),
+                    w['person_id'],
+                    dovetail.util.condition_date(w['key_date']))
+
+        assignee = Person(w['person_id'])
+        assignee.name = w['assignee_name']
+        assignee.picture = w['assignee_picture']
+        work.assignee = assignee
+        result.append(work)
     return result
 
 
