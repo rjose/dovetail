@@ -49,6 +49,8 @@ def projects():
 @mod.route('/projects/<int:project_id>')
 def project(project_id):
     project = projects_db.select_project(g.connection, project_id)
+    for w in project.work:
+        w.key_date = dovetail.util.format_date(w.key_date)
     project_data = {
             'project_id': project.project_id,
             'name': project.name,
@@ -58,9 +60,7 @@ def project(project_id):
             'work': project.work,
             'participants': project.participants
             }
-    return render_template('projects/details.html',
-            database = dovetail.util,
-            project_data = project_data)
+    return render_template('projects/details.html', project_data = project_data)
 
 @mod.route('/projects/new')
 def projects_new():

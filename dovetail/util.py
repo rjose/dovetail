@@ -3,7 +3,7 @@ import json
 
 def format_date(date):
     if date == None:
-        return "?"
+        return ''
     elif type(date) == str:
         return date
     else:
