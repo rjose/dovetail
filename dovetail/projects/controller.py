@@ -5,6 +5,7 @@ import dovetail.util
 import dovetail.database as database
 import dovetail.projects.db as projects_db
 import dovetail.work.db as work_db
+import dovetail.people.db as people_db
 from dovetail.projects.util import project_work_to_string, parse_workline
 from dovetail.projects.project import Project
 from dovetail.work.work import Work
@@ -130,7 +131,7 @@ def project_participants_new(project_id):
             }
     return render_template('projects/new_participant.html',
             project_data = project_data,
-            people = database.get_people(g.connection))
+            people = people_db.get_people(g.connection))
 
 @mod.route('/projects/<int:project_id>/participants', methods=['POST'])
 def project_participants(project_id):

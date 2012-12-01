@@ -8,7 +8,7 @@
     <p>Person:
         <select name="person">
             {% for p in people %}
-            <option value="{{ p.get('id', 0) }}">{{ p.get('name', '') }}</option>
+            <option value="{{ p.person_id }}">{{ p.name }}</option>
             {% endfor %}
         </select>
     </p>

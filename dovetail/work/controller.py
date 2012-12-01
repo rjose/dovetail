@@ -3,6 +3,7 @@ from datetime import datetime
 
 import dovetail.database as database
 import dovetail.projects.db as projects_db
+import dovetail.people.db as people_db
 
 mod = Blueprint('work', __name__)
 
@@ -27,5 +28,5 @@ def work_new():
     project = projects_db.select_project(g.connection, project_id)
     return render_template('work/new.html', 
             project = project,
-            people = database.get_people(g.connection))
+            people = people_db.get_people(g.connection))
 
