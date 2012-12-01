@@ -2,12 +2,11 @@
 {% block title %}Projects{% endblock %}
 
 {%block content %}
-<h2 class="span12">Active Projects</h2>
 <div class="container-fluid">
 
     <div class="row-fluid">
-        <div class="span2">
-            <div class="well well-small sidebar-nav">
+        <div class="span2 well">
+            <div class="sidebar-nav">
                 <ul class="nav nav-pills nav-stacked">
                     <li class="active"><a href="#">List View</a></li>
                     <li><a href="#">Timeline View</a></li>
@@ -19,7 +18,8 @@
                 <li><a class="btn" href="/projects/edit">Rank projects</a></li>
             </ul>
         </div><!--/span-->
-        <div class="span9">
+        <div class="span10">
+            <h2>Active Projects</h2>
             <div class="">
                 <ul>
                     {% for project in project_data %}

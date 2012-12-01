@@ -3,12 +3,11 @@
 
 {%block content %}
 
-<h2 class="span12">Project: {{ project_data.name }}</h2>
 <div class="container-fluid">
 
     <div class="row-fluid">
-        <div class="span2">
-            <div class="well well-small sidebar-nav">
+        <div class="span2 well">
+            <div class="sidebar-nav">
                 <ul class="nav nav-pills nav-stacked">
                     <li class="active"><a href="#">List View</a></li>
                     <li><a href="#">Timeline View</a></li>
@@ -21,37 +20,38 @@
                 <li><a class="btn" href='/projects/{{ project_data.project_id }}/participants/new'>Add participant</a></li>
             </ul>
         </div><!--/span-->
-        <div class="span9">
+        <div class="span10">
+            <h2>Project: {{ project_data.name }}</h2>
 
-<h2>Stats</h2>
-<ul>
-    <li>Target date: {{ project_data.target_date }} </li>
-    <li>Estimated date: {{ project_data.est_end_date }} </li>
-    <li>Total effort: {{ project_data.total_effort }} </li>
-</ul>
+            <h3>Stats</h3>
+            <ul>
+                <li>Target date: {{ project_data.target_date }} </li>
+                <li>Estimated date: {{ project_data.est_end_date }} </li>
+                <li>Total effort: {{ project_data.total_effort }} </li>
+            </ul>
 
-<h2>Work</h2>
-<table>
-    {% for w in project_data.work %}
-    <tr>
-        {% if w.key_date %}
-        <td>{{ w.key_date }}</td>
-        {% else %}
-        <td></td>
-        {% endif %}
+            <h3>Work</h3>
+            <table>
+                {% for w in project_data.work %}
+                <tr>
+                    {% if w.key_date %}
+                    <td>{{ w.key_date }}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
 
-        <td>{{ w.title }}</td>
-        <td><img width=25 src={{ w.assignee.picture }}>{{ w.assignee.name }}</td>
-    </tr>
-    {% endfor %}
-</table>
+                    <td>{{ w.title }}</td>
+                    <td><img width=25 src={{ w.assignee.picture }}>{{ w.assignee.name }}</td>
+                </tr>
+                {% endfor %}
+            </table>
 
-<h2>Participants</h2>
-<ul>
-    {% for p in project_data.participants %}
-    <li>{{ p.name }}, {{ p.title }}, {{ p.team }}</li>
-    {% endfor %}
-</ul>
+            <h3>Participants</h3>
+            <ul>
+                {% for p in project_data.participants %}
+                <li>{{ p.name }}, {{ p.title }}, {{ p.team }}</li>
+                {% endfor %}
+            </ul>
 
         </div><!--/span-->
     </div><!--/row-->
