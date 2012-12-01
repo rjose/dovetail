@@ -1,8 +1,27 @@
-<!doctype html>
+{% extends "layout/base.html" %}
+{% block title %}{{ project_data.name }}{% endblock %}
 
-<title>Project: {{ project_data.name }}</title>
+{%block content %}
 
-<h1>Project: {{ project_data.name }}</h1>
+<h2 class="span12">Project: {{ project_data.name }}</h2>
+<div class="container-fluid">
+
+    <div class="row-fluid">
+        <div class="span2">
+            <div class="well well-small sidebar-nav">
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active"><a href="#">List View</a></li>
+                    <li><a href="#">Timeline View</a></li>
+                </ul>
+            </div><!--/.well -->
+
+            <ul class="nav">
+                <li><a class="btn" href='/projects/{{ project_data.project_id }}/work/edit'>Edit project</a></li>
+                <li><a class="btn" href='/work/new?project={{ project_data.project_id }}'>Add work item</a></li>
+                <li><a class="btn" href='/projects/{{ project_data.project_id }}/participants/new'>Add participant</a></li>
+            </ul>
+        </div><!--/span-->
+        <div class="span9">
 
 <h2>Stats</h2>
 <ul>
@@ -12,11 +31,6 @@
 </ul>
 
 <h2>Work</h2>
-<p>
-<a href='/projects/{{ project_data.project_id }}/work/edit'>Edit</a>
-<a href='/work/new?project={{ project_data.project_id }}'>Add work</a>
-</p>
-
 <table>
     {% for w in project_data.work %}
     <tr>
@@ -32,14 +46,15 @@
     {% endfor %}
 </table>
 
-
 <h2>Participants</h2>
-<p>
-<a href='/projects/{{ project_data.project_id }}/participants/new'>Add participant</a>
-</p>
-
 <ul>
     {% for p in project_data.participants %}
     <li>{{ p.name }}, {{ p.title }}, {{ p.team }}</li>
     {% endfor %}
 </ul>
+
+        </div><!--/span-->
+    </div><!--/row-->
+</div><!--/.fluid-container-->
+{% endblock %}
+
