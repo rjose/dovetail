@@ -4,7 +4,7 @@
 
 <h1>Add work to: {{ project.name }}</h1>
 
-<form action="/work?project={{ project.id }}" method='POST'>
+<form action="/work?project={{ project.project_id }}" method='POST'>
     <p>Title: <input type="text" name="title"><br></p>
     <p>Assignee:
         <select name="assignee">
