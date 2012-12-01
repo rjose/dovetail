@@ -1,47 +1,108 @@
-<!doctype html>
-<title>Projects</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Projects | Dovetail</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Projects overview page">
+  <meta name="author" content="Rino Jose">
 
-<h1>Current Projects</h1>
+  <link href="../assets/css/bootstrap.css" rel="stylesheet">
+  <style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+  .sidebar-nav {
+    padding: 9px 0 0px 0;
+  }
+  </style>
+  <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">
 
-<p>
-<a href='/projects/edit'>Edit</a>
-<a href='/projects/new'>Add project</a>
-</p>
+  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
 
-<ul>
-{% for project in project_data %}
-  <li><a href={{ project.detail_url }}>{{ project.name }}</a></li>
-    <ul>
-      <li>Estimated: {{ project.est_end_date }}</li>
-      <li>Target: {{ project.target_date }}</li>
+  <!-- Fav and touch icons -->
+  <link rel="shortcut icon" href="../assets/ico/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+</head>
 
-      {% if project.key_work  %}
-      <li>Key dates</li>
-      <ul>
-        {% for w in project.key_work %}
-          <li>{{ w.date }}: {{ w.title }}</li>
-        {% endfor %}
-      </ul>
-      {% endif  %}
-    </ul>
-{% endfor %}
-</ul>
+<body>
 
-{# TODO: Only show this if there are projects completed in the past 30 days #}
-<h1>Completed (past 30 days)</h1>
-<ul>
-    <li><a href='/projects/5'>Splash page</a></li>
-    <ul>
-        <li>Completed: Aug 17, 2012</li>
-        <li>Target: Aug 1, 2012</li>
-    </ul>
-</ul>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container-fluid">
+        <a class="brand" href="#">Dovetail</a>
+        <div class="">
+          <ul class="nav pull-right">
+            <li class="active"><a href="/projects">Projects</a></li>
+            <li><a href="/teams">Teams</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
 
-{# TODO: Only show this if there are older projects  #}
-<a href='/projects?older=true'>Older projects</a>
+  <h2 class="span12">Active Projects</h2>
+  <div class="container-fluid">
 
-<p>
-    <form action="/projects/reschedule" method='POST'>
-        <button type="submit">Reschedule Projects!</button>
-    </form>
-</p>
+    <div class="row-fluid">
+      <div class="span2">
+        <div class="well well-small sidebar-nav">
+          <ul class="nav nav-pills nav-stacked">
+            <li class="active"><a href="#">List View</a></li>
+            <li><a href="#">Timeline View</a></li>
+          </ul>
+        </div><!--/.well -->
+
+        <ul class="nav">
+          <li><a class="btn" href="/projects/new">Add project</a></li>
+          <li><a class="btn" href="/projects/edit">Rank projects</a></li>
+        </ul>
+      </div><!--/span-->
+      <div class="span9">
+        <div class="">
+          <ul>
+            {% for project in project_data %}
+            <li><a href={{ project.detail_url }}>{{ project.name }}</a></li>
+            <ul>
+              <li>Estimated: {{ project.est_end_date }}</li>
+              <li>Target: {{ project.target_date }}</li>
+
+              {% if project.key_work  %}
+              <li>Key dates</li>
+              <ul>
+                {% for w in project.key_work %}
+                <li>{{ w.date }}: {{ w.title }}</li>
+                {% endfor %}
+              </ul>
+              {% endif  %}
+            </ul>
+            {% endfor %}
+          </ul>
+
+          <p>
+            <form action="/projects/reschedule" method='POST'>
+              <button class="btn btn-primary" type="submit">Reschedule Projects!</button>
+            </form>
+          </p>
+        </div>
+
+      </div><!--/span-->
+    </div><!--/row-->
+
+    <hr>
+
+  </div><!--/.fluid-container-->
+
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="../assets/js/jquery-1.8.3.min.js"></script>
+  <script src="../assets/js/bootstrap.min.js"></script>
+
+</body>
+</html>
