@@ -1,7 +1,7 @@
 import dovetail.database as database
 from dovetail.people.person import Person
 
-def get_people(connection):
+def select_people(connection):
     people_data = connection.execute('select id, name from people order by name')
     result = []
     for d in people_data:

@@ -28,5 +28,5 @@ def work_new():
     project = projects_db.select_project(g.connection, project_id)
     return render_template('work/new.html', 
             project = project,
-            people = people_db.get_people(g.connection))
+            people = people_db.select_people(g.connection))
 
