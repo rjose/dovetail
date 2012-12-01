@@ -61,7 +61,10 @@ def project(project_id):
             'work': project.work,
             'participants': project.participants
             }
-    return render_template('projects/details.html', project_data = project_data)
+
+    return render_template('projects/details.html',
+            project_data = project_data,
+            people = people_db.select_project_participants(g.connection, project_id))
 
 @mod.route('/projects/new')
 def projects_new():

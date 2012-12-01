@@ -16,7 +16,7 @@
 
             <ul class="nav">
                 <li><a class="btn" href='/projects/{{ project_data.project_id }}/work/edit'>Edit project</a></li>
-                <li><a class="btn" href='/work/new?project={{ project_data.project_id }}'>Add work item</a></li>
+                <li><a class="btn" href='#add_work_modal' role='button' data-toggle='modal' data-backdrop='static'>Add work item</a></li>
                 <li><a class="btn" href='/projects/{{ project_data.project_id }}/participants/new'>Add participant</a></li>
             </ul>
         </div><!--/span-->
@@ -56,5 +56,57 @@
         </div><!--/span-->
     </div><!--/row-->
 </div><!--/.fluid-container-->
+
+{# Modal: Add work to project #}
+<div id='add_work_modal' class='modal hide fade' tabindex='-1' role='dialog'>
+    <div class='modal-header'>
+        <button type='button' class='close' data-dismiss='modal'>x</button>
+        <h3 id='add_work_modal_label'>Add work to project: {{ project_data.name }}</h3>
+    </div>
+    <div class='modal-body'>
+        <form class='horizontal'>
+            <div class=control-group>
+                <label class='control-label' for='work_title_input'>Title</label>
+                <div class='controls'>
+                    <input type='text' id='work_title_input' placeholder=''>
+                </div>
+            </div>
+
+            <div class=control-group>
+                <label class='control-label' for='effort_left_input'>Estimate (d)</label>
+                <div class='controls'>
+                    <input type='text' id='effort_left_input' placeholder='1.0'>
+                </div>
+            </div>
+
+            <div class=control-group>
+                <label class='control-label' for='assignee_input'>Assignee</label>
+                <div class='controls'>
+                    <select name="assignee">
+                        {% for p in people %}
+                        <option value="{{ p.person_id }}">{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class='modal-footer'>
+        <button id='add_work_modal_save' class='btn btn-primary'>Save changes</button>
+        <button class='btn' data-dismiss='modal'>Close</button>
+    </div>
+</div>
+
+<script>
+    $('#add_work_modal_save').on('click', function() {
+        console.log($('#work_title_input').val());
+        $('#add_work_modal').modal('hide');
+    });
+
+    $('#add_work_modal').on('hidden', function() {
+        $('#work_title_input').val('');
+        $('#effort_left_input').val('');
+    });
+</script>
 {% endblock %}
 
