@@ -77,7 +77,8 @@
             <div class=control-group>
                 <label class='control-label' for='work_textarea'>Project work</label>
                 <div class='controls'>
-                    <textarea class='span9' rows='10' wrap='off' name='work_textarea'>{{ work_data }}</textarea>
+                    <textarea id='edit_project_worklines' class='span9' rows='10'
+                        wrap='off' name='work_textarea'>{{ work_data }}</textarea>
                 </div>
             </div>
         </form>
@@ -88,6 +89,28 @@
     </div>
 </div>
 
+<script>
+    $('#edit_project_modal_save').on('click', function() {
+        // TODO: Replace name and target with real inputs
+        $.ajax('/api/projects/{{ project_data.project_id }}', {
+            data: {
+                name: '{{ project_data.name }}',
+                target_date: '{{ project_data.target_date }}',
+                worklines: $('#edit_project_worklines').val()
+            },
+            type: 'POST',
+            error: function(xhr, text_status, error_thrown) {
+                console.log('ERROR: ' + text_status);
+            },
+            success: function(data, text_status, xhr) {
+                console.log('Success!');
+                console.log(data)
+                location.reload();
+            }
+        })
+        $('#edit_project_modal').modal('hide');
+    });
+</script>
 
 {# Modal: Add work to project #}
 <div id='add_work_modal' class='modal hide fade' tabindex='-1' role='dialog'>

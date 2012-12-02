@@ -16,7 +16,7 @@ from dovetail.work.work import Work
 mod = Blueprint('projects', __name__)
 
 # Projects
-@mod.route('/projects', methods=['GET'])
+@mod.route('/projects')
 def projects():
     projects = projects_db.select_project_collection(g.connection)
     data = []
@@ -72,17 +72,6 @@ def projects_edit():
         # TODO: Update the rankings
         return redirect(url_for('projects'))
 
-@mod.route('/projects/<int:project_id>/work/edit')
-def project_work_edit(project_id):
-    project = projects_db.select_project(g.connection, project_id)
-    project_data = {
-            'project_id': project.project_id,
-            'name': project.name,
-            'participants': project.participants,
-            'work': projects_util.project_work_to_string(project.work)
-            }
-    return render_template('projects/edit_work.html', project_data = project_data)
-
 # TODO: Move this
 def to_work(fields):
     result = Work(fields['id'], fields['title'], fields['effort_left_d'],
@@ -90,30 +79,37 @@ def to_work(fields):
             fields['assignee_id'], fields['key_date'])
     return result
 
-@mod.route('/projects/<int:project_id>/work', methods = ['POST'])
-def project_work(project_id):
-    worklines = request.form['work'].split('\n')
+
+@mod.route('/api/projects/<int:project_id>', methods=['POST'])
+def edit_project(project_id):
+    name = request.values['name']
+    target_date = dovetail.util.parse_date(request.values['target_date'])
+    worklines = request.values['worklines'].split('\n')
     work = []
     for workline in worklines:
-        # We have this here to skip lines that cannot be parsed (like empty lines)
         try:
             # TODO: Change these so they return Work objects
             work_data = projects_util.parse_workline(g.connection, workline)
             fields = work_data['fields']
             fields.update(project_id = project_id)
+
+            # Save any changes to the work items
             work_db.update_work(g.connection, work_data)
             fields.update(id = work_data['id'])
             work.append(to_work(fields))
         except:
+            # TODO: log something
             pass
 
     project = Project(project_id)
     project.work = work
     project.topo_sort_work()
     work_db.update_work_topo_order(g.connection, project.work)
-
     dovetail.scheduler.reschedule_world(g.connection)
-    return redirect('/projects/%d' % int(project_id))
+
+    response_data = {}
+    result = Response(json.dumps(response_data), status=200, mimetype='application/json')
+    return result
 
 @mod.route('/api/projects', methods=['POST'])
 def api_add_project():
