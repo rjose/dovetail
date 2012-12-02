@@ -33,9 +33,10 @@ def select_project(connection, project_id):
         database.projects.c.id == project_id)).first()
 
     result.name = data['name']
-    # TODO: Check if these calls should be condition_date
-    result.target_date = dovetail.util.format_date(data['target_date'])
-    result.est_end_date = dovetail.util.format_date(data['est_end_date'])
+    # NOTE: We don't need to condition them because we're not doing an explicit select
+    # SqlAlchemy takes care of the date manipulation for us
+    result.target_date = data['target_date']
+    result.est_end_date = data['est_end_date']
     result.participants = people_db.select_project_participants(connection, project_id)
     result.work = work_db.select_work_for_project(connection, project_id)
     return result
