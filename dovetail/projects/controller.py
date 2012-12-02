@@ -1,16 +1,15 @@
-from flask import (Blueprint, Response, json, render_template, request,
-        redirect, url_for, g)
 from datetime import datetime
+from flask import (Blueprint, Response, json, render_template, request,
+                   redirect, url_for, g)
 
 import dovetail.util
-import dovetail.database as database
 import dovetail.projects.db as projects_db
 import dovetail.work.db as work_db
 import dovetail.people.db as people_db
-from dovetail.projects.util import project_work_to_string, parse_workline
+import dovetail.projects.util as projects_util
+
 from dovetail.projects.project import Project
 from dovetail.work.work import Work
-
 from dovetail.scheduler import Scheduler
 
 mod = Blueprint('projects', __name__)
@@ -69,7 +68,7 @@ def project(project_id):
 
     return render_template('projects/details.html',
             project_data = project_data,
-            work_data = project_work_to_string(project.work),
+            work_data = projects_util.project_work_to_string(project.work),
             participants = people_db.select_project_participants(g.connection, project_id),
             people = people_db.select_people(g.connection))
 
@@ -96,7 +95,7 @@ def project_work_edit(project_id):
             'project_id': project.project_id,
             'name': project.name,
             'participants': project.participants,
-            'work': project_work_to_string(project.work)
+            'work': projects_util.project_work_to_string(project.work)
             }
     return render_template('projects/edit_work.html', project_data = project_data)
 
@@ -115,7 +114,7 @@ def project_work(project_id):
         # We have this here to skip lines that cannot be parsed (like empty lines)
         try:
             # TODO: Change these so they return Work objects
-            work_data = parse_workline(g.connection, workline)
+            work_data = projects_util.parse_workline(g.connection, workline)
             fields = work_data['fields']
             fields.update(project_id = project_id)
             work_db.update_work(g.connection, work_data)
