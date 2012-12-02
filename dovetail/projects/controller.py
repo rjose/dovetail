@@ -7,19 +7,13 @@ import dovetail.projects.db as projects_db
 import dovetail.work.db as work_db
 import dovetail.people.db as people_db
 import dovetail.projects.util as projects_util
+import dovetail.scheduler
 
 from dovetail.projects.project import Project
 from dovetail.work.work import Work
-from dovetail.scheduler import Scheduler
+
 
 mod = Blueprint('projects', __name__)
-
-def reschedule_world(connection):
-    scheduler = Scheduler(datetime.now())
-    projects = projects_db.get_projects_for_scheduling(connection)
-    projects = scheduler.schedule_projects(projects)
-    projects_db.update_project_and_work_dates(connection, projects)
-    return
 
 # Projects
 @mod.route('/projects', methods=['GET', 'POST'])
@@ -128,7 +122,7 @@ def project_work(project_id):
     project.topo_sort_work()
     work_db.update_work_topo_order(g.connection, project.work)
 
-    reschedule_world(g.connection)
+    dovetail.scheduler.reschedule_world(g.connection)
     return redirect('/projects/%d' % int(project_id))
 
 @mod.route('/projects/<int:project_id>/participants/new')
@@ -151,6 +145,6 @@ def api_add_project_participant(project_id):
 
 @mod.route('/projects/reschedule', methods=['POST'])
 def reschedule_projects():
-    reschedule_world(g.connection)
+    dovetail.scheduler.reschedule_world(g.connection)
     return redirect('/projects')
 

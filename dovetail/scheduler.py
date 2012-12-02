@@ -1,4 +1,6 @@
+from datetime import datetime
 from dovetail.timeline.timeline import Timeline
+import dovetail.projects.db as projects_db
 
 class Scheduler:
 
@@ -40,3 +42,11 @@ class Scheduler:
                     est_project_end = w_end_date
             p.est_end_date = est_project_end
         return projects
+
+
+def reschedule_world(connection):
+    scheduler = Scheduler(datetime.now())
+    projects = projects_db.get_projects_for_scheduling(connection)
+    projects = scheduler.schedule_projects(projects)
+    projects_db.update_project_and_work_dates(connection, projects)
+    return
