@@ -179,14 +179,15 @@
             type: 'POST',
             error: function(xhr, text_status, error_thrown) {
                 console.log('ERROR: ' + text_status);
+                $('#add_work_modal').modal('hide');
             },
             success: function(data, text_status, xhr) {
                 console.log('Success!');
                 console.log(data)
+                $('#add_work_modal').modal('hide');
                 location.reload();
             }
         })
-        $('#add_work_modal').modal('hide');
     });
 
     $('#add_work_modal').on('hidden', function() {
