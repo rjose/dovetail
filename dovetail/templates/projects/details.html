@@ -82,7 +82,7 @@
             <div class=control-group>
                 <label class='control-label' for='assignee_input'>Assignee</label>
                 <div class='controls'>
-                    <select name="assignee">
+                    <select id='assignee_select' name="assignee">
                         {% for p in people %}
                         <option value="{{ p.person_id }}">{{ p.name }}</option>
                         {% endfor %}
@@ -99,7 +99,21 @@
 
 <script>
     $('#add_work_modal_save').on('click', function() {
-        console.log($('#work_title_input').val());
+        $.ajax('/api/work', {
+            data: {project_id: {{ project_data.project_id }},
+                   title: $('#work_title_input').val(),
+                   effort_left_d: $('#effort_left_input').val(),
+                   assignee_id: $('#assignee_select').val()},
+            type: 'POST',
+            error: function(xhr, text_status, error_thrown) {
+                console.log('ERROR: ' + text_status);
+            },
+            success: function(data, text_status, xhr) {
+                console.log('Success!');
+                console.log(data)
+                location.reload();
+            }
+        })
         $('#add_work_modal').modal('hide');
     });
 
