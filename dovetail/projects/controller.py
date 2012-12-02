@@ -16,14 +16,8 @@ from dovetail.work.work import Work
 mod = Blueprint('projects', __name__)
 
 # Projects
-@mod.route('/projects', methods=['GET', 'POST'])
+@mod.route('/projects', methods=['GET'])
 def projects():
-    if request.method == 'POST':
-        target_date = dovetail.util.parse_date(request.form['target_date'])
-        projects_db.insert_project(g.connection, request.form['name'], target_date)
-    else:
-        pass
-
     projects = projects_db.select_project_collection(g.connection)
     data = []
     project_rank_data = []
@@ -65,10 +59,6 @@ def project(project_id):
             work_data = projects_util.project_work_to_string(project.work),
             participants = people_db.select_project_participants(g.connection, project_id),
             people = people_db.select_people(g.connection))
-
-@mod.route('/projects/new')
-def projects_new():
-    return render_template('projects/new.html')
 
 @mod.route('/projects/edit', methods = ['GET', 'POST'])
 def projects_edit():
@@ -125,16 +115,13 @@ def project_work(project_id):
     dovetail.scheduler.reschedule_world(g.connection)
     return redirect('/projects/%d' % int(project_id))
 
-@mod.route('/projects/<int:project_id>/participants/new')
-def project_participants_new(project_id):
-    project = projects_db.select_project(g.connection, project_id)
-    project_data = {
-            'project_id': project.project_id,
-            'name': project.name
-            }
-    return render_template('projects/new_participant.html',
-            project_data = project_data,
-            people = people_db.select_get_people(g.connection))
+@mod.route('/api/projects', methods=['POST'])
+def api_add_project():
+    target_date = dovetail.util.parse_date(request.values['target_date'])
+    insert_result = projects_db.insert_project(g.connection,
+            request.values['name'], target_date)
+    response_data = {'project_id': insert_result.inserted_primary_key}
+    return Response(json.dumps(response_data), status=200, mimetype='application/json')
 
 @mod.route('/api/projects/<int:project_id>/participants', methods=['POST'])
 def api_add_project_participant(project_id):

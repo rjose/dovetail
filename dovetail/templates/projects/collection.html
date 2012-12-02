@@ -85,6 +85,26 @@
     </div>
 </div>
 
+<script>
+    $('#add_project_modal_save').on('click', function() {
+        $.ajax('/api/projects', {
+            data: {name: $('#project_name_input').val(),
+                   target_date: $('#target_date_input').val()},
+            type: 'POST',
+            error: function(xhr, text_status, error_thrown) {
+                console.log('ERROR: ' + text_status);
+                $('#add_project_modal').modal('hide');
+            },
+            success: function(data, text_status, xhr) {
+                console.log('Success!');
+                console.log(data)
+                $('#add_project_modal').modal('hide');
+                location.reload();
+            }
+        })
+    });
+</script>
+
 {# Modal: Rank projects #}
 <div id='rank_projects_modal' class='modal hide fade' tabindex='-1' role='dialog'>
     <div class='modal-header'>
