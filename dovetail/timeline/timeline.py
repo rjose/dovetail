@@ -47,8 +47,10 @@ class Timeline():
 
     def day_from_date(self, date):
         date = dovetail.util.standardize_date(date)
+
+        # If date is in the past, return 0 (current date)
         if date < self.cur_date:
-            return None
+            return 0
         if self.need_to_add_dates(date):
             self.add_dates_to(date)
 
@@ -102,11 +104,11 @@ class Timeline():
         if num_days_to_add <= 0:
             return
 
-        start_date = None
         if self.dates == []:
             start_date = self.cur_date
         else:
             start_date = increment_date(self.dates[-1])
+
         self.add_dates_to(start_date, num_days_to_add)
         return
 

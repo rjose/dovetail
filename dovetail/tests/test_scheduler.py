@@ -5,10 +5,15 @@ from dovetail.scheduler import Scheduler
 from dovetail.projects.project import Project
 from dovetail.work.work import Work
 
+nov1 = datetime.strptime("Nov 1, 2012", "%b %d, %Y")
+nov2 = datetime.strptime("Nov 2, 2012", "%b %d, %Y")
+nov5 = datetime.strptime("Nov 5, 2012", "%b %d, %Y")
+nov6 = datetime.strptime("Nov 6, 2012", "%b %d, %Y")
+nov15 = datetime.strptime("Nov 15, 2012", "%b %d, %Y")
+
 class TestScheduler(unittest.TestCase):
 
     def test_construct_assignee_timelines(self):
-        nov1 = datetime.strptime("Nov 1, 2012", "%b %d, %Y") # Thu
         scheduler = Scheduler(nov1)
         t101 = scheduler.get_assignee_timeline(101)
         self.assertEqual(0, len(t101.dates))
@@ -16,12 +21,6 @@ class TestScheduler(unittest.TestCase):
         return
     
     def test_schedule_project(self):
-        nov1 = datetime.strptime("Nov 1, 2012", "%b %d, %Y")
-        nov2 = datetime.strptime("Nov 2, 2012", "%b %d, %Y")
-        nov5 = datetime.strptime("Nov 5, 2012", "%b %d, %Y")
-        nov6 = datetime.strptime("Nov 6, 2012", "%b %d, %Y")
-        nov15 = datetime.strptime("Nov 15, 2012", "%b %d, %Y")
-
         # Assignees
         person_id1 = 101
         person_id2 = 102
@@ -52,6 +51,22 @@ class TestScheduler(unittest.TestCase):
         # Check project end dates
         self.assertEqual(nov15, p1.est_end_date)
         self.assertEqual(nov6, p2.est_end_date)
+        return
+
+    def test_schedule_with_key_date_in_past(self):
+        # Assignees
+        person_id1 = 101
+
+        # Projects
+        p1 = Project(1)
+        p1_w3 = Work(5, "p1 w3", 0.1, [], person_id1, nov1)
+        p1.work = [p1_w3]
+
+        # Scheduler
+        scheduler = Scheduler(nov15)
+        projects = scheduler.schedule_projects([p1])
+
+        self.assertEqual(nov15, p1.est_end_date)
         return
 
 
