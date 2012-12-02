@@ -33,7 +33,7 @@ def projects():
                     } for w in work_db.select_key_work_for_project(g.connection, p.project_id)]
             }
         data.append(d)
-        project_rank_data.append(p.name)
+        project_rank_data.append('%d %s' % (p.project_id, p.name))
 
     return render_template('projects/collection.html', project_data = data,
             project_rank_data = '\n'.join(project_rank_data))
@@ -131,6 +131,37 @@ def api_add_project_participant(project_id):
     projects_db.add_project_participant(g.connection, project_id, person_id)
     response_data = {}
     return Response(json.dumps(response_data), status=200, mimetype='application/json')
+
+# TODO: Move this
+def parse_project_line(line, value):
+    parts = line.split()
+    result = Project(parts[0])
+    result.value = value
+    return result
+
+@mod.route('/api/projects/rankings', methods=['POST'])
+def rank_projects():
+    project_lines = request.values['project_lines'].split('\n')
+
+    # TODO: Figure out how to compute project value
+    cur_value = 100
+    projects = []
+    for line in project_lines:
+        try:
+            p = parse_project_line(line, cur_value)
+            cur_value -= 1
+            projects.append(p)
+        except:
+            # TODO: log something
+            pass
+
+    # Update project info
+    projects_db.update_project_collection_value(g.connection, projects)
+    dovetail.scheduler.reschedule_world(g.connection)
+
+    response_data = {}
+    result = Response(json.dumps(response_data), status=200, mimetype='application/json')
+    return result
 
 @mod.route('/projects/reschedule', methods=['POST'])
 def reschedule_projects():

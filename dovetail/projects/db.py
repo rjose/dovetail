@@ -10,12 +10,18 @@ from dovetail.work.work import Work
 # This adds 'key_work' to each project as well
 def select_project_collection(connection):
     data = connection.execute(database.projects.select())
+    data = connection.execute('''
+    select id, name, target_date, est_end_date, value
+    from projects
+    order by value desc
+    ''')
     result = []
     for row in data:
         p = Project(row['id'])
         p.name = row['name']
-        p.target_date = row['target_date']
-        p.est_end_date = row['est_end_date']
+        p.target_date = dovetail.util.condition_date(row['target_date'])
+        p.est_end_date = dovetail.util.condition_date( row['est_end_date'] )
+        p.value = row['value']
         p.key_work = work_db.select_key_work_for_project(connection, row['id'])
         result.append(p)
     return result
@@ -27,6 +33,7 @@ def select_project(connection, project_id):
         database.projects.c.id == project_id)).first()
 
     result.name = data['name']
+    # TODO: Check if these calls should be condition_date
     result.target_date = dovetail.util.format_date(data['target_date'])
     result.est_end_date = dovetail.util.format_date(data['est_end_date'])
     result.participants = people_db.select_project_participants(connection, project_id)
@@ -72,6 +79,16 @@ def update_project(connection, project):
                 })
     result = connection.execute(statement)
     return result
+
+def update_project_collection_value(connection, projects):
+    for p in projects:
+        statement = database.projects.update().\
+                where(database.projects.c.id == p.project_id).\
+                values({
+                    'value': p.value
+                    })
+        result = connection.execute(statement)
+    return
 
 def select_all_project_ids(connection):
     data = connection.execute('select id from projects order by value desc')

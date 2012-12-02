@@ -114,9 +114,12 @@
     <div class='modal-body'>
         <form class='horizontal'>
             <div class=control-group>
-                <label class='control-label' for='projects_text_area'>Projects (most important at top)</label>
+                <label class='control-label'
+                    for='rank_projects_text_area'>Projects (most important at top)</label>
                 <div class='controls'>
-                    <textarea name='projects'>{{ project_rank_data }}</textarea>
+                    <textarea class='span5' rows='10'
+                        wrap='off'
+                        id='rank_projects_text_area'>{{ project_rank_data }}</textarea>
                 </div>
             </div>
         </form>
@@ -127,6 +130,26 @@
     </div>
 </div>
 
+<script>
+    $('#rank_projects_modal_save').on('click', function() {
+        $.ajax('/api/projects/rankings', {
+            data: {
+                project_lines: $('#rank_projects_text_area').val()
+            },
+            type: 'POST',
+            error: function(xhr, text_status, error_thrown) {
+                console.log('ERROR: ' + text_status);
+                $('#rank_projects_modal').modal('hide');
+            },
+            success: function(data, text_status, xhr) {
+                console.log('Success!');
+                console.log(data)
+                $('#rank_projects_modal').modal('hide');
+                location.reload();
+            }
+        })
+    });
+</script>
 
 {% endblock %}
 
