@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, g
+from flask import (Blueprint, Response, json, render_template, request,
+        redirect, url_for, g)
 from datetime import datetime
 
 import dovetail.util
@@ -144,6 +145,13 @@ def project_participants(project_id):
         return redirect('/projects/%d' % int(project_id))
     else:
         return "TODO: Figure out what should go here"
+
+@mod.route('/api/projects/<int:project_id>/participants', methods=['POST'])
+def api_add_project_participant(project_id):
+    person_id = int(request.values['person_id'])
+    projects_db.add_project_participant(g.connection, project_id, person_id)
+    response_data = {}
+    return Response(json.dumps(response_data), status=200, mimetype='application/json')
 
 @mod.route('/projects/reschedule', methods=['POST'])
 def reschedule_projects():
