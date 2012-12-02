@@ -17,7 +17,8 @@
             <ul class="nav">
                 <li><a class="btn" href='/projects/{{ project_data.project_id }}/work/edit'>Edit project</a></li>
                 <li><a class="btn" href='#add_work_modal' role='button' data-toggle='modal' data-backdrop='static'>Add work item</a></li>
-                <li><a class="btn" href='/projects/{{ project_data.project_id }}/participants/new'>Add participant</a></li>
+                <li><a class="btn" href='#add_participant_modal' role='button' data-toggle='modal' data-backdrop='static'>Add participant</a></li>
+                <li><a class="btn" href='/projects/{{ project_data.project_id }}/participants/new'>Add participant (old)</a></li>
             </ul>
         </div><!--/span-->
         <div class="span10">
@@ -83,7 +84,7 @@
                 <label class='control-label' for='assignee_input'>Assignee</label>
                 <div class='controls'>
                     <select id='assignee_select' name="assignee">
-                        {% for p in people %}
+                        {% for p in participants %}
                         <option value="{{ p.person_id }}">{{ p.name }}</option>
                         {% endfor %}
                     </select>
@@ -122,5 +123,33 @@
         $('#effort_left_input').val('');
     });
 </script>
+
+{# Modal: Add participant to project #}
+<div id='add_participant_modal' class='modal hide fade' tabindex='-1' role='dialog'>
+    <div class='modal-header'>
+        <button type='button' class='close' data-dismiss='modal'>x</button>
+        <h3 id='add_participant_modal_label'>Add participant to project: {{ project_data.name }}</h3>
+    </div>
+    <div class='modal-body'>
+        <form class='horizontal'>
+            <div class=control-group>
+                <label class='control-label' for='participant_select'>Assignee</label>
+                <div class='controls'>
+                    <select id='participant_select'>
+                        {% for p in people %}
+                        <option value="{{ p.person_id }}">{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class='modal-footer'>
+        <button id='add_participant_modal_save' class='btn btn-primary'>Save changes</button>
+        <button class='btn' data-dismiss='modal'>Close</button>
+    </div>
+</div>
+
+
 {% endblock %}
 

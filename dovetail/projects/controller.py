@@ -64,7 +64,8 @@ def project(project_id):
 
     return render_template('projects/details.html',
             project_data = project_data,
-            people = people_db.select_project_participants(g.connection, project_id))
+            participants = people_db.select_project_participants(g.connection, project_id),
+            people = people_db.select_people(g.connection))
 
 @mod.route('/projects/new')
 def projects_new():
