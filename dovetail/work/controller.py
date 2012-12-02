@@ -5,6 +5,7 @@ from datetime import datetime
 import dovetail.database as database
 import dovetail.projects.db as projects_db
 import dovetail.people.db as people_db
+import dovetail.scheduler
 
 mod = Blueprint('work', __name__)
 
@@ -23,5 +24,6 @@ def api_work():
            effort_left_d = effort_left_d)
 
     response_data = {'work_id': insert_result.inserted_primary_key}
+    dovetail.scheduler.reschedule_world()
     return Response(json.dumps(response_data), status=200, mimetype='application/json')
 
