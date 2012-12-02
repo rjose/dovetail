@@ -75,6 +75,23 @@
     <div class='modal-body'>
         <form class='horizontal'>
             <div class=control-group>
+                <label class='control-label' for='edit_project_name_input'>Name</label>
+                <div class='controls'>
+                    <input type='text' id='edit_project_name_input'
+                           value='{{project_data.name}}'>
+                </div>
+            </div>
+
+            <div class=control-group>
+                <label class='control-label'
+                    for='edit_project_target_date_input'>Target date</label>
+                <div class='controls'>
+                    <input type='text' id='edit_project_target_date_input'
+                           value='{{project_data.target_date}}'>
+                </div>
+            </div>
+
+            <div class=control-group>
                 <label class='control-label' for='work_textarea'>Project work</label>
                 <div class='controls'>
                     <textarea id='edit_project_worklines' class='span9' rows='10'
@@ -91,24 +108,24 @@
 
 <script>
     $('#edit_project_modal_save').on('click', function() {
-        // TODO: Replace name and target with real inputs
         $.ajax('/api/projects/{{ project_data.project_id }}', {
             data: {
-                name: '{{ project_data.name }}',
-                target_date: '{{ project_data.target_date }}',
+                name: $('#edit_project_name_input').val(),
+                target_date: $('#edit_project_target_date_input').val(),
                 worklines: $('#edit_project_worklines').val()
             },
             type: 'POST',
             error: function(xhr, text_status, error_thrown) {
                 console.log('ERROR: ' + text_status);
+                $('#edit_project_modal').modal('hide');
             },
             success: function(data, text_status, xhr) {
                 console.log('Success!');
                 console.log(data)
+                $('#edit_project_modal').modal('hide');
                 location.reload();
             }
         })
-        $('#edit_project_modal').modal('hide');
     });
 </script>
 

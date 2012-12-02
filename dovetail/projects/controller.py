@@ -12,7 +12,6 @@ import dovetail.scheduler
 from dovetail.projects.project import Project
 from dovetail.work.work import Work
 
-
 mod = Blueprint('projects', __name__)
 
 # Projects
@@ -85,6 +84,7 @@ def edit_project(project_id):
     name = request.values['name']
     target_date = dovetail.util.parse_date(request.values['target_date'])
     worklines = request.values['worklines'].split('\n')
+
     work = []
     for workline in worklines:
         try:
@@ -94,6 +94,7 @@ def edit_project(project_id):
             fields.update(project_id = project_id)
 
             # Save any changes to the work items
+            # TOOD: Separate topo sort work so we only have to write to database once
             work_db.update_work(g.connection, work_data)
             fields.update(id = work_data['id'])
             work.append(to_work(fields))
@@ -102,10 +103,15 @@ def edit_project(project_id):
             pass
 
     project = Project(project_id)
+    project.name = name
+    project.target_date = target_date
     project.work = work
     project.topo_sort_work()
     work_db.update_work_topo_order(g.connection, project.work)
     dovetail.scheduler.reschedule_world(g.connection)
+
+    # Update project info
+    projects_db.update_project(g.connection, project)
 
     response_data = {}
     result = Response(json.dumps(response_data), status=200, mimetype='application/json')

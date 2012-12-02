@@ -63,6 +63,16 @@ def update_project_and_work_dates(connection, projects):
         work_db.update_work_dates(connection, p.work)
     return
 
+def update_project(connection, project):
+    statement = database.projects.update().\
+            where(database.projects.c.id == project.project_id).\
+            values({
+                'name': project.name,
+                'target_date': project.target_date
+                })
+    result = connection.execute(statement)
+    return result
+
 def select_all_project_ids(connection):
     data = connection.execute('select id from projects order by value desc')
     result = [row['id'] for row in data]
