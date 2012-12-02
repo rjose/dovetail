@@ -34,10 +34,10 @@ def select_project(connection, project_id):
     return result
 
 def insert_project(connection, name, target_date):
-    connection.execute(database.projects.insert(),
+    result = connection.execute(database.projects.insert(),
            name = name,
            target_date = target_date)
-    return
+    return result
 
 def add_project_participant(connection, project_id, person_id):
     data = connection.execute('''
