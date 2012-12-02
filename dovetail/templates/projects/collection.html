@@ -14,8 +14,8 @@
             </div><!--/.well -->
 
             <ul class="nav">
-                <li><a class="btn" href="/projects/new">Add project</a></li>
-                <li><a class="btn" href="/projects/edit">Rank projects</a></li>
+                <li><a class="btn" href="#add_project_modal" role='button' data-toggle='modal' data-backdrop='static'>Add project</a></li>
+                <li><a class="btn" href="#rank_projects_modal" role='button' data-toggle='modal' data-backdrop='static'>Rank projects</a></li>
             </ul>
         </div><!--/span-->
         <div class="span10">
@@ -54,5 +54,59 @@
 <script>
     $('#navbar_projects').addClass('active');
 </script>
+
+{# Modal: Add project #}
+<div id='add_project_modal' class='modal hide fade' tabindex='-1' role='dialog'>
+    <div class='modal-header'>
+        <button type='button' class='close' data-dismiss='modal'>x</button>
+        <h3 id='add_project_modal_label'>Add project</h3>
+    </div>
+    <div class='modal-body'>
+        <form class='horizontal'>
+            <div class=control-group>
+                <label class='control-label' for='project_name_input'>Title</label>
+                <div class='controls'>
+                    <input type='text' id='project_name_input' placeholder=''>
+                </div>
+            </div>
+
+            <div class=control-group>
+                <label class='control-label' for='target_date_input'>Target date</label>
+                <div class='controls'>
+                    <input type='text' id='target_date_input' placeholder='Oct 21, 2014'>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class='modal-footer'>
+        <button id='add_project_modal_save' class='btn btn-primary'>Save changes</button>
+        <button class='btn' data-dismiss='modal'>Close</button>
+    </div>
+</div>
+
+{# Modal: Rank projects #}
+<div id='rank_projects_modal' class='modal hide fade' tabindex='-1' role='dialog'>
+    <div class='modal-header'>
+        <button type='button' class='close' data-dismiss='modal'>x</button>
+        <h3>Rank projects</h3>
+    </div>
+    <div class='modal-body'>
+        <form class='horizontal'>
+            <div class=control-group>
+                <label class='control-label' for='projects_text_area'>Projects (most important at top)</label>
+                <div class='controls'>
+                    <textarea name='projects'>{{ project_rank_data }}</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class='modal-footer'>
+        <button id='rank_projects_modal_save' class='btn btn-primary'>Save changes</button>
+        <button class='btn' data-dismiss='modal'>Close</button>
+    </div>
+</div>
+
+
 {% endblock %}
 

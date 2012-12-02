@@ -33,6 +33,7 @@ def projects():
 
     projects = projects_db.select_project_collection(g.connection)
     data = []
+    project_rank_data = []
     for p in projects:
         d = {
                 'project_id': p.project_id,
@@ -46,7 +47,10 @@ def projects():
                     } for w in work_db.select_key_work_for_project(g.connection, p.project_id)]
             }
         data.append(d)
-    return render_template('projects/collection.html', project_data = data)
+        project_rank_data.append(p.name)
+
+    return render_template('projects/collection.html', project_data = data,
+            project_rank_data = '\n'.join(project_rank_data))
 
 @mod.route('/projects/<int:project_id>')
 def project(project_id):
