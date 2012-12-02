@@ -2,6 +2,12 @@
 {% block title %}{{ project_data.name }}{% endblock %}
 
 {%block content %}
+<style type='text/css'>
+    body #edit_project_modal {
+        width: 800px;
+        margin: -250px 0 0 -480px;
+    }
+</style>
 
 <div class="container-fluid">
 
@@ -15,7 +21,7 @@
             </div><!--/.well -->
 
             <ul class="nav">
-                <li><a class="btn" href='/projects/{{ project_data.project_id }}/work/edit'>Edit project</a></li>
+                <li><a class="btn" href='#edit_project_modal' role='button' data-toggle='modal' data-backdrop='static'>Edit project</a></li>
                 <li><a class="btn" href='#add_work_modal' role='button' data-toggle='modal' data-backdrop='static'>Add work item</a></li>
                 <li><a class="btn" href='#add_participant_modal' role='button' data-toggle='modal' data-backdrop='static'>Add participant</a></li>
             </ul>
@@ -56,6 +62,29 @@
         </div><!--/span-->
     </div><!--/row-->
 </div><!--/.fluid-container-->
+
+{# Modal: Edit project #}
+<div id='edit_project_modal' class='modal hide fade' tabindex='-1' role='dialog'>
+    <div class='modal-header'>
+        <button type='button' class='close' data-dismiss='modal'>x</button>
+        <h3>Edit project: {{ project_data.name }}</h3>
+    </div>
+    <div class='modal-body'>
+        <form class='horizontal'>
+            <div class=control-group>
+                <label class='control-label' for='work_textarea'>Project work</label>
+                <div class='controls'>
+                    <textarea class='span9' rows='10' wrap='off' name='work_textarea'>{{ work_data }}</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class='modal-footer'>
+        <button id='edit_project_modal_save' class='btn btn-primary'>Save changes</button>
+        <button class='btn' data-dismiss='modal'>Close</button>
+    </div>
+</div>
+
 
 {# Modal: Add work to project #}
 <div id='add_work_modal' class='modal hide fade' tabindex='-1' role='dialog'>
