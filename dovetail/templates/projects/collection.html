@@ -14,8 +14,12 @@
             </div><!--/.well -->
 
             <ul class="nav">
-                <li><a class="btn" href="#add_project_modal" role='button' data-toggle='modal' data-backdrop='static'>Add project</a></li>
-                <li><a class="btn" href="#rank_projects_modal" role='button' data-toggle='modal' data-backdrop='static'>Rank projects</a></li>
+                <li><a class="btn" href="#add_project_modal" role='button'
+                    data-toggle='modal' data-backdrop='static'>Add project</a></li>
+                <li><a class="btn" href="#rank_projects_modal" role='button'
+                    data-toggle='modal' data-backdrop='static'>Rank projects</a></li>
+                <li><a id='reschedule_button' class="btn"
+                    role='button'>Reschedule projects</a></li>
             </ul>
         </div><!--/span-->
         <div class="span9">
@@ -41,13 +45,6 @@
                 </tr>
                 {% endfor %}
             </table>
-            <div class="">
-                <p>
-                <form action="/projects/reschedule" method='POST'>
-                    <button class="btn btn-primary" type="submit">Reschedule Projects!</button>
-                </form>
-                </p>
-            </div>
 
         </div><!--/span-->
     </div><!--/row-->
@@ -151,6 +148,20 @@
             }
         })
     });
+</script>
+
+<script>
+    $('#reschedule_button').on('click', function() {
+        $.ajax('/projects/reschedule', {
+            type: 'POST',
+            error: function(xhr, text_status, error_thrown) {
+            },
+            success: function(data, text_status, xhr) {
+                console.log("Rescheduled!");
+                location.reload();
+            }
+        });
+    })
 </script>
 
 {% endblock %}
