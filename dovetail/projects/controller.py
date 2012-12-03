@@ -20,12 +20,14 @@ def projects():
     projects = projects_db.select_project_collection(g.connection)
     data = []
     project_rank_data = []
-    for p in projects:
+    for i, p in enumerate(projects):
         d = {
                 'project_id': p.project_id,
+                'rank': i + 1,
                 'name': p.name,
                 'target_date': dovetail.util.format_date(p.target_date),
                 'est_end_date': dovetail.util.format_date(p.est_end_date),
+                'effort_left_d': dovetail.util.format_effort_left(p.total_effort(), 0),
                 'detail_url': '/projects/%d' % p.project_id,
                 'key_work': [{
                     'date': dovetail.util.format_date(w.key_date),

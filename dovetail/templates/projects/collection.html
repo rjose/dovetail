@@ -5,10 +5,10 @@
 <div class="container-fluid">
 
     <div class="row-fluid">
-        <div class="span2 well">
+        <div class="span3 well">
             <div class="sidebar-nav">
                 <ul class="nav nav-pills nav-stacked">
-                    <li class="active"><a href="#">List View</a></li>
+                    <li class="active"><a href="#">Table View</a></li>
                     <li><a href="#">Timeline View</a></li>
                 </ul>
             </div><!--/.well -->
@@ -18,28 +18,30 @@
                 <li><a class="btn" href="#rank_projects_modal" role='button' data-toggle='modal' data-backdrop='static'>Rank projects</a></li>
             </ul>
         </div><!--/span-->
-        <div class="span10">
+        <div class="span9">
             <h2>Active Projects</h2>
+
+            <table class='table'>
+                <tr>
+                    <th>Rank</th>
+                    <th>Project</th>
+                    <th>Status</th>
+                    <th>Target</th>
+                    <th>Estimated</th>
+                    <th class='number'>Effort left</th>
+                </tr>
+                {% for project in project_data %}
+                <tr>
+                    <td>#{{ project.rank }}</td>
+                    <td><a href={{ project.detail_url }}>{{ project.name}}</a></td>
+                    <td><span class="label label-success">ON TRACK</span></td>
+                    <td>{{ project.target_date }}</td>
+                    <td>{{ project.est_end_date }}</td>
+                    <td class='number'>{{ project.effort_left_d }}</td>
+                </tr>
+                {% endfor %}
+            </table>
             <div class="">
-                <ul>
-                    {% for project in project_data %}
-                    <li><a href={{ project.detail_url }}>{{ project.name }}</a></li>
-                    <ul>
-                        <li>Estimated: {{ project.est_end_date }}</li>
-                        <li>Target: {{ project.target_date }}</li>
-
-                        {% if project.key_work  %}
-                        <li>Key dates</li>
-                        <ul>
-                            {% for w in project.key_work %}
-                            <li>{{ w.date }}: {{ w.title }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif  %}
-                    </ul>
-                    {% endfor %}
-                </ul>
-
                 <p>
                 <form action="/projects/reschedule" method='POST'>
                     <button class="btn btn-primary" type="submit">Reschedule Projects!</button>
@@ -89,7 +91,7 @@
     $('#add_project_modal_save').on('click', function() {
         $.ajax('/api/projects', {
             data: {name: $('#project_name_input').val(),
-                   target_date: $('#target_date_input').val()},
+                target_date: $('#target_date_input').val()},
             type: 'POST',
             error: function(xhr, text_status, error_thrown) {
                 console.log('ERROR: ' + text_status);

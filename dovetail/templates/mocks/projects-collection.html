@@ -1,108 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Projects | Dovetail</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Projects overview page">
-  <meta name="author" content="Rino Jose">
+    <head>
+        <meta charset="utf-8">
+        <title>Projects | Dovetail</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Projects overview page">
+        <meta name="author" content="Rino Jose">
 
-  <link href="../assets/css/bootstrap.css" rel="stylesheet">
-  <style type="text/css">
-  body {
-    padding-top: 60px;
-    padding-bottom: 40px;
-  }
-  .sidebar-nav {
-    padding: 9px 0 0px 0;
-  }
-  </style>
-  <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">
+        <script src="../assets/js/jquery-1.8.3.min.js"></script>
+        <link href="../assets/css/bootstrap.css" rel="stylesheet">
+        <style type="text/css">
+            body {
+                padding-top: 60px;
+                padding-bottom: 40px;
+            }
+            .sidebar-nav {
+                padding: 9px 0 0px 0;
+            }
+            .projects {
+                outline: grey solid 1px;
+            }
+            .dev {
+                outline: red dotted 1px;
+            }
+            img.project-participant {
+                width: 30px;
+            }
+            .project-participant-block {
+                float: right;
+            }
+            .key-dates th, .key-dates td {
+                text-align: left;
+                vertical-align: text-top;
+                padding: 0px 10px 0px 0px;
+            }
+            .stats-block {
+                float: left;
+            }
+        </style>
+        <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">
 
-  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-  <!--[if lt IE 9]>
-  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
 
-  <!-- Fav and touch icons -->
-  <link rel="shortcut icon" href="../assets/ico/favicon.ico">
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
-</head>
+        <!-- Fav and touch icons -->
+        <link rel="shortcut icon" href="../assets/ico/favicon.ico">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+    </head>
 
-<body>
-
-  <div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container-fluid">
-        <a class="brand" href="#">Dovetail</a>
-        <div class="">
-          <ul class="nav pull-right">
-            <li class="active"><a href="/projects">Projects</a></li>
-            <li><a href="/teams">Teams</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </div>
-  </div>
-
-  <h2 class="span12">Active Projects</h2>
-  <div class="container-fluid">
-
-    <div class="row-fluid">
-      <div class="span2">
-        <div class="well well-small sidebar-nav">
-          <ul class="nav nav-pills nav-stacked">
-            <li class="active"><a href="#">List View</a></li>
-            <li><a href="#">Timeline View</a></li>
-          </ul>
-        </div><!--/.well -->
-
-        <ul class="nav">
-          <li><a class="btn" href="/projects/new">Add project</a></li>
-          <li><a class="btn" href="/projects/edit">Rank projects</a></li>
-        </ul>
-      </div><!--/span-->
-      <div class="span9">
-        <div class="">
-          <ul>
-            {% for project in project_data %}
-            <li><a href={{ project.detail_url }}>{{ project.name }}</a></li>
-            <ul>
-              <li>Estimated: {{ project.est_end_date }}</li>
-              <li>Target: {{ project.target_date }}</li>
-
-              {% if project.key_work  %}
-              <li>Key dates</li>
-              <ul>
-                {% for w in project.key_work %}
-                <li>{{ w.date }}: {{ w.title }}</li>
-                {% endfor %}
-              </ul>
-              {% endif  %}
-            </ul>
-            {% endfor %}
-          </ul>
-
-          <p>
-            <form action="/projects/reschedule" method='POST'>
-              <button class="btn btn-primary" type="submit">Reschedule Projects!</button>
-            </form>
-          </p>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="brand" href="#">Dovetail</a>
+                    <ul class="nav pull-left">
+                        <li id='navbar_projects' class=""><a href="/projects">Projects</a></li>
+                        <li id='navbar_teams'><a href="/teams">Teams</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
-      </div><!--/span-->
+
+<div class="container-fluid">
+
+    <div class="row-fluid">
+        <div class="span3 well">
+            <div class="sidebar-nav">
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active"><a href="#">List View</a></li>
+                    <li><a href="#">Timeline View</a></li>
+                </ul>
+            </div><!--/.well -->
+
+            <ul class="nav">
+                <li><a class="btn" href="#add_project_modal" role='button' data-toggle='modal' data-backdrop='static'>Add project</a></li>
+                <li><a class="btn" href="#rank_projects_modal" role='button' data-toggle='modal' data-backdrop='static'>Rank projects</a></li>
+                <li><a class="btn" href="#" role='button'>Reschedule projects</a></li>
+            </ul>
+        </div><!--/span-->
+        <div class="span9">
+            <h2>Active Projects</h2>
+            <div class='row-fluid'>
+
+                <h4><a href=/projects/4>Mongo</a></h4>
+                <div class="span3">
+                <p><span class="label label-important">RUNNING LATE</span></p>
+                    <div class='project-participant-block'>
+                        <img class='project-participant' src=​"../assets/pic.jpg">
+                        <img class='project-participant' src=​"../assets/pic.jpg">
+                        <img class='project-participant' src=​"../assets/pic.jpg">
+                        <img class='project-participant' src=​"../assets/pic.jpg">
+                        <img class='project-participant' src=​"../assets/pic.jpg">
+                        <img class='project-participant' src=​"../assets/pic.jpg">
+                    </div>
+                </div>
+                <div class="span8">
+                    <div class="stats-block">
+                    <table class='key-dates'>
+                        <tr><th>Target</th><th>Estimated</th><th>Effort left</th></tr>
+                        <tr>
+                            <td>Dec 15, 2012</td>
+                            <td>Dec 5, 2012</td>
+                            <td>20.0 d</td>
+                        </tr>
+                    </table>
+                    <h5>Key items</h5>
+                        <ul>
+                            <li><span class="">Dec 03, 2012</span> - Finish design specs
+                            <li><span class="text-error">Dec 13, 2012</span> - Testing is documented
+                        </ul>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div><!--/span-->
     </div><!--/row-->
+</div><!--/.fluid-container-->
 
-    <hr>
+<script>
+    $('#navbar_projects').addClass('active');
+</script>
 
-  </div><!--/.fluid-container-->
 
-  <!-- Placed at the end of the document so the pages load faster -->
-  <script src="../assets/js/jquery-1.8.3.min.js"></script>
-  <script src="../assets/js/bootstrap.min.js"></script>
+<div id='add_project_modal' class='modal hide fade' tabindex='-1' role='dialog'>
+    <div class='modal-header'>
+        <button type='button' class='close' data-dismiss='modal'>x</button>
+        <h3 id='add_project_modal_label'>Add project</h3>
+    </div>
+    <div class='modal-body'>
+        <form class='horizontal'>
+            <div class=control-group>
+                <label class='control-label' for='project_name_input'>Title</label>
+                <div class='controls'>
+                    <input type='text' id='project_name_input' placeholder=''>
+                </div>
+            </div>
 
-</body>
+            <div class=control-group>
+                <label class='control-label' for='target_date_input'>Target date</label>
+                <div class='controls'>
+                    <input type='text' id='target_date_input' placeholder='Oct 21, 2014'>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class='modal-footer'>
+        <button id='add_project_modal_save' class='btn btn-primary'>Save changes</button>
+        <button class='btn' data-dismiss='modal'>Close</button>
+    </div>
+</div>
+
+<script>
+    $('#add_project_modal_save').on('click', function() {
+        $.ajax('/api/projects', {
+            data: {name: $('#project_name_input').val(),
+                   target_date: $('#target_date_input').val()},
+            type: 'POST',
+            error: function(xhr, text_status, error_thrown) {
+                console.log('ERROR: ' + text_status);
+                $('#add_project_modal').modal('hide');
+            },
+            success: function(data, text_status, xhr) {
+                console.log('Success!');
+                console.log(data)
+                $('#add_project_modal').modal('hide');
+                location.reload();
+            }
+        })
+    });
+</script>
+
+
+<div id='rank_projects_modal' class='modal hide fade' tabindex='-1' role='dialog'>
+    <div class='modal-header'>
+        <button type='button' class='close' data-dismiss='modal'>x</button>
+        <h3>Rank projects</h3>
+    </div>
+    <div class='modal-body'>
+        <form class='horizontal'>
+            <div class=control-group>
+                <label class='control-label'
+                    for='rank_projects_text_area'>Projects (most important at top)</label>
+                <div class='controls'>
+                    <textarea class='span5' rows='10'
+                        wrap='off'
+                        id='rank_projects_text_area'>4 Mongo
+1 Dovetail
+3 Tongo
+2 Stub</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class='modal-footer'>
+        <button id='rank_projects_modal_save' class='btn btn-primary'>Save changes</button>
+        <button class='btn' data-dismiss='modal'>Close</button>
+    </div>
+</div>
+
+<script>
+    $('#rank_projects_modal_save').on('click', function() {
+        $.ajax('/api/projects/rankings', {
+            data: {
+                project_lines: $('#rank_projects_text_area').val()
+            },
+            type: 'POST',
+            error: function(xhr, text_status, error_thrown) {
+                console.log('ERROR: ' + text_status);
+                $('#rank_projects_modal').modal('hide');
+            },
+            success: function(data, text_status, xhr) {
+                console.log('Success!');
+                console.log(data)
+                $('#rank_projects_modal').modal('hide');
+                location.reload();
+            }
+        })
+    });
+</script>
+
+
+        <hr>
+
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="../assets/js/bootstrap.min.js"></script>
+
+    </body>
 </html>

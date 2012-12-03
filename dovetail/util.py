@@ -22,11 +22,12 @@ def condition_date(d):
     else:
         return d
 
-def format_effort_left(effort_left_d):
-    if effort_left_d:
-        return '%.2f d' % effort_left_d
-    else:
-        return '0.1 d'
+def format_effort_left(effort_left_d, precision=2):
+    if not effort_left_d:
+        effort_left_d = 0.1
+
+    format_string = '%%.%df d' % precision
+    return format_string % effort_left_d
 
 def condition_prereqs(prereqs):
     result = []

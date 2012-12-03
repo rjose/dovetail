@@ -22,6 +22,7 @@ def select_project_collection(connection):
         p.target_date = dovetail.util.condition_date(row['target_date'])
         p.est_end_date = dovetail.util.condition_date( row['est_end_date'] )
         p.value = row['value']
+        p.work = work_db.select_work_for_project(connection, row['id'])
         p.key_work = work_db.select_key_work_for_project(connection, row['id'])
         result.append(p)
     return result
