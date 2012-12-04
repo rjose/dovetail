@@ -22,7 +22,7 @@
                     role='button'>Reschedule</a></li>
             </ul>
         </div><!--/span-->
-        <div class="span10">
+        <div class="span9">
             <h2>Active Projects</h2>
 
             <table class='table'>
@@ -30,8 +30,8 @@
                     <th>Rank</th>
                     <th>Project</th>
                     <th>Status</th>
-                    <th>Target</th>
                     <th>Estimated</th>
+                    <th>Target</th>
                     <th class='number'>Effort left</th>
                 </tr>
                 {% for project in project_data %}
@@ -39,8 +39,8 @@
                     <td>#{{ project.rank }}</td>
                     <td><a href={{ project.detail_url }}>{{ project.name}}</a></td>
                     <td><span class="label label-success">ON TRACK</span></td>
-                    <td>{{ project.target_date }}</td>
                     <td>{{ project.est_end_date }}</td>
+                    <td>{{ project.target_date }}</td>
                     <td class='number'>{{ project.effort_left_d }}</td>
                 </tr>
                 {% endfor %}
