@@ -50,7 +50,7 @@ def project(project_id):
             'name': project.name,
             'target_date': dovetail.util.format_date(project.target_date),
             'est_end_date': dovetail.util.format_date(project.est_end_date),
-            'total_effort': dovetail.util.format_effort_left(project.total_effort()),
+            'effort_left_d': dovetail.util.format_effort_left(project.total_effort(), 1),
             'work': project.work,
             'participants': project.participants
             }

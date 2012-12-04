@@ -12,10 +12,10 @@
 <div class="container-fluid">
 
     <div class="row-fluid">
-        <div class="span3 well">
+        <div class="span2 well">
             <div class="sidebar-nav">
                 <ul class="nav nav-pills nav-stacked">
-                    <li class="active"><a href="#">List View</a></li>
+                    <li class="active"><a href="#">Table View</a></li>
                     <li><a href="#">Timeline View</a></li>
                 </ul>
             </div><!--/.well -->
@@ -24,45 +24,60 @@
                 <li><a class="btn" href='#edit_project_modal' role='button'
                     data-toggle='modal' data-backdrop='static'>Edit project</a></li>
                 <li><a class="btn" href='#add_work_modal' role='button'
-                    data-toggle='modal' data-backdrop='static'>Add work item</a></li>
+                    data-toggle='modal' data-backdrop='static'>Add work</a></li>
                 <li><a class="btn" href='#add_participant_modal' role='button'
-                    data-toggle='modal' data-backdrop='static'>Add participant</a></li>
+                    data-toggle='modal' data-backdrop='static'>Add person</a></li>
             </ul>
         </div><!--/span-->
-        <div class="span9">
-            <h2>Project: {{ project_data.name }}</h2>
+        <div class="span10">
+            <div class='row-fluid'>
+                <h2>Project: {{ project_data.name }}</h2>
+            </div>
+            <div class='row-fluid'>
+                <div class='span9'>
+                    <table class='table'>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Assignee</th>
+                            <th>Effort left (d)</th>
+                            <th>Key date</th>
+                        </tr>
+                        {% for w in project_data.work %}
+                        <tr>
+                            <td>{{ w.work_id }}</td>
+                            <td>{{ w.title}}</td>
+                            <td>{{ w.assignee.name }}</td>
+                            <td>{{ w.effort_left_d }}</td>
+                            <td>{{ w.key_date }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="span3">
+                    <p><span class="label label-success">ON TRACK</span></p>
+                    <dl>
+                        <dt>Target</dt>
+                        <dd>{{ project_data.target_date }}</dd>
 
-            <h3>Stats</h3>
-            <ul>
-                <li>Target date: {{ project_data.target_date }} </li>
-                <li>Estimated date: {{ project_data.est_end_date }} </li>
-                <li>Total effort: {{ project_data.total_effort }} </li>
-            </ul>
+                        <dt>Estimated</dt>
+                        <dd>{{ project_data.est_end_date }}</dd>
 
-            <h3>Work</h3>
-            <table>
-                {% for w in project_data.work %}
-                <tr>
-                    {% if w.key_date %}
-                    <td>{{ w.key_date }}</td>
-                    {% else %}
-                    <td></td>
-                    {% endif %}
+                        <dt>Effort left<dt>
+                        <dd>{{ project_data.effort_left_d }}</dd>
+                    </dl>
 
-                    <td>{{ w.title }}</td>
-                    <td><img width=25 src={{ w.assignee.picture }}>{{ w.assignee.name }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-
-            <h3>Participants</h3>
-            <ul>
-                {% for p in project_data.participants %}
-                <li>{{ p.name }}, {{ p.title }}, {{ p.team }}</li>
-                {% endfor %}
-            </ul>
-
+                    <h4>Participants</h4>
+                    <ul>
+                        {% for p in project_data.participants %}
+                        <li>{{ p.name }}, {{ p.title }}, {{ p.team }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
         </div><!--/span-->
+
+
     </div><!--/row-->
 </div><!--/.fluid-container-->
 
@@ -78,7 +93,7 @@
                 <label class='control-label' for='edit_project_name_input'>Name</label>
                 <div class='controls'>
                     <input type='text' id='edit_project_name_input'
-                           value='{{project_data.name}}'>
+                    value='{{project_data.name}}'>
                 </div>
             </div>
 
@@ -87,7 +102,7 @@
                     for='edit_project_target_date_input'>Target date</label>
                 <div class='controls'>
                     <input type='text' id='edit_project_target_date_input'
-                           value='{{project_data.target_date}}'>
+                    value='{{project_data.target_date}}'>
                 </div>
             </div>
 
@@ -173,9 +188,9 @@
     $('#add_work_modal_save').on('click', function() {
         $.ajax('/api/work', {
             data: {project_id: {{ project_data.project_id }},
-                   title: $('#work_title_input').val(),
-                   effort_left_d: $('#effort_left_input').val(),
-                   assignee_id: $('#assignee_select').val()},
+                title: $('#work_title_input').val(),
+                effort_left_d: $('#effort_left_input').val(),
+                assignee_id: $('#assignee_select').val()},
             type: 'POST',
             error: function(xhr, text_status, error_thrown) {
                 console.log('ERROR: ' + text_status);
