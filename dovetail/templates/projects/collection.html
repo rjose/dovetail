@@ -38,9 +38,9 @@
                 <tr>
                     <td>#{{ project.rank }}</td>
                     <td><a href={{ project.detail_url }}>{{ project.name}}</a></td>
-                    <td><span class="label label-success">ON TRACK</span></td>
-                    <td>{{ project.est_end_date }}</td>
-                    <td>{{ project.target_date }}</td>
+                    <td><span class="label {{ project.status.class }}">{{ project.status.label}}</span></td>
+                    <td><span class='{{ project.status.date_class }}'>{{ project.est_end_date }}</span></td>
+                    <td><span class='{{ project.status.date_class }}'>{{ project.target_date }}</span></td>
                     <td class='number'>{{ project.effort_left_d }}</td>
                 </tr>
                 {% endfor %}

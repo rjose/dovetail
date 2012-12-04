@@ -14,6 +14,17 @@ from dovetail.work.work import Work
 
 mod = Blueprint('projects', __name__)
 
+# TODO: Move this to projects/util.py
+def compute_status(target_date, est_date):
+    delta = est_date - target_date
+    if (delta.days <= -5):
+        result = {'label': 'EARLY', 'class': 'label-success', 'date_class': ''}
+    elif (delta.days > -5 and delta.days <= 0):
+        result = {'label': 'ON TRACK', 'class': '', 'date_class': ''}
+    else:
+        result = {'label': 'LATE', 'class': 'label-important', 'date_class': 'text-error'}
+    return result
+
 # Projects
 @mod.route('/projects')
 def projects():
@@ -27,6 +38,7 @@ def projects():
                 'name': p.name,
                 'target_date': dovetail.util.format_date(p.target_date),
                 'est_end_date': dovetail.util.format_date(p.est_end_date),
+                'status': compute_status(p.target_date, p.est_end_date),
                 'effort_left_d': dovetail.util.format_effort_left(p.total_effort(), 0),
                 'detail_url': '/projects/%d' % p.project_id,
                 'key_work': [{
