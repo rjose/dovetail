@@ -55,13 +55,13 @@
                     </table>
                 </div>
                 <div class="span3">
-                    <p><span class="label label-success">ON TRACK</span></p>
+                    <p><span class="label {{ project_data.status.class }}">{{ project_data.status.label }}</span></p>
                     <dl>
                         <dt>Estimated</dt>
-                        <dd>{{ project_data.est_end_date }}</dd>
+                        <dd><span class='{{ project_data.status.date_class }}'>{{ project_data.est_end_date }}</span></dd>
 
                         <dt>Target</dt>
-                        <dd>{{ project_data.target_date }}</dd>
+                        <dd><span class='{{ project_data.status.date_class }}'>{{ project_data.target_date }}</span></dd>
 
                         <dt>Effort left<dt>
                         <dd>{{ project_data.effort_left_d }}</dd>
