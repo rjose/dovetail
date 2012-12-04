@@ -63,18 +63,6 @@ def project(project_id):
             participants = people_db.select_project_participants(g.connection, project_id),
             people = people_db.select_people(g.connection))
 
-@mod.route('/projects/edit', methods = ['GET', 'POST'])
-def projects_edit():
-    if request.method == 'GET':
-        project_data = "1 Search\n"
-        project_data += "2 Endorsements\n"
-        project_data += "3 Rich Media\n"
-        project_data += "4 Mentions\n"
-        return render_template('projects/edit_collection.html', project_data=project_data)
-    else:
-        # TODO: Update the rankings
-        return redirect(url_for('projects'))
-
 # TODO: Move this
 def to_work(fields):
     result = Work(fields['id'], fields['title'], fields['effort_left_d'],
