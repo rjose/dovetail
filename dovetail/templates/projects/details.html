@@ -82,7 +82,9 @@
                     <ul>
                         {% for p in project_data.participants %}
                         <li><button class='btn btn-mini remove-participant'
-                            person_id='{{ p.person_id }}'>X</button> {{ p.name }}, {{ p.title }}, {{ p.team }}</li>
+                            person_id='{{ p.person_id }}'>X</button>
+                        <a href='/people/{{ p.person_id }}'>{{ p.name }}</a>,
+                        {{ p.title }}, {{ p.team }}</li>
                         {% endfor %}
                     </ul>
                 </div>
