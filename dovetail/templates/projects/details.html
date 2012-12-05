@@ -41,6 +41,7 @@
                             <th>Title</th>
                             <th>Assignee</th>
                             <th>Effort left (d)</th>
+                            <th>Est complete</th>
                             <th>Key date</th>
                         </tr>
                         {% for w in project_data.work %}
@@ -49,6 +50,7 @@
                             <td>{{ w.title}}</td>
                             <td>{{ w.assignee.name }}</td>
                             <td>{{ w.effort_left_d }}</td>
+                            <td>{{ w.end_date }}</td>
                             <td>{{ w.key_date }}</td>
                         </tr>
                         {% endfor %}

@@ -14,6 +14,8 @@ def work_data_to_work_object(work_data):
                     dovetail.util.condition_prereqs(w['prereqs']),
                     w['person_id'],
                     dovetail.util.condition_date(w['key_date']))
+        work.start_date = dovetail.util.condition_date(w['start_date'])
+        work.end_date = dovetail.util.condition_date(w['end_date'])
 
         assignee = Person(w['person_id'])
         assignee.name = w['assignee_name']
@@ -25,7 +27,7 @@ def work_data_to_work_object(work_data):
 # This augments work with an assignee Person object
 def select_work_for_project(connection, project_id):
     work_data = connection.execute(
-            '''select w.id, w.title,
+            '''select w.id, w.title, w.start_date, w.end_date,
                people.id as person_id, people.name as assignee_name,
                people.picture as assignee_picture, w.effort_left_d, w.key_date, w.prereqs
                from work as w
@@ -79,7 +81,7 @@ def select_key_work_for_project(connection, project_id):
 
 def select_done_work_for_project(connection, project_id):
     work_data = connection.execute(
-            '''select w.id, w.title,
+            '''select w.id, w.title, w.start_date, w.end_date,
                people.id as person_id, people.name as assignee_name,
                people.picture as assignee_picture, w.effort_left_d, w.key_date, w.prereqs
                from work as w

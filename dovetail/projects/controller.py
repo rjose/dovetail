@@ -51,6 +51,7 @@ def projects():
 def format_work_dates(work_collection):
     for w in work_collection:
         w.key_date = dovetail.util.format_date(w.key_date)
+        w.end_date = dovetail.util.format_date(w.end_date)
     return
 
 @mod.route('/projects/<int:project_id>')
