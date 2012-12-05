@@ -16,7 +16,6 @@ class Project:
         return reduce(lambda x, y: x + y, [w.effort_left_d for w in self.work], 0)
 
     def topo_sort_work(self):
-        # Reverse work to preserver initial order among items of same rank
         my_work = self.work
 
         work_dict = {}
@@ -28,6 +27,7 @@ class Project:
 
         for w in my_work:
             for p in w.prereqs:
-                graph.add_edge((work_dict[p], w))
+                if work_dict[p]:
+                    graph.add_edge((work_dict[p], w))
         self.work = topological_sorting(graph)
         return
