@@ -22,7 +22,6 @@ def data_to_projects(connection, data):
 
 # This adds 'key_work' to each project as well
 def select_project_collection(connection):
-    data = connection.execute(database.projects.select())
     data = connection.execute('''
     select id, name, target_date, est_end_date, value
     from projects
@@ -33,7 +32,6 @@ def select_project_collection(connection):
     return result
 
 def select_done_project_collection(connection):
-    data = connection.execute(database.projects.select())
     data = connection.execute('''
     select id, name, target_date, est_end_date, value
     from projects
@@ -136,4 +134,12 @@ def mark_projects_undone(connection, project_ids):
             where(database.projects.c.id == p).\
             values({'is_done': False})
         connection.execute(statement)
+    return
+
+def remove_participant(connection, project_id, person_id):
+    print "Removing %d from %d" % (person_id, project_id)
+    data = connection.execute('''
+    delete from project_participants
+    where project_id = %d and person_id = %d
+    ''' % (project_id, person_id))
     return

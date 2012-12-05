@@ -81,7 +81,8 @@
                     <h4>Participants</h4>
                     <ul>
                         {% for p in project_data.participants %}
-                        <li>{{ p.name }}, {{ p.title }}, {{ p.team }}</li>
+                        <li><button class='btn btn-mini remove-participant'
+                            person_id='{{ p.person_id }}'>X</button> {{ p.name }}, {{ p.title }}, {{ p.team }}</li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -93,6 +94,20 @@
 </div><!--/.fluid-container-->
 
 <script>
+    $('.remove-participant').on('click', function(evt) {
+        var person_id = $(evt.target).attr('person_id');
+        $.ajax('/api/projects/' + {{ project_data.project_id }} + '/remove_participant', {
+            data: {person_id: person_id},
+            type: 'POST',
+            error: function(xhr, text_status, error_thrown) {
+                console.log('ERROR: ' + text_status);
+            },
+            success: function(data, text_status, xhr) {
+                location.reload();
+            }
+        })
+    });
+
     $('.mark-work-undone').on('click', function(evt) {
         var work_id = $(evt.target).attr('work_id');
         $.ajax('/api/work/' + work_id + '/mark_undone', {

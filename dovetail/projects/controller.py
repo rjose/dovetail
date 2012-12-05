@@ -187,9 +187,17 @@ def reschedule_projects():
     dovetail.scheduler.reschedule_world(g.connection)
     return redirect('/projects')
 
-@mod.route('/api/project/<int:project_id>/mark_undone', methods=['POST'])
+@mod.route('/api/projects/<int:project_id>/mark_undone', methods=['POST'])
 def api_mark_projects_undone(project_id):
     projects_db.mark_projects_undone(g.connection, [project_id])
+    response_data = {}
+    result = Response(json.dumps(response_data), status=200, mimetype='application/json')
+    return result
+
+@mod.route('/api/projects/<int:project_id>/remove_participant', methods=['POST'])
+def api_remove_participant(project_id):
+    person_id = int(request.values['person_id'])
+    projects_db.remove_participant(g.connection, project_id, person_id)
     response_data = {}
     result = Response(json.dumps(response_data), status=200, mimetype='application/json')
     return result

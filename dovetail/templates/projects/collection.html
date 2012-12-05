@@ -63,7 +63,7 @@
 <script>
     $('.mark-project-undone').on('click', function(evt) {
         var project_id = $(evt.target).attr('project_id');
-        $.ajax('/api/project/' + project_id + '/mark_undone', {
+        $.ajax('/api/projects/' + project_id + '/mark_undone', {
             type: 'POST',
             error: function(xhr, text_status, error_thrown) {
                 console.log('ERROR: ' + text_status);
