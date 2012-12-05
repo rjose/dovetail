@@ -50,6 +50,12 @@ def projects():
 # TODO: Move this
 def format_work_dates(work_collection):
     for w in work_collection:
+        key_date = w.key_date
+        end_date = w.end_date
+
+        if key_date and end_date > key_date:
+            w.title_class = 'text-error'
+            w.key_date_class = 'text-error'
         w.key_date = dovetail.util.format_date(w.key_date)
         w.end_date = dovetail.util.format_date(w.end_date)
     return
