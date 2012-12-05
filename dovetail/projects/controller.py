@@ -38,8 +38,14 @@ def projects():
         data.append(d)
         project_rank_data.append('%d %s' % (p.project_id, p.name))
 
-    return render_template('projects/collection.html', project_data = data,
-            project_rank_data = '\n'.join(project_rank_data))
+    project_ids = json.dumps([p.project_id for p in projects])
+
+    done_projects = projects_db.select_done_project_collection(g.connection)
+    return render_template('projects/collection.html',
+            project_data = data,
+            project_rank_data = '\n'.join(project_rank_data),
+            project_ids = project_ids,
+            done_projects = done_projects)
 
 # TODO: Move this
 def format_work_dates(work_collection):
@@ -149,6 +155,7 @@ def parse_project_line(line, value):
 @mod.route('/api/projects/rankings', methods=['POST'])
 def rank_projects():
     project_lines = request.values['project_lines'].split('\n')
+    original_project_ids = set(json.loads(request.values['original_project_ids']))
 
     # TODO: Figure out how to compute project value
     cur_value = 100
@@ -161,6 +168,11 @@ def rank_projects():
         except:
             # TODO: log something
             pass
+
+    # Returned project ids
+    returned_project_ids = set([int(p.project_id) for p in projects])
+    done_project_ids = original_project_ids - returned_project_ids
+    projects_db.mark_projects_done(g.connection, done_project_ids)
 
     # Update project info
     projects_db.update_project_collection_value(g.connection, projects)
@@ -175,3 +187,9 @@ def reschedule_projects():
     dovetail.scheduler.reschedule_world(g.connection)
     return redirect('/projects')
 
+@mod.route('/api/project/<int:project_id>/mark_undone', methods=['POST'])
+def api_mark_projects_undone(project_id):
+    projects_db.mark_projects_undone(g.connection, [project_id])
+    response_data = {}
+    result = Response(json.dumps(response_data), status=200, mimetype='application/json')
+    return result

@@ -7,14 +7,7 @@ import dovetail.people.db as people_db
 from dovetail.projects.project import Project
 from dovetail.work.work import Work
 
-# This adds 'key_work' to each project as well
-def select_project_collection(connection):
-    data = connection.execute(database.projects.select())
-    data = connection.execute('''
-    select id, name, target_date, est_end_date, value
-    from projects
-    order by value desc
-    ''')
+def data_to_projects(connection, data):
     result = []
     for row in data:
         p = Project(row['id'])
@@ -25,6 +18,29 @@ def select_project_collection(connection):
         p.work = work_db.select_work_for_project(connection, row['id'])
         p.key_work = work_db.select_key_work_for_project(connection, row['id'])
         result.append(p)
+    return result
+
+# This adds 'key_work' to each project as well
+def select_project_collection(connection):
+    data = connection.execute(database.projects.select())
+    data = connection.execute('''
+    select id, name, target_date, est_end_date, value
+    from projects
+    where is_done = 0
+    order by value desc
+    ''')
+    result = data_to_projects(connection, data)
+    return result
+
+def select_done_project_collection(connection):
+    data = connection.execute(database.projects.select())
+    data = connection.execute('''
+    select id, name, target_date, est_end_date, value
+    from projects
+    where is_done = 1
+    order by value desc
+    ''')
+    result = data_to_projects(connection, data)
     return result
 
 
@@ -106,3 +122,18 @@ def get_projects_for_scheduling(connection):
         result.append(p)
     return result
 
+def mark_projects_done(connection, project_ids):
+    for p in project_ids:
+        statement = database.projects.update().\
+            where(database.projects.c.id == p).\
+            values({'is_done': True})
+        connection.execute(statement)
+    return
+
+def mark_projects_undone(connection, project_ids):
+    for p in project_ids:
+        statement = database.projects.update().\
+            where(database.projects.c.id == p).\
+            values({'is_done': False})
+        connection.execute(statement)
+    return

@@ -46,11 +46,34 @@
                 {% endfor %}
             </table>
 
+            {% if done_projects %}
+            <h3>Recently completed</h3>
+            <ul>
+                {% for p in done_projects %}
+                <li><button class='btn btn-mini mark-project-undone'
+                    project_id='{{ p.project_id }}'>Not done</button> {{ p.name }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
         </div><!--/span-->
     </div><!--/row-->
 </div><!--/.fluid-container-->
 
 <script>
+    $('.mark-project-undone').on('click', function(evt) {
+        var project_id = $(evt.target).attr('project_id');
+        $.ajax('/api/project/' + project_id + '/mark_undone', {
+            type: 'POST',
+            error: function(xhr, text_status, error_thrown) {
+                console.log('ERROR: ' + text_status);
+            },
+            success: function(data, text_status, xhr) {
+                location.reload();
+            }
+        })
+    });
+
     $('#navbar_projects').addClass('active');
 </script>
 
@@ -133,7 +156,8 @@
     $('#rank_projects_modal_save').on('click', function() {
         $.ajax('/api/projects/rankings', {
             data: {
-                project_lines: $('#rank_projects_text_area').val()
+                project_lines: $('#rank_projects_text_area').val(),
+                original_project_ids: '{{ project_ids }}'
             },
             type: 'POST',
             error: function(xhr, text_status, error_thrown) {
