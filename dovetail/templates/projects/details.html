@@ -48,7 +48,7 @@
                         <tr>
                             <td>{{ w.work_id }}</td>
                             <td>{{ w.title}}</td>
-                            <td>{{ w.assignee.name }}</td>
+                            <td><a href='{{ w.assignee.detail_url }}'>{{ w.assignee.name }}</a></td>
                             <td>{{ w.effort_left_d }}</td>
                             <td>{{ w.end_date }}</td>
                             <td>{{ w.key_date }}</td>

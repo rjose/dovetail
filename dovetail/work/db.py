@@ -20,6 +20,7 @@ def work_data_to_work_object(work_data):
         assignee = Person(w['person_id'])
         assignee.name = w['assignee_name']
         assignee.picture = w['assignee_picture']
+        assignee.detail_url = '/people/%d' % w['person_id']
         work.assignee = assignee
         result.append(work)
     return result
