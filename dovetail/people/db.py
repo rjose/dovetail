@@ -26,12 +26,22 @@ def select_project_participants(connection, project_id):
         result.append(p)
     return result
 
+def data_to_person(data):
+    result = Person(data['id'])
+    result.name = data['name']
+    result.picture = data['picture']
+    result.team = data['team']
+    result.title = data['title']
+    return result
+
+def select_person(connection, person_id):
+    person_data = connection.execute(database.people.select(
+        database.people.c.id == person_id)).first()
+    result = data_to_person(person_data)
+    return result
+
 def select_person_by_name(connection, name):
     person_data = connection.execute(database.people.select(
         database.people.c.name == name)).first()
-    result = Person(person_data['id'])
-    result.name = person_data['name']
-    result.picture = person_data['picture']
-    result.team = person_data['team']
-    result.title = person_data['title']
+    result = data_to_person(person_data)
     return result

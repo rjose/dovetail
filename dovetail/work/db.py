@@ -37,6 +37,28 @@ def select_work_for_project(connection, project_id):
     result = work_data_to_work_object(work_data)
     return result
 
+def select_work_for_person(connection, person_id):
+    work_data = connection.execute(
+            '''select w.id, w.title, w.effort_left_d, w.key_date, w.start_date, w.end_date,
+               w.prereqs, w.project_id,
+               projects.name as project_name
+               from work as w
+               inner join projects on projects.id = w.project_id
+               where w.assignee_id = %d and w.is_done = 0
+               order by w.start_date ASC
+            ''' % int(person_id))
+    result = []
+    for w in work_data:
+        work = Work(w['id'],
+                    w['title'],
+                    w['effort_left_d'],
+                    dovetail.util.condition_prereqs(w['prereqs']),
+                    person_id,
+                    dovetail.util.condition_date(w['key_date']))
+        work.project_name = w['project_name']
+        work.project_id = w['project_id']
+        result.append(work)
+    return result
 
 def select_key_work_for_project(connection, project_id):
     work_data = connection.execute(
