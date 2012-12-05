@@ -32,6 +32,7 @@
                             <th>Project</th>
                             <th>Title</th>
                             <th>Effort left (d)</th>
+                            <th>Est complete</th>
                             <th>Key date</th>
                         </tr>
                         {% for w in person.work %}
@@ -40,6 +41,7 @@
                             <td><a href='{{ w.project_url }}'>{{ w.project_name }}</a></td>
                             <td>{{ w.title }}</td>
                             <td>{{ w.effort_left_d }}</td>
+                            <td>{{ w.est_end_date }}</td>
                             <td>{{ w.key_date }}</td>
                         </tr>
                         {% endfor %}

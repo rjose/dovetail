@@ -57,6 +57,7 @@ def select_work_for_person(connection, person_id):
                     dovetail.util.condition_date(w['key_date']))
         work.project_name = w['project_name']
         work.project_id = w['project_id']
+        work.end_date = dovetail.util.condition_date(w['end_date'])
         result.append(work)
     return result
 
