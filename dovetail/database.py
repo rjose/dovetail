@@ -19,6 +19,7 @@ projects = Table('projects', metadata,
         Column('is_deleted', Boolean, default = False),
         Column('is_done', Boolean, default = False),
         Column('value', Float),
+        Column('completion_date', Date()),
         Column('target_date', Date()),
         Column('est_end_date', Date())
         )
@@ -43,6 +44,7 @@ work = Table('work', metadata,
         Column('key_date', Date()),
         Column('start_date', Date()),
         Column('end_date', Date()),
+        Column('completion_date', Date()),
         Column('prereqs', String(200))
         )
 
