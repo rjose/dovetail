@@ -53,6 +53,17 @@
                         </tr>
                         {% endfor %}
                     </table>
+
+                    {% if done_work %}
+                    <h4>Completed work</h4>
+
+                    <ul>
+                        {% for w in done_work %}
+                        <li><button class='btn btn-mini mark-work-undone'
+                            work_id='{{ w.work_id }}'>Not done</button> {{ w.title }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
                 </div>
                 <div class="span3">
                     <p><span class="label {{ project_data.status.class }}">{{ project_data.status.label }}</span></p>
@@ -80,6 +91,21 @@
 
     </div><!--/row-->
 </div><!--/.fluid-container-->
+
+<script>
+    $('.mark-work-undone').on('click', function(evt) {
+        var work_id = $(evt.target).attr('work_id');
+        $.ajax('/api/work/' + work_id + '/mark_undone', {
+            type: 'POST',
+            error: function(xhr, text_status, error_thrown) {
+                console.log('ERROR: ' + text_status);
+            },
+            success: function(data, text_status, xhr) {
+                location.reload();
+            }
+        })
+    });
+</script>
 
 {# Modal: Edit project #}
 <div id='edit_project_modal' class='modal hide fade' tabindex='-1' role='dialog'>
@@ -127,7 +153,8 @@
             data: {
                 name: $('#edit_project_name_input').val(),
                 target_date: $('#edit_project_target_date_input').val(),
-                worklines: $('#edit_project_worklines').val()
+                worklines: $('#edit_project_worklines').val(),
+                original_work_ids: '{{ project_data.work_ids }}'
             },
             type: 'POST',
             error: function(xhr, text_status, error_thrown) {

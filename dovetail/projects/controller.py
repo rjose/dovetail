@@ -41,11 +41,16 @@ def projects():
     return render_template('projects/collection.html', project_data = data,
             project_rank_data = '\n'.join(project_rank_data))
 
+# TODO: Move this
+def format_work_dates(work_collection):
+    for w in work_collection:
+        w.key_date = dovetail.util.format_date(w.key_date)
+    return
+
 @mod.route('/projects/<int:project_id>')
 def project(project_id):
     project = projects_db.select_project(g.connection, project_id)
-    for w in project.work:
-        w.key_date = dovetail.util.format_date(w.key_date)
+    format_work_dates(project.work)
     project_data = {
             'project_id': project.project_id,
             'name': project.name,
@@ -54,13 +59,17 @@ def project(project_id):
             'status': projects_util.compute_status(project.target_date, project.est_end_date),
             'effort_left_d': dovetail.util.format_effort_left(project.total_effort(), 1),
             'work': project.work,
+            'work_ids': json.dumps([w.work_id for w in project.work]),
             'participants': project.participants
             }
+    done_work = work_db.select_done_work_for_project(g.connection, project_id)
+    format_work_dates(done_work)
 
     return render_template('projects/details.html',
             project_data = project_data,
             work_data = projects_util.project_work_to_string(project.work),
             participants = people_db.select_project_participants(g.connection, project_id),
+            done_work = done_work,
             people = people_db.select_people(g.connection))
 
 # TODO: Move this
@@ -76,6 +85,7 @@ def edit_project(project_id):
     name = request.values['name']
     target_date = dovetail.util.parse_date(request.values['target_date'])
     worklines = request.values['worklines'].split('\n')
+    original_work_ids = set(json.loads(request.values['original_work_ids']))
 
     work = []
     for workline in worklines:
@@ -93,6 +103,11 @@ def edit_project(project_id):
         except:
             # TODO: log something
             pass
+
+    # Mark missing work as done
+    returned_work_ids = set([w.work_id for w in work])
+    done_work_ids = original_work_ids - returned_work_ids
+    work_db.mark_work_done(g.connection, done_work_ids)
 
     project = Project(project_id)
     project.name = name

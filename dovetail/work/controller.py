@@ -5,6 +5,7 @@ from datetime import datetime
 import dovetail.database as database
 import dovetail.projects.db as projects_db
 import dovetail.people.db as people_db
+import dovetail.work.db as work_db
 import dovetail.scheduler
 
 mod = Blueprint('work', __name__)
@@ -27,3 +28,9 @@ def api_work():
     dovetail.scheduler.reschedule_world(g.connection)
     return Response(json.dumps(response_data), status=200, mimetype='application/json')
 
+@mod.route('/api/work/<int:work_id>/mark_undone', methods=['POST'])
+def api_mark_work_undone(work_id):
+    work_db.mark_work_undone(g.connection, [work_id])
+    response_data = {}
+    result = Response(json.dumps(response_data), status=200, mimetype='application/json')
+    return result
