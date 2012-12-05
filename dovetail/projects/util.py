@@ -50,6 +50,9 @@ def parse_workline(connection, workline):
     return result
 
 def compute_status(target_date, est_date):
+    if not est_date:
+        return {'label': 'UNKNOWN', 'class': '', 'date_class': ''}
+
     delta = est_date - target_date
     if (delta.days <= -5):
         result = {'label': 'EARLY', 'class': 'label-success', 'date_class': ''}
