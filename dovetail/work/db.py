@@ -64,6 +64,33 @@ def select_work_for_person(connection, person_id):
         result.append(work)
     return result
 
+def select_timelines_for_people(connection, people_ids):
+    # This converts something like 'set([1, 2]) to '1, 2'
+    people_id_string = str(people_ids)[5:-2]
+    if not people_id_string:
+        return []
+    work_data = connection.execute(
+            '''select w.id, w.title, w.key_date, w.start_date, w.end_date,
+               w.project_id,
+               projects.name as project_name,
+               people.name as assignee_name
+               from work as w
+               inner join projects on projects.id = w.project_id
+               inner join people on people.id = w.assignee_id
+               where w.assignee_id in (%s) and w.is_done = 0
+               order by w.start_date ASC
+            ''' % people_id_string)
+    assignments = {}
+    for w in work_data:
+        items = assignments.get(w['assignee_name'], [])
+        items.append({'label': w['title'],
+            'project_id': w['project_id'],
+            'start_date': dovetail.util.condition_date(w['start_date']),
+            'end_date': dovetail.util.condition_date(w['end_date'])})
+        assignments[w['assignee_name']] = items
+
+    return assignments
+
 def select_key_work_for_project(connection, project_id):
     work_data = connection.execute(
             '''select id, title, effort_left_d, prereqs, assignee_id, key_date

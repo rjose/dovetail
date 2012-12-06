@@ -50,18 +50,49 @@ def projects():
 # TODO: Move this
 def format_work_dates(work_collection):
     for w in work_collection:
-        key_date = w.key_date
-        end_date = w.end_date
-
-        if key_date and end_date > key_date:
+        if w.key_date and w.end_date > w.key_date:
             w.title_class = 'text-error'
             w.key_date_class = 'text-error'
-        w.key_date = dovetail.util.format_date(w.key_date)
-        w.end_date = dovetail.util.format_date(w.end_date)
+        w.key_date_str = dovetail.util.format_date(w.key_date)
+        w.end_date_str = dovetail.util.format_date(w.end_date)
     return
+
+# TODO: Move this
+def get_timeline_rows(connection, assignee_ids, highlighted_project_id=None):
+    timelines = work_db.select_timelines_for_people(connection, assignee_ids)
+    names = timelines.keys()
+    names.sort()
+
+    # TODO: Figure out where this should be in the canvas
+    cur_y = 50
+    y_step = 30
+    result = []
+    for name in names:
+        row = {
+            'label': name,
+            'y': cur_y
+        }
+        bars = []
+        for work in timelines[name]:
+            bar = {
+                'label': work['label'],
+                # TODO: Compute x values from dates
+                'x_start': 50,
+                'x_end': 100,
+                # TODO: Compute color based on project ID and highlighted_project_id
+                'color': 'red'
+            }
+            bars.append(bar)
+        row['bars'] = bars
+        result.append(row)
+        cur_y += y_step
+
+    return result
 
 @mod.route('/projects/<int:project_id>')
 def project(project_id):
+    is_timeline = request.args.get('timeline')
+
     project = projects_db.select_project(g.connection, project_id)
     format_work_dates(project.work)
     project_data = {
@@ -73,17 +104,31 @@ def project(project_id):
             'effort_left_d': dovetail.util.format_effort_left(project.total_effort(), 1),
             'work': project.work,
             'work_ids': json.dumps([w.work_id for w in project.work]),
-            'participants': project.participants
+            'participants': project.participants,
+            'details_url': '/projects/%d' % project_id,
+            'details_timeline_url': '/projects/%d?timeline=true' % project_id
             }
-    done_work = work_db.select_done_work_for_project(g.connection, project_id)
-    format_work_dates(done_work)
 
-    return render_template('projects/details.html',
-            project_data = project_data,
-            work_data = projects_util.project_work_to_string(project.work),
-            participants = people_db.select_project_participants(g.connection, project_id),
-            done_work = done_work,
-            people = people_db.select_people(g.connection))
+    if is_timeline:
+        timeline_rows = get_timeline_rows(g.connection, set([w.assignee.person_id for w in project.work]),
+                project_id)
+        print timeline_rows
+        return render_template('projects/details_timeline.html',
+                project_data = project_data,
+                work_data = projects_util.project_work_to_string(project.work),
+                participants = people_db.select_project_participants(g.connection, project_id),
+                people = people_db.select_people(g.connection))
+    else:
+        done_work = work_db.select_done_work_for_project(g.connection, project_id)
+        format_work_dates(done_work)
+        return render_template('projects/details.html',
+                project_data = project_data,
+                work_data = projects_util.project_work_to_string(project.work),
+                participants = people_db.select_project_participants(g.connection, project_id),
+                done_work = done_work,
+                people = people_db.select_people(g.connection))
+
+
 
 # TODO: Move this
 def to_work(fields):
