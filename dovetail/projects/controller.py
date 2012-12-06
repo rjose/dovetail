@@ -11,6 +11,7 @@ import dovetail.scheduler
 
 from dovetail.projects.project import Project
 from dovetail.work.work import Work
+from dovetail.render.timeline import TimelineRenderer
 
 mod = Blueprint('projects', __name__)
 
@@ -57,37 +58,6 @@ def format_work_dates(work_collection):
         w.end_date_str = dovetail.util.format_date(w.end_date)
     return
 
-# TODO: Move this
-def get_timeline_rows(connection, assignee_ids, highlighted_project_id=None):
-    timelines = work_db.select_timelines_for_people(connection, assignee_ids)
-    names = timelines.keys()
-    names.sort()
-
-    # TODO: Figure out where this should be in the canvas
-    cur_y = 50
-    y_step = 30
-    result = []
-    for name in names:
-        row = {
-            'label': name,
-            'y': cur_y
-        }
-        bars = []
-        for work in timelines[name]:
-            bar = {
-                'label': work['label'],
-                # TODO: Compute x values from dates
-                'x_start': 50,
-                'x_end': 100,
-                # TODO: Compute color based on project ID and highlighted_project_id
-                'color': 'red'
-            }
-            bars.append(bar)
-        row['bars'] = bars
-        result.append(row)
-        cur_y += y_step
-
-    return result
 
 @mod.route('/projects/<int:project_id>')
 def project(project_id):
@@ -110,11 +80,13 @@ def project(project_id):
             }
 
     if is_timeline:
-        timeline_rows = get_timeline_rows(g.connection, set([w.assignee.person_id for w in project.work]),
-                project_id)
-        print timeline_rows
+        assignee_ids = set([w.assignee.person_id for w in project.work])
+        timelines = work_db.select_timelines_for_people(g.connection, assignee_ids)
+        timeline_renderer = TimelineRenderer(datetime.now(), timelines, project_id)
+
         return render_template('projects/details_timeline.html',
                 project_data = project_data,
+                timeline_code = timeline_renderer.get_timeline_code(),
                 work_data = projects_util.project_work_to_string(project.work),
                 participants = people_db.select_project_participants(g.connection, project_id),
                 people = people_db.select_people(g.connection))

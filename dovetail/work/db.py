@@ -71,7 +71,7 @@ def select_timelines_for_people(connection, people_ids):
         return []
     work_data = connection.execute(
             '''select w.id, w.title, w.key_date, w.start_date, w.end_date,
-               w.project_id,
+               w.project_id, w.effort_left_d,
                projects.name as project_name,
                people.name as assignee_name
                from work as w
@@ -83,10 +83,13 @@ def select_timelines_for_people(connection, people_ids):
     assignments = {}
     for w in work_data:
         items = assignments.get(w['assignee_name'], [])
-        items.append({'label': w['title'],
+        items.append({
+            'label': w['title'],
             'project_id': w['project_id'],
+            'effort_left_d': w['effort_left_d'],
             'start_date': dovetail.util.condition_date(w['start_date']),
-            'end_date': dovetail.util.condition_date(w['end_date'])})
+            'end_date': dovetail.util.condition_date(w['end_date'])
+        })
         assignments[w['assignee_name']] = items
 
     return assignments

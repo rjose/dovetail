@@ -2,6 +2,7 @@
 {% block title %}{{ project_data.name }}{% endblock %}
 
 {%block content %}
+<script type='text/javascript' src='../assets/js/dovetail.js'></script>
 <style type='text/css'>
     body #edit_project_modal {
         width: 800px;
@@ -32,12 +33,20 @@
         <div class="span10">
             <div class='row-fluid'>
                 <h2>Project: {{ project_data.name }}</h2>
+                <div id='viewer'></div>
             </div>
         </div><!--/span-->
-
-
     </div><!--/row-->
 </div><!--/.fluid-container-->
+
+<script>
+    Planman.init();
+
+    {% autoescape off %}
+    {{ timeline_code }}
+    {% endautoescape %}
+</script>
+
 
 {# Modal: Edit project #}
 <div id='edit_project_modal' class='modal hide fade' tabindex='-1' role='dialog'>
