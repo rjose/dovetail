@@ -52,6 +52,8 @@ class TimelineRenderer():
         
     # TODO: Rename this
     def get_timeline_rows(self):
+        if not self.timelines:
+            return []
         names = self.timelines.keys()
         names.sort()
 
