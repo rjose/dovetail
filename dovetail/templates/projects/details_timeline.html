@@ -3,6 +3,7 @@
 
 {%block content %}
 <script type='text/javascript' src='../assets/js/dovetail.js'></script>
+<script type='text/javascript' src='../assets/js/dovetail_viewer.js'></script>
 <style type='text/css'>
     body #edit_project_modal {
         width: 800px;
@@ -33,6 +34,8 @@
         <div class="span10">
             <div class='row-fluid'>
                 <h2>Project: {{ project_data.name }}</h2>
+                <div id='timeline-viewer'></div>
+                <h2>Old</h2>
                 <div id='viewer'></div>
             </div>
         </div><!--/span-->
@@ -40,6 +43,8 @@
 </div><!--/.fluid-container-->
 
 <script>
+    var viewer = DovetailViewer('timeline-viewer');
+    viewer.addRectangle(20, 20, 100, 25, 'blue');
     Planman.init();
 
     {% autoescape off %}
