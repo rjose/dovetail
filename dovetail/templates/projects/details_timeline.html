@@ -2,7 +2,6 @@
 {% block title %}{{ project_data.name }}{% endblock %}
 
 {%block content %}
-<script type='text/javascript' src='../assets/js/dovetail.js'></script>
 <script type='text/javascript' src='../assets/js/dovetail_viewer.js'></script>
 <style type='text/css'>
     body #edit_project_modal {
@@ -35,8 +34,6 @@
             <div class='row-fluid'>
                 <h2>Project: {{ project_data.name }}</h2>
                 <div id='timeline-viewer'></div>
-                <h2>Old</h2>
-                <div id='viewer'></div>
             </div>
         </div><!--/span-->
     </div><!--/row-->
