@@ -43,13 +43,12 @@
 </div><!--/.fluid-container-->
 
 <script>
-    var viewer = DovetailViewer('timeline-viewer');
-    viewer.addRectangle(20, 20, 100, 25, 'blue');
-    Planman.init();
-
     {% autoescape off %}
-    {{ timeline_code }}
+    viewerData = {{ timeline_code }}
     {% endautoescape %}
+
+    var viewer = DovetailViewer('timeline-viewer');
+    viewer.renderData(viewerData);
 </script>
 
 

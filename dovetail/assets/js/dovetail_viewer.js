@@ -23,9 +23,17 @@ function DovetailViewer(viewerId) {
         return result;
     }
 
+    function renderData(data) {
+        var bars = data.bars;
+        bars.forEach(function(b) {
+            addRectangle(b.x, b.y, b.width, b.height, b.color);
+        });
+    }
+
 
     var result = {
-        addRectangle: addRectangle
+        addRectangle: addRectangle,
+        renderData: renderData
     };
 
     return result;

@@ -1,4 +1,5 @@
 import dovetail.util
+import json
 
 class TimelineRenderer():
     def __init__(self, cur_day, timeline_data, highlighted_project_id=None):
@@ -20,9 +21,13 @@ class TimelineRenderer():
         return result
 
     # TODO: Rework this so it converts into JSON data
+    # Remove this
     def get_timeline_code(self):
         timeline_rows = self.get_timeline_rows()
         result = self.render_timeline_rows(timeline_rows)
+        return result
+
+    def get_timeline_data(self):
         return result
 
     def construct_bars(self, work_data):
@@ -75,8 +80,12 @@ class TimelineRenderer():
         rendered_rows = []
         for row in rows:
             for bar in row['bars']:
-                rendered_rows.append('Planman.addRectangle(%.1f, %.1f, %.1f, %1.f, "%s");'
-                        % (bar['x_start'], row['y'], bar['width'], self.BAR_HEIGHT, bar['color']))
-        result = '\n'.join(rendered_rows)
+                rendered_rows.append({'x': bar['x_start'], 'y': row['y'],
+                    'width': bar['width'], 'height': self.BAR_HEIGHT,
+                    'color': bar['color']})
+        data = {
+            'bars' : rendered_rows
+        }
+        result = json.dumps(data)
         return result
 
