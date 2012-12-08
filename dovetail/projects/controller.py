@@ -11,7 +11,7 @@ import dovetail.scheduler
 
 from dovetail.projects.project import Project
 from dovetail.work.work import Work
-from dovetail.render.timeline import TimelineRenderer
+from dovetail.charts.timeline import TimelineRenderer
 
 mod = Blueprint('projects', __name__)
 
