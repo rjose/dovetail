@@ -23,9 +23,26 @@ function DovetailChart(viewerId) {
         return result;
     }
 
+   function addText(x, y, text, color) {
+       var result = createSvgNode("text");
+       result.setAttributeNS(null, "x", x);
+       result.setAttributeNS(null, "y", y);
+       result.setAttributeNS(null, "fill", color);
+
+       var textNode = document.createTextNode(text);
+       result.appendChild(textNode);
+
+       svgViewer.appendChild(result);
+       return result;
+   }
+
     function renderData(data) {
         data.rows.forEach(function(r) {
             r.bars.forEach(function(b) {
+                // TODO: Set text coordinates
+                var textX = 10;
+                var textY = b.y + 15;
+                addText(textX, textY, r.label, '#333');
                 addRectangle(b.x, b.y, b.width, b.height, b.color);
             });
         });
@@ -34,6 +51,7 @@ function DovetailChart(viewerId) {
 
     var result = {
         addRectangle: addRectangle,
+        addText: addText,
         renderData: renderData
     };
 
