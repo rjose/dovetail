@@ -49,23 +49,13 @@ def projects():
             project_ids = project_ids,
             done_projects = done_projects)
 
-# TODO: Move this
-def format_work_dates(work_collection):
-    for w in work_collection:
-        if w.key_date and w.end_date > w.key_date:
-            w.title_class = 'text-error'
-            w.key_date_class = 'text-error'
-        w.key_date_str = dovetail.util.format_date(w.key_date)
-        w.end_date_str = dovetail.util.format_date(w.end_date)
-    return
-
 
 @mod.route('/projects/<int:project_id>')
 def project(project_id):
     is_timeline = request.args.get('timeline')
 
     project = projects_db.select_project(g.connection, project_id)
-    format_work_dates(project.work)
+    projects_util.format_work_dates(project.work)
     project_data = {
             'project_id': project.project_id,
             'name': project.name,
@@ -94,7 +84,7 @@ def project(project_id):
                 people = people_db.select_people(g.connection))
     else:
         done_work = work_db.select_done_work_for_project(g.connection, project_id)
-        format_work_dates(done_work)
+        projects_util.format_work_dates(done_work)
         return render_template('projects/details.html',
                 project_data = project_data,
                 work_data = projects_util.project_work_to_string(project.work),
@@ -162,7 +152,6 @@ def api_add_project_participant(project_id):
     response_data = {}
     return Response(json.dumps(response_data), status=200, mimetype='application/json')
 
-# TODO: Move this
 def parse_project_line(line, value):
     parts = line.split()
     result = Project(parts[0])
