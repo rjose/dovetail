@@ -1,13 +1,23 @@
 import dovetail.database as database
 from dovetail.people.person import Person
 
+def fields_to_person_object(fields):
+    result = Person(fields['id'])
+
+    for f in fields.keys():
+        if f == 'name':
+            result.name = fields[f]
+        elif f == 'title':
+            result.title = fields[f]
+        elif f == 'team':
+            result.team = fields[f]
+        elif f == 'picture':
+            result.picture = fields[f]
+    return result
+
 def select_people(connection):
     people_data = connection.execute('select id, name from people order by name')
-    result = []
-    for d in people_data:
-        p = Person(d['id'])
-        p.name = d['name']
-        result.append(p)
+    result = [fields_to_person_object(d) for d in people_data]
     return result
 
 def select_project_participants(connection, project_id):
@@ -16,32 +26,17 @@ def select_project_participants(connection, project_id):
                inner join project_participants on project_participants.person_id = people.id
                where project_participants.project_id= %d
                order by name''' % int(project_id))
-    result = []
-    for d in particpants_data:
-        p = Person(d['id'])
-        p.name = d['name']
-        p.title = d['title']
-        p.team = d['team']
-        p.picture = d['picture']
-        result.append(p)
-    return result
-
-def data_to_person(data):
-    result = Person(data['id'])
-    result.name = data['name']
-    result.picture = data['picture']
-    result.team = data['team']
-    result.title = data['title']
+    result = [fields_to_person_object(d) for d in particpants_data]
     return result
 
 def select_person(connection, person_id):
     person_data = connection.execute(database.people.select(
         database.people.c.id == person_id)).first()
-    result = data_to_person(person_data)
+    result = fields_to_person_object(person_data)
     return result
 
 def select_person_by_name(connection, name):
     person_data = connection.execute(database.people.select(
         database.people.c.name == name)).first()
-    result = data_to_person(person_data)
+    result = fields_to_person_object(person_data)
     return result
