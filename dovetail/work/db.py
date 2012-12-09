@@ -10,14 +10,22 @@ def fields_to_work_object(fields):
     for f in fields.keys():
         if f == 'title':
             result.title = fields[f]
+        elif f == 'assignee_id' or f == 'person_id':
+            result.assignee_id = fields[f]
+        elif f == 'project_name':
+            result.project_name = fields[f]
+        elif f == 'project_id':
+            result.project_id = fields[f]
+
         elif f == 'effort_left_d':
             result.effort_left_d = float(fields[f])
         elif f == 'prereqs':
             result.prereqs = dovetail.util.condition_prereqs(fields[f])
-        elif f == 'assignee_id' or f == 'person_id':
-            result.assignee_id = fields[f]
+
         elif f == 'key_date':
             result.key_date = dovetail.util.condition_date(fields[f])
+        elif f == 'end_date':
+            result.end_date = dovetail.util.condition_date(fields[f])
     return result
 
 def work_data_to_work_object(work_data):
@@ -55,21 +63,14 @@ def select_work_for_project(connection, project_id):
 def select_work_for_person(connection, person_id):
     work_data = connection.execute(
             '''select w.id, w.title, w.effort_left_d, w.key_date, w.start_date, w.end_date,
-               w.prereqs, w.project_id,
+               w.prereqs, w.project_id, w.assignee_id,
                projects.name as project_name
                from work as w
                inner join projects on projects.id = w.project_id
                where w.assignee_id = %d and w.is_done = 0
                order by w.start_date ASC
             ''' % int(person_id))
-    result = []
-    for w in work_data:
-        work = fields_to_work_object(w)
-        work.assignee_id = person_id
-        work.project_name = w['project_name']
-        work.project_id = w['project_id']
-        work.end_date = dovetail.util.condition_date(w['end_date'])
-        result.append(work)
+    result = [fields_to_work_object(w) for w in work_data]
     return result
 
 def select_timelines_for_people(connection, people_ids):
