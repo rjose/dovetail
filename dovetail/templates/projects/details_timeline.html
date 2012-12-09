@@ -41,9 +41,10 @@
 
 <script>
     {% autoescape off %}
-    viewerData = {{ timeline_code }}
+    var viewerData = {{ timeline_data }}
     {% endautoescape %}
 
+    // TODO: Rename to Gantt viewer
     var viewer = DovetailViewer('timeline-viewer');
     viewer.renderData(viewerData);
 </script>

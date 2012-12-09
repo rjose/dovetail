@@ -24,9 +24,10 @@ function DovetailViewer(viewerId) {
     }
 
     function renderData(data) {
-        var bars = data.bars;
-        bars.forEach(function(b) {
-            addRectangle(b.x, b.y, b.width, b.height, b.color);
+        data.rows.forEach(function(r) {
+            r.bars.forEach(function(b) {
+                addRectangle(b.x, b.y, b.width, b.height, b.color);
+            });
         });
     }
 

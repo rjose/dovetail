@@ -11,7 +11,8 @@ import dovetail.scheduler
 
 from dovetail.projects.project import Project
 from dovetail.work.work import Work
-from dovetail.charts.timeline import TimelineRenderer
+
+from dovetail.charts.support.gantt import Gantt
 
 mod = Blueprint('projects', __name__)
 
@@ -82,11 +83,25 @@ def project(project_id):
     if is_timeline:
         assignee_ids = set([w.assignee.person_id for w in project.work])
         timelines = work_db.select_timelines_for_people(g.connection, assignee_ids)
-        timeline_renderer = TimelineRenderer(datetime.now(), timelines, project_id)
+
+        # Sample data
+        rows = [
+            {'label': 'Borvo Borvison',
+             'bars': [
+                 {'start': datetime(2012, 12, 9), 'end': datetime(2012, 12, 12), 'effort_d': 2, 'color': 'blue'},
+                 {'start': datetime(2012, 12, 13), 'end': datetime(2012, 12, 18), 'effort_d': 5, 'color': 'gray'}
+              ]},
+            {'label': 'Torvo Torvison',
+             'bars': [
+                 {'start': datetime(2012, 12, 9), 'end': datetime(2012, 12, 17), 'effort_d': 2, 'color': 'blue'},
+                 {'start': datetime(2012, 12, 18), 'end': datetime(2012, 12, 18), 'effort_d': 1, 'color': 'gray'}
+              ]}
+        ]
+        gantt = Gantt(datetime.now(), rows)
 
         return render_template('projects/details_timeline.html',
                 project_data = project_data,
-                timeline_code = timeline_renderer.get_timeline_code(),
+                timeline_data = gantt.as_json(),
                 work_data = projects_util.project_work_to_string(project.work),
                 participants = people_db.select_project_participants(g.connection, project_id),
                 people = people_db.select_people(g.connection))
