@@ -1,5 +1,5 @@
 
-function DovetailViewer(viewerId) {
+function DovetailChart(viewerId) {
     // Creates an svg node. The `svgType` should be things like `svg`, `rect`, etc.
     // See [SVG Shapes](http://www.w3.org/TR/SVG11/shapes.html) for more info.
     function createSvgNode(svgType) {

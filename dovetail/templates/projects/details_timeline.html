@@ -2,7 +2,7 @@
 {% block title %}{{ project_data.name }}{% endblock %}
 
 {%block content %}
-<script type='text/javascript' src='../assets/js/dovetail_viewer.js'></script>
+<script type='text/javascript' src='../assets/js/dovetail_chart.js'></script>
 <style type='text/css'>
     body #edit_project_modal {
         width: 800px;
@@ -33,7 +33,7 @@
         <div class="span10">
             <div class='row-fluid'>
                 <h2>Project: {{ project_data.name }}</h2>
-                <div id='timeline-viewer'></div>
+                <div id='timeline-chart'></div>
             </div>
         </div><!--/span-->
     </div><!--/row-->
@@ -41,12 +41,11 @@
 
 <script>
     {% autoescape off %}
-    var viewerData = {{ timeline_data }}
+    var timelineData = {{ timeline_data }}
     {% endautoescape %}
 
-    // TODO: Rename to Gantt viewer
-    var viewer = DovetailViewer('timeline-viewer');
-    viewer.renderData(viewerData);
+    var chart = DovetailChart('timeline-chart');
+    chart.renderData(timelineData);
 </script>
 
 
