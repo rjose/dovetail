@@ -5,14 +5,12 @@ from dovetail.timeline.timeline import Timeline
 from dovetail.timeline.slot import Slot
 from dovetail.work.work import Work
 import dovetail.work.db as work_db
+import dovetail.tests.util as util
 
 class TestWork(unittest.TestCase):
 
     def test_schedule(self):
-        nov1 = datetime.strptime("Nov 1, 2012", "%b %d, %Y") # Thu
-        nov7 = datetime.strptime("Nov 7, 2012", "%b %d, %Y") # Wed
-        nov8 = datetime.strptime("Nov 8, 2012", "%b %d, %Y") # Thu
-        timeline = Timeline(nov1)
+        timeline = Timeline(util.nov1)
         work_slot, _ = timeline.find_slot(4, 1.5)
 
         w = Work(1)
@@ -21,15 +19,12 @@ class TestWork(unittest.TestCase):
         w.assignee_id = 100
 
         w.schedule(work_slot)
-        self.assertEqual(nov7, w.est_start_date())
-        self.assertEqual(nov8, w.est_end_date())
+        self.assertEqual(util.nov7, w.est_start_date())
+        self.assertEqual(util.nov8, w.est_end_date())
         return
 
     def test_earliest_start_date(self):
-        nov1 = datetime.strptime("Nov 1, 2012", "%b %d, %Y") # Thu
-        nov5 = datetime.strptime("Nov 5, 2012", "%b %d, %Y") # Mon
-        nov7 = datetime.strptime("Nov 7, 2012", "%b %d, %Y") # Wed
-        timeline = Timeline(nov1)
+        timeline = Timeline(util.nov1)
         work_slot, _ = timeline.find_slot(4, 1.5)
 
         w1 = Work(1)
@@ -51,7 +46,7 @@ class TestWork(unittest.TestCase):
         w3.assignee_id = 200
 
         work_dict = {1: w1, 2: w2, 3: w3}
-        self.assertEqual(nov7, w3.earliest_start_date(work_dict, nov1))
+        self.assertEqual(util.nov7, w3.earliest_start_date(work_dict, util.nov1))
         return
 
     def test_fields_to_work_object(self):
