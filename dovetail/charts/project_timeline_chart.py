@@ -6,11 +6,14 @@ class ProjectTimelineChart:
     def __init__(self, project_id, cur_day, timelines):
         self.cur_day = dovetail.util.standardize_date(cur_day)
         self.project_id = project_id
+        self.data = []
+
+        if not timelines:
+            return
 
         names = timelines.keys()
         names.sort()
 
-        self.data = []
         for name in names:
             work = timelines[name]
             row = {
@@ -18,7 +21,7 @@ class ProjectTimelineChart:
                 'bars': self.work_to_bars(work)
             }
             self.data.append(row)
-        return 
+        return
 
     def work_to_bars(self, work):
         result = []
