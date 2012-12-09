@@ -104,14 +104,6 @@ def project(project_id):
 
 
 
-# TODO: Move this
-def to_work(fields):
-    result = Work(fields['id'], fields['title'], fields['effort_left_d'],
-            dovetail.util.condition_prereqs(fields['prereqs']),
-            fields['assignee_id'], fields['key_date'])
-    return result
-
-
 @mod.route('/api/projects/<int:project_id>', methods=['POST'])
 def edit_project(project_id):
     name = request.values['name']
@@ -122,7 +114,6 @@ def edit_project(project_id):
     work = []
     for workline in worklines:
         try:
-            # TODO: Change these so they return Work objects
             work_data = projects_util.parse_workline(g.connection, workline)
             fields = work_data['fields']
             fields.update(project_id = project_id)
@@ -131,7 +122,7 @@ def edit_project(project_id):
             # TOOD: Separate topo sort work so we only have to write to database once
             work_db.update_work(g.connection, work_data)
             fields.update(id = work_data['id'])
-            work.append(to_work(fields))
+            work.append(work_db.fields_to_work_object(fields))
         except:
             # TODO: log something
             pass

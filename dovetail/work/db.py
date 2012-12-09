@@ -5,21 +5,33 @@ import dovetail.database as database
 from dovetail.work.work import Work
 from dovetail.people.person import Person
 
+def fields_to_work_object(fields):
+    result = Work(fields['id'])
+    for f in fields.keys():
+        if f == 'title':
+            result.title = fields[f]
+        elif f == 'effort_left_d':
+            result.effort_left_d = float(fields[f])
+        elif f == 'prereqs':
+            result.prereqs = dovetail.util.condition_prereqs(fields[f])
+        elif f == 'assignee_id' or f == 'person_id':
+            result.assignee_id = fields[f]
+        elif f == 'key_date':
+            result.key_date = dovetail.util.condition_date(fields[f])
+    return result
+
 def work_data_to_work_object(work_data):
     result = []
     for w in work_data:
-        work = Work(w['id'],
-                    w['title'],
-                    w['effort_left_d'],
-                    dovetail.util.condition_prereqs(w['prereqs']),
-                    w['person_id'],
-                    dovetail.util.condition_date(w['key_date']))
+        work = fields_to_work_object(w)
         work.start_date = dovetail.util.condition_date(w['start_date'])
         work.end_date = dovetail.util.condition_date(w['end_date'])
 
         assignee = Person(w['person_id'])
         assignee.name = w['assignee_name']
         assignee.picture = w['assignee_picture']
+
+        # TODO: The controller should do this
         assignee.detail_url = '/people/%d' % w['person_id']
         work.assignee = assignee
         result.append(work)
@@ -52,12 +64,8 @@ def select_work_for_person(connection, person_id):
             ''' % int(person_id))
     result = []
     for w in work_data:
-        work = Work(w['id'],
-                    w['title'],
-                    w['effort_left_d'],
-                    dovetail.util.condition_prereqs(w['prereqs']),
-                    person_id,
-                    dovetail.util.condition_date(w['key_date']))
+        work = fields_to_work_object(w)
+        work.assignee_id = person_id
         work.project_name = w['project_name']
         work.project_id = w['project_id']
         work.end_date = dovetail.util.condition_date(w['end_date'])
@@ -101,13 +109,7 @@ def select_key_work_for_project(connection, project_id):
                where project_id = %d AND key_date NOT NULL AND work.is_done = 0
                order by key_date ASC
             ''' % int(project_id))
-    result = [Work(w['id'],
-                 w['title'],
-                 w['effort_left_d'],
-                 dovetail.util.condition_prereqs(w['prereqs']),
-                 w['assignee_id'],
-                 dovetail.util.condition_date(w['key_date']))
-             for w in work_data]
+    result = [fields_to_work_object(w) for w in work_data]
     return result
 
 def select_done_work_for_project(connection, project_id):

@@ -4,6 +4,7 @@ from datetime import datetime
 from dovetail.scheduler import Scheduler
 from dovetail.projects.project import Project
 from dovetail.work.work import Work
+from dovetail.tests.util import construct_work
 
 nov1 = datetime.strptime("Nov 1, 2012", "%b %d, %Y")
 nov2 = datetime.strptime("Nov 2, 2012", "%b %d, %Y")
@@ -28,14 +29,14 @@ class TestScheduler(unittest.TestCase):
 
         # Projects
         p1 = Project(1)
-        p1_w1 = Work(1, "p1 w1", 1.0, [], person_id1, None)
-        p1_w2 = Work(2, "p1 w2", 1.0, [], person_id1, None)
-        p1_w3 = Work(5, "p1 w3", 0.1, [], person_id1, nov15)
+        p1_w1 = construct_work(1, "p1 w1", 1.0, [], person_id1, None)
+        p1_w2 = construct_work(2, "p1 w2", 1.0, [], person_id1, None)
+        p1_w3 = construct_work(5, "p1 w3", 0.1, [], person_id1, nov15)
         p1.work = [p1_w1, p1_w2, p1_w3]
 
         p2 = Project(2)
-        p2_w1 = Work(3, "p2 w1", 1.0, [], person_id2, None)
-        p2_w2 = Work(4, "p2 w2", 1.0, [2], person_id3, None)
+        p2_w1 = construct_work(3, "p2 w1", 1.0, [], person_id2, None)
+        p2_w2 = construct_work(4, "p2 w2", 1.0, [2], person_id3, None)
         p2.work = [p2_w1, p2_w2]
 
         # Scheduler
@@ -59,7 +60,7 @@ class TestScheduler(unittest.TestCase):
 
         # Projects
         p1 = Project(1)
-        p1_w3 = Work(5, "p1 w3", 0.1, [], person_id1, nov1)
+        p1_w3 = construct_work(5, "p1 w3", 0.1, [], person_id1, nov1)
         p1.work = [p1_w3]
 
         # Scheduler

@@ -1,12 +1,12 @@
 class Work():
     
-    def __init__(self, work_id, title, effort_left_d, prereqs, assignee_id, key_date):
+    def __init__(self, work_id):
         self.work_id = work_id
-        self.title = title
-        self.effort_left_d = effort_left_d
-        self.prereqs = prereqs
-        self.assignee_id = assignee_id
-        self.key_date = key_date
+        self.title = ''
+        self.effort_left_d = 0
+        self.prereqs = []
+        self.assignee_id = None
+        self.key_date = None
         self.slot = None
 
     def schedule(self, slot):
