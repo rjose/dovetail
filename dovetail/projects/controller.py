@@ -24,24 +24,21 @@ def projects():
     project_rank_data = []
     for i, p in enumerate(projects):
         d = {
-                'project_id': p.project_id,
-                'rank': i + 1,
-                'name': p.name,
-                'target_date': dovetail.util.format_date(p.target_date),
-                'est_end_date': dovetail.util.format_date(p.est_end_date),
-                'status': projects_util.compute_status(p.target_date, p.est_end_date),
-                'effort_left_d': dovetail.util.format_effort_left(p.total_effort(), 0),
-                'detail_url': '/projects/%d' % p.project_id,
-                'key_work': [{
-                    'date': dovetail.util.format_date(w.key_date),
-                    'title': w.title
-                    } for w in work_db.select_key_work_for_project(g.connection, p.project_id)]
-            }
+            'project_id': p.project_id,
+            'rank': i + 1,
+            'name': p.name,
+            'target_date': dovetail.util.format_date(p.target_date),
+            'est_end_date': dovetail.util.format_date(p.est_end_date),
+            'status': projects_util.compute_status(p.target_date, p.est_end_date),
+            'effort_left_d': dovetail.util.format_effort_left(p.total_effort(), 0),
+            'detail_url': '/projects/%d' % p.project_id
+        }
         data.append(d)
         project_rank_data.append('%d %s' % (p.project_id, p.name))
 
     project_ids = json.dumps([p.project_id for p in projects])
 
+    # TODO: Only select the most recently completed
     done_projects = projects_db.select_done_project_collection(g.connection)
     return render_template('projects/collection.html',
             project_data = data,
