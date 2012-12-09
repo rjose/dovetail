@@ -59,7 +59,7 @@ def compute_status(target_date, est_date):
     elif (delta.days > -5 and delta.days <= 0):
         result = {'label': 'ON TRACK', 'class': '', 'date_class': ''}
     else:
-        result = {'label': 'LATE', 'class': 'label-important', 'date_class': 'text-error'}
+        result = {'label': 'LATE - %dd' % delta.days, 'class': 'label-important', 'date_class': 'text-error'}
     return result
 
 
