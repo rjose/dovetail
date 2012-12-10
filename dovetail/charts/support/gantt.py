@@ -71,10 +71,17 @@ class Gantt:
             })
         return result
 
+    def compute_chart_height(self, num_rows):
+        buffer = 40
+        result = num_rows * self.Y_STEP + buffer
+        return result
+
+
     def transform(self, rows):
         result = {
             'rows': [],
-            'dates': []
+            'dates': [],
+            'chart_height': self.compute_chart_height(len(rows))
         }
 
         cur_y = self.START_Y

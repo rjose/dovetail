@@ -10,6 +10,7 @@ function DovetailChart(viewerId) {
     // Initialization
     var viewerElement = document.getElementById(viewerId);
     var svgViewer = createSvgNode('svg');
+    var chartHeight = svgViewer.getAttribute('height');
     viewerElement.appendChild(svgViewer);
 
     function addRectangle(x, y, width, height, color) {
@@ -37,6 +38,10 @@ function DovetailChart(viewerId) {
    }
 
     function renderData(data) {
+        // Set chart height from data
+        chartHeight = data.chart_height;
+        svgViewer.setAttribute('height', chartHeight);
+
         data.rows.forEach(function(r) {
             var textX = 10;
             var textY = r.y + 15;
