@@ -29,3 +29,7 @@ td.number, th.number {
     text-align: right;
 }
 
+.viewer {
+    outline: grey solid 1.5px;
+    padding: 15px 10px 15px 10px;
+}
