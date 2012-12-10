@@ -5,6 +5,7 @@ from dovetail.tests.test_timeline import TestTimeline
 from dovetail.tests.test_work import TestWork
 from dovetail.tests.test_scheduler import TestScheduler
 from dovetail.tests.test_project import TestProject
+from dovetail.tests.test_gantt import TestGantt
 
 alltests = unittest.TestSuite([
     unittest.TestLoader().loadTestsFromTestCase(t) for t in [
@@ -13,7 +14,8 @@ alltests = unittest.TestSuite([
         TestTimeline,
         TestWork,
         TestScheduler,
-        TestProject
+        TestProject,
+        TestGantt
         ]])
 
 unittest.TextTestRunner(verbosity=2).run(alltests)

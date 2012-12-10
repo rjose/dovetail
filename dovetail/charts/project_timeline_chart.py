@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import dovetail.util
 from dovetail.charts.support.gantt import Gantt
 
@@ -39,5 +39,7 @@ class ProjectTimelineChart:
         return result
 
     def as_json(self):
-        gantt = Gantt(self.cur_day, self.data)
+        # Set the end date of the chart to be 3 weeks out
+        max_date = self.cur_day + timedelta(21)
+        gantt = Gantt(self.cur_day, self.data, max_date)
         return gantt.as_json()

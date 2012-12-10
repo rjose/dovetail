@@ -10,7 +10,10 @@ nov6 = datetime.strptime("Nov 6, 2012", "%b %d, %Y")
 nov7 = datetime.strptime("Nov 7, 2012", "%b %d, %Y") # Wed
 nov8 = datetime.strptime("Nov 8, 2012", "%b %d, %Y") # Thu
 nov9 = datetime.strptime("Nov 9, 2012", "%b %d, %Y") # Fri
+nov12 = datetime.strptime("Nov 12, 2012", "%b %d, %Y") # Fri
 nov15 = datetime.strptime("Nov 15, 2012", "%b %d, %Y")
+nov19 = datetime.strptime("Nov 19, 2012", "%b %d, %Y")
+nov23 = datetime.strptime("Nov 23, 2012", "%b %d, %Y")
 
 def construct_work(id, title, effort_left_d, prereqs, assignee_id, key_date):
     result = Work(id)
