@@ -11,7 +11,7 @@ class Gantt:
         self.START_X = 100
         self.START_Y = 20
         self.BAR_HEIGHT = 25
-        self.PIXELS_PER_DAY = 20
+        self.PIXELS_PER_DAY = 30
         self.X_MARGIN = 2
 
         self.cur_day = dovetail.util.standardize_date(cur_day)
@@ -51,6 +51,7 @@ class Gantt:
     def transform_row(self, row, cur_y):
         result = {
             'label': row['label'],
+            'y': cur_y,
             'bars': []
         }
 
@@ -64,7 +65,6 @@ class Gantt:
 
             result['bars'].append({
                 'x': x_start,
-                'y': cur_y,
                 'width': x_end - x_start,
                 'height': self.BAR_HEIGHT,
                 'color': b['color']

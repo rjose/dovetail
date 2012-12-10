@@ -38,13 +38,20 @@ function DovetailChart(viewerId) {
 
     function renderData(data) {
         data.rows.forEach(function(r) {
+            var textX = 10;
+            var textY = r.y + 15;
+            addText(textX, textY, r.label, '#333');
+
             r.bars.forEach(function(b) {
-                // TODO: Set text coordinates
-                var textX = 10;
-                var textY = b.y + 15;
-                addText(textX, textY, r.label, '#333');
-                addRectangle(b.x, b.y, b.width, b.height, b.color);
+                addRectangle(b.x, r.y, b.width, b.height, b.color);
             });
+        });
+        data.dates.forEach(function(d) {
+            // TODO: Add labels to top and bottom of chart
+            // TODO: Add lines going across chart
+            var textX = d.x;
+            var textY = 10;
+            addText(textX, textY, d.label, '#333');
         });
     }
 

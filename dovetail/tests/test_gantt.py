@@ -14,7 +14,7 @@ class TestGantt(unittest.TestCase):
     def test_compute_date_labels(self):
         gantt = Gantt(util.nov1, [], util.nov23)
         self.assertEqual([
-            {'label': 'Nov 05, 2012', 'x': 180},
-            {'label': 'Nov 12, 2012', 'x': 320},
-            {'label': 'Nov 19, 2012', 'x': 460}], gantt.date_labels())
+            {'label': 'Nov 05, 2012', 'x': 220},
+            {'label': 'Nov 12, 2012', 'x': 430},
+            {'label': 'Nov 19, 2012', 'x': 640}], gantt.date_labels())
         return
