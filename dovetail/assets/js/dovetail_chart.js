@@ -36,6 +36,18 @@ function DovetailChart(viewerId) {
        svgViewer.appendChild(result);
        return result;
    }
+   
+   function addLine(x1, y1, x2, y2, color) {
+       var result = createSvgNode("line");
+        result.x1.baseVal.value = x1;
+        result.y1.baseVal.value = y1;
+        result.x2.baseVal.value = x2;
+        result.y2.baseVal.value = y2;
+        result.style.stroke = color;
+        svgViewer.appendChild(result);
+
+       return result;
+   }
 
     function renderData(data) {
         // Set chart height from data
@@ -52,11 +64,16 @@ function DovetailChart(viewerId) {
             });
         });
         data.dates.forEach(function(d) {
-            // TODO: Add labels to top and bottom of chart
-            // TODO: Add lines going across chart
-            var textX = d.x;
+            // Add lines going across chart
+            addLine(d.x, 0, d.x, chartHeight, 'gray');
+            
+            // Add labels
+            var textX = d.x + 4;
             var textY = 10;
-            addText(textX, textY, d.label, '#333');
+            if (chartHeight > 400) {
+                addText(textX, textY, d.label, '#333');
+            }
+            addText(textX, chartHeight, d.label, '#333');
         });
     }
 

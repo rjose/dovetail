@@ -31,5 +31,5 @@ td.number, th.number {
 
 .viewer {
     outline: grey solid 1.5px;
-    padding: 15px 10px 15px 10px;
+    padding: 0;
 }
