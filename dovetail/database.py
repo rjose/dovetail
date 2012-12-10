@@ -3,7 +3,7 @@ from sqlalchemy import (create_engine, MetaData, Table, Column,
     Integer, String, Date, Float, Boolean)
 
 # TODO: Use an environment/config variable for this
-engine = create_engine('sqlite:////Users/rjose/database/dovetail_dev.db')
+engine = create_engine('sqlite:///db/dovetail_dev.db')
 metadata = MetaData(bind=engine)
 
 people = Table('people', metadata,
