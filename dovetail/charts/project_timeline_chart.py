@@ -27,7 +27,7 @@ class ProjectTimelineChart:
         result = []
         for w in work:
             if w['project_id'] == self.project_id:
-                color = 'blue'
+                color = '#08C'
             else:
                 color = 'gray'
             result.append({

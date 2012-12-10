@@ -8,7 +8,7 @@ class Gantt:
     def __init__(self, cur_day, rows, max_date):
         # Chart params
         self.Y_STEP = 30
-        self.START_X = 100
+        self.START_X = 120
         self.START_Y = 20
         self.BAR_HEIGHT = 25
         self.PIXELS_PER_DAY = 30
