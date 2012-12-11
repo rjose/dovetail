@@ -1,307 +1,70 @@
-{% extends "layout/base.html" %}
-{% block title %}{{ project_data.name }}{% endblock %}
+{% extends "layout/projects/details.html" %}
 
-{%block content %}
-<style type='text/css'>
-    body #edit_project_modal {
-        width: 800px;
-        margin: -250px 0 0 -480px;
-    }
-</style>
+{% block content2 %}
+<div class='row-fluid'>
+    <h2>Project: {{ project_data.name }}</h2>
+</div>
+<div class='row-fluid'>
+    <div class='span9'>
+        <table class='table table-bordered'>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Assignee</th>
+                <th>Effort left (d)</th>
+                <th>Est complete</th>
+                <th>Key date</th>
+            </tr>
+            {% for w in project_data.work %}
+            <tr>
+                <td>{{ w.work_id }}</td>
+                <td><span class='{{ w.title_class }}'>{{ w.title}}</span></td>
+                <td><a href='{{ w.assignee.detail_url }}'>{{ w.assignee.name }}</a></td>
+                <td>{{ w.effort_left_d }}</td>
+                <td><span class='{{ w.key_date_class }}'>{{ w.end_date_str }}</span></td>
+                <td><span class='{{ w.key_date_class }}'>{{ w.key_date_str }}</span></td>
+            </tr>
+            {% endfor %}
+        </table>
 
-<div class="container-fluid">
+        {% if done_work %}
+        <h4>Completed work</h4>
 
-    <div class="row-fluid">
-        <div class="span2 well">
-            <div class="sidebar-nav">
-                <ul class="nav nav-pills nav-stacked">
-                    <li class="active"><a href="#">Table</a></li>
-                    <li><a href="{{ project_data.details_timeline_url }}">Timeline</a></li>
-                </ul>
-            </div><!--/.well -->
-
-            <ul class="nav">
-                <li><a class="btn" href='#edit_project_modal' role='button'
-                    data-toggle='modal' data-backdrop='static'>Edit</a></li>
-                <li><a class="btn" href='#add_work_modal' role='button'
-                    data-toggle='modal' data-backdrop='static'>+ work</a></li>
-                <li><a class="btn" href='#add_participant_modal' role='button'
-                    data-toggle='modal' data-backdrop='static'>+ person</a></li>
-            </ul>
-        </div><!--/span-->
-        <div class="span10">
-            <div class='row-fluid'>
-                <h2>Project: {{ project_data.name }}</h2>
-            </div>
-            <div class='row-fluid'>
-                <div class='span9'>
-                    <table class='table table-bordered'>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Assignee</th>
-                            <th>Effort left (d)</th>
-                            <th>Est complete</th>
-                            <th>Key date</th>
-                        </tr>
-                        {% for w in project_data.work %}
-                        <tr>
-                            <td>{{ w.work_id }}</td>
-                            <td><span class='{{ w.title_class }}'>{{ w.title}}</span></td>
-                            <td><a href='{{ w.assignee.detail_url }}'>{{ w.assignee.name }}</a></td>
-                            <td>{{ w.effort_left_d }}</td>
-                            <td><span class='{{ w.key_date_class }}'>{{ w.end_date_str }}</span></td>
-                            <td><span class='{{ w.key_date_class }}'>{{ w.key_date_str }}</span></td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-
-                    {% if done_work %}
-                    <h4>Completed work</h4>
-
-                    <ul>
-                        {% for w in done_work %}
-                        <li><button class='btn btn-mini mark-work-undone'
-                            work_id='{{ w.work_id }}'>Not done</button> {{ w.title }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                </div>
-                <div class="span3">
-                    <p><span class="label {{ project_data.status.class }}">{{ project_data.status.label }}</span></p>
-                    <dl>
-                        <dt>Estimated</dt>
-                        <dd><span class='{{ project_data.status.date_class }}'>{{ project_data.est_end_date }}</span></dd>
-
-                        <dt>Target</dt>
-                        <dd><span class='{{ project_data.status.date_class }}'>{{ project_data.target_date }}</span></dd>
-
-                        <dt>Effort left<dt>
-                        <dd>{{ project_data.effort_left_d }}</dd>
-                    </dl>
-
-                    <h4>Participants</h4>
-                    <ul>
-                        {% for p in project_data.participants %}
-                        <li><button class='btn btn-mini remove-participant'
-                            person_id='{{ p.person_id }}'>X</button>
-                        <a href='/people/{{ p.person_id }}'>{{ p.name }}</a>,
-                        {{ p.title }}, {{ p.team }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div><!--/span-->
-
-
-    </div><!--/row-->
-</div><!--/.fluid-container-->
-
-<script>
-    $('.remove-participant').on('click', function(evt) {
-        var person_id = $(evt.target).attr('person_id');
-        $.ajax('/api/projects/' + {{ project_data.project_id }} + '/remove_participant', {
-            data: {person_id: person_id},
-            type: 'POST',
-            error: function(xhr, text_status, error_thrown) {
-                console.log('ERROR: ' + text_status);
-            },
-            success: function(data, text_status, xhr) {
-                location.reload();
-            }
-        })
-    });
-
-    $('.mark-work-undone').on('click', function(evt) {
-        var work_id = $(evt.target).attr('work_id');
-        $.ajax('/api/work/' + work_id + '/mark_undone', {
-            type: 'POST',
-            error: function(xhr, text_status, error_thrown) {
-                console.log('ERROR: ' + text_status);
-            },
-            success: function(data, text_status, xhr) {
-                location.reload();
-            }
-        })
-    });
-</script>
-
-{# Modal: Edit project #}
-<div id='edit_project_modal' class='modal hide fade' tabindex='-1' role='dialog'>
-    <div class='modal-header'>
-        <button type='button' class='close' data-dismiss='modal'>x</button>
-        <h3>Edit project: {{ project_data.name }}</h3>
+        <ul>
+            {% for w in done_work %}
+            <li><button class='btn btn-mini mark-work-undone'
+                work_id='{{ w.work_id }}'>Not done</button> {{ w.title }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
     </div>
-    <div class='modal-body'>
-        <form class='horizontal'>
-            <div class=control-group>
-                <label class='control-label' for='edit_project_name_input'>Name</label>
-                <div class='controls'>
-                    <input type='text' id='edit_project_name_input'
-                    value='{{project_data.name}}'>
-                </div>
-            </div>
+    <div class="span3">
+        <p><span class="label {{ project_data.status.class }}">{{ project_data.status.label }}</span></p>
+        <dl>
+            <dt>Estimated</dt>
+            <dd><span class='{{ project_data.status.date_class }}'>{{ project_data.est_end_date }}</span></dd>
 
-            <div class=control-group>
-                <label class='control-label'
-                    for='edit_project_target_date_input'>Target date</label>
-                <div class='controls'>
-                    <input type='text' id='edit_project_target_date_input'
-                    value='{{project_data.target_date}}'>
-                </div>
-            </div>
+            <dt>Target</dt>
+            <dd><span class='{{ project_data.status.date_class }}'>{{ project_data.target_date }}</span></dd>
 
-            <div class=control-group>
-                <label class='control-label' for='work_textarea'>Project work</label>
-                <div class='controls'>
-                    <textarea id='edit_project_worklines' class='span9' rows='10'
-                        wrap='off' name='work_textarea'>{{ work_data }}</textarea>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class='modal-footer'>
-        <button id='edit_project_modal_save' class='btn btn-primary'>Save changes</button>
-        <button class='btn' data-dismiss='modal'>Close</button>
+            <dt>Effort left<dt>
+            <dd>{{ project_data.effort_left_d }}</dd>
+        </dl>
+
+        <h4>Participants</h4>
+        <ul>
+            {% for p in project_data.participants %}
+            <li><button class='btn btn-mini remove-participant'
+                person_id='{{ p.person_id }}'>X</button>
+            <a href='/people/{{ p.person_id }}'>{{ p.name }}</a>,
+            {{ p.title }}, {{ p.team }}</li>
+            {% endfor %}
+        </ul>
     </div>
 </div>
 
 <script>
-    $('#edit_project_modal_save').on('click', function() {
-        $.ajax('/api/projects/{{ project_data.project_id }}', {
-            data: {
-                name: $('#edit_project_name_input').val(),
-                target_date: $('#edit_project_target_date_input').val(),
-                worklines: $('#edit_project_worklines').val(),
-                original_work_ids: '{{ project_data.work_ids }}'
-            },
-            type: 'POST',
-            error: function(xhr, text_status, error_thrown) {
-                console.log('ERROR: ' + text_status);
-                $('#edit_project_modal').modal('hide');
-            },
-            success: function(data, text_status, xhr) {
-                console.log('Success!');
-                console.log(data)
-                $('#edit_project_modal').modal('hide');
-                location.reload();
-            }
-        })
-    });
+    $('#nav-table').addClass('active');
 </script>
-
-{# Modal: Add work to project #}
-<div id='add_work_modal' class='modal hide fade' tabindex='-1' role='dialog'>
-    <div class='modal-header'>
-        <button type='button' class='close' data-dismiss='modal'>x</button>
-        <h3 id='add_work_modal_label'>Add work to project: {{ project_data.name }}</h3>
-    </div>
-    <div class='modal-body'>
-        <form class='horizontal'>
-            <div class=control-group>
-                <label class='control-label' for='work_title_input'>Title</label>
-                <div class='controls'>
-                    <input type='text' id='work_title_input' placeholder=''>
-                </div>
-            </div>
-
-            <div class=control-group>
-                <label class='control-label' for='effort_left_input'>Estimate (d)</label>
-                <div class='controls'>
-                    <input type='text' id='effort_left_input' placeholder='1.0'>
-                </div>
-            </div>
-
-            <div class=control-group>
-                <label class='control-label' for='assignee_select'>Assignee</label>
-                <div class='controls'>
-                    <select id='assignee_select' name="assignee">
-                        {% for p in participants %}
-                        <option value="{{ p.person_id }}">{{ p.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class='modal-footer'>
-        <button id='add_work_modal_save' class='btn btn-primary'>Save changes</button>
-        <button class='btn' data-dismiss='modal'>Close</button>
-    </div>
-</div>
-
-<script>
-    $('#add_work_modal_save').on('click', function() {
-        $.ajax('/api/work', {
-            data: {project_id: {{ project_data.project_id }},
-                title: $('#work_title_input').val(),
-                effort_left_d: $('#effort_left_input').val(),
-                assignee_id: $('#assignee_select').val()},
-            type: 'POST',
-            error: function(xhr, text_status, error_thrown) {
-                console.log('ERROR: ' + text_status);
-                $('#add_work_modal').modal('hide');
-            },
-            success: function(data, text_status, xhr) {
-                console.log('Success!');
-                console.log(data)
-                $('#add_work_modal').modal('hide');
-                location.reload();
-            }
-        })
-    });
-
-    $('#add_work_modal').on('hidden', function() {
-        $('#work_title_input').val('');
-        $('#effort_left_input').val('');
-    });
-</script>
-
-{# Modal: Add participant to project #}
-<div id='add_participant_modal' class='modal hide fade' tabindex='-1' role='dialog'>
-    <div class='modal-header'>
-        <button type='button' class='close' data-dismiss='modal'>x</button>
-        <h3 id='add_participant_modal_label'>Add participant to project: {{ project_data.name }}</h3>
-    </div>
-    <div class='modal-body'>
-        <form class='horizontal'>
-            <div class=control-group>
-                <label class='control-label' for='participant_select'>Assignee</label>
-                <div class='controls'>
-                    <select id='participant_select'>
-                        {% for p in people %}
-                        <option value="{{ p.person_id }}">{{ p.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class='modal-footer'>
-        <button id='add_participant_modal_save' class='btn btn-primary'>Save changes</button>
-        <button class='btn' data-dismiss='modal'>Close</button>
-    </div>
-</div>
-
-
-<script>
-    $('#add_participant_modal_save').on('click', function() {
-        $.ajax('/api/projects/{{ project_data.project_id }}/participants', {
-            data: {person_id: $('#participant_select').val()},
-            type: 'POST',
-            error: function(xhr, text_status, error_thrown) {
-                console.log('ERROR: ' + text_status);
-            },
-            success: function(data, text_status, xhr) {
-                console.log('Success!');
-                console.log(data)
-                location.reload();
-            }
-        })
-        $('#add_participant_modal').modal('hide');
-    });
-
-</script>
-
 {% endblock %}
 
