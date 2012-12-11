@@ -42,8 +42,7 @@ def projects():
     # TODO: Only select the most recently completed
     done_projects = projects_db.select_done_project_collection(g.connection)
 
-    is_timeline = request.args.get('timeline')
-    if is_timeline:
+    if request.args.get('timeline'):
         chart = ProjectCollectionTimelineChart(datetime.now(), projects)
         return render_template('projects/collection_timeline.html',
                 project_data = data,
@@ -67,8 +66,6 @@ def projects():
 
 @mod.route('/projects/<int:project_id>')
 def project(project_id):
-    is_timeline = request.args.get('timeline')
-
     project = projects_db.select_project(g.connection, project_id)
     projects_util.format_work_dates(project.work)
     project_data = {
@@ -85,7 +82,7 @@ def project(project_id):
             'details_timeline_url': '/projects/%d?timeline=true' % project_id
             }
 
-    if is_timeline:
+    if request.args.get('timeline'):
         assignee_ids = set([w.assignee.person_id for w in project.work])
         timelines = work_db.select_timelines_for_people(g.connection, assignee_ids)
 
