@@ -21,6 +21,7 @@ projects = Table('projects', metadata,
         Column('value', Float),
         Column('completion_date', Date()),
         Column('target_date', Date()),
+        Column('est_start_date', Date()),
         Column('est_end_date', Date())
         )
 
