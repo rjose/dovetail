@@ -6,6 +6,8 @@ import dovetail.people.db as people_db
 import dovetail.work.db as work_db
 import dovetail.util
 
+from dovetail.charts.person_timeline_chart import PersonTimelineChart
+
 mod = Blueprint('people', __name__)
 
 @mod.route('/people', methods=['GET', 'POST'])
@@ -33,7 +35,21 @@ def person_details(person_id):
         w.key_date = dovetail.util.format_date(w.key_date)
         w.project_url = '/projects/%d' % int(w.project_id)
     person.work = work
-    return render_template('people/details.html', person = person)
+
+    if request.args.get('timeline'):
+        chart = PersonTimelineChart(datetime.now(), person)
+        return render_template('people/details_timeline.html',
+                person = person,
+                details_url = '/people/%d' % person_id,
+                details_timeline_url = '/people/%d?timeline=true' % person_id,
+                timeline_data = chart.as_json()
+                )
+    else:
+        return render_template('people/details.html',
+                person = person,
+                details_url = '/people/%d' % person_id,
+                details_timeline_url = '/people/%d?timeline=true' % person_id
+                )
 
 @mod.route('/people/new')
 def people_new():

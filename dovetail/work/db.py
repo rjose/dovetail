@@ -24,6 +24,8 @@ def fields_to_work_object(fields):
 
         elif f == 'key_date':
             result.key_date = dovetail.util.condition_date(fields[f])
+        elif f == 'start_date':
+            result.start_date = dovetail.util.condition_date(fields[f])
         elif f == 'end_date':
             result.end_date = dovetail.util.condition_date(fields[f])
     return result
