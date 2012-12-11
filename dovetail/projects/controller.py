@@ -40,11 +40,21 @@ def projects():
 
     # TODO: Only select the most recently completed
     done_projects = projects_db.select_done_project_collection(g.connection)
-    return render_template('projects/collection.html',
-            project_data = data,
-            project_rank_data = '\n'.join(project_rank_data),
-            project_ids = project_ids,
-            done_projects = done_projects)
+
+    is_timeline = request.args.get('timeline')
+    if is_timeline:
+        return render_template('projects/collection_timeline.html',
+                projects_url = '/projects',
+                projects_timeline_url = '/projects?timeline=true'
+                )
+    else:
+        return render_template('projects/collection.html',
+                project_data = data,
+                projects_url = '/projects',
+                projects_timeline_url = '/projects?timeline=true',
+                project_rank_data = '\n'.join(project_rank_data),
+                project_ids = project_ids,
+                done_projects = done_projects)
 
 
 @mod.route('/projects/<int:project_id>')

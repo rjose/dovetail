@@ -1,0 +1,162 @@
+{% extends "layout/base.html" %}
+{% block title %}Projects{% endblock %}
+
+
+{%block content %}
+<div class="container-fluid">
+
+    <div class="row-fluid">
+        <div class="span2 well">
+            <div class="sidebar-nav">
+                <ul class="nav nav-pills nav-stacked">
+                    <li id='nav-table'><a href="{{ projects_url }}">Table</a></li>
+                    <li id='nav-timeline'><a href="{{ projects_timeline_url }}">Timeline</a></li>
+                </ul>
+            </div><!--/.well -->
+
+            <ul class="nav">
+                <li><a class="btn" href="#rank_projects_modal" role='button'
+                    data-toggle='modal' data-backdrop='static'>Edit</a></li>
+                <li><a class="btn" href="#add_project_modal" role='button'
+                    data-toggle='modal' data-backdrop='static'>+ project</a></li>
+                <li><a id='reschedule_button' class="btn"
+                    role='button'>Reschedule</a></li>
+            </ul>
+        </div><!--/span-->
+        <div class="span9">
+            <h2>Active Projects</h2>
+            {% block content2 %}{% endblock %}
+        </div><!--/span-->
+    </div><!--/row-->
+</div><!--/.fluid-container-->
+
+<script>
+    $('.mark-project-undone').on('click', function(evt) {
+        var project_id = $(evt.target).attr('project_id');
+        $.ajax('/api/projects/' + project_id + '/mark_undone', {
+            type: 'POST',
+            error: function(xhr, text_status, error_thrown) {
+                console.log('ERROR: ' + text_status);
+            },
+            success: function(data, text_status, xhr) {
+                location.reload();
+            }
+        })
+    });
+
+    $('#navbar_projects').addClass('active');
+</script>
+
+{# Modal: Add project #}
+<div id='add_project_modal' class='modal hide fade' tabindex='-1' role='dialog'>
+    <div class='modal-header'>
+        <button type='button' class='close' data-dismiss='modal'>x</button>
+        <h3 id='add_project_modal_label'>Add project</h3>
+    </div>
+    <div class='modal-body'>
+        <form class='horizontal'>
+            <div class=control-group>
+                <label class='control-label' for='project_name_input'>Title</label>
+                <div class='controls'>
+                    <input type='text' id='project_name_input' placeholder=''>
+                </div>
+            </div>
+
+            <div class=control-group>
+                <label class='control-label' for='target_date_input'>Target date</label>
+                <div class='controls'>
+                    <input type='text' id='target_date_input' placeholder='Oct 21, 2014'>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class='modal-footer'>
+        <button id='add_project_modal_save' class='btn btn-primary'>Save changes</button>
+        <button class='btn' data-dismiss='modal'>Close</button>
+    </div>
+</div>
+
+<script>
+    $('#add_project_modal_save').on('click', function() {
+        $.ajax('/api/projects', {
+            data: {name: $('#project_name_input').val(),
+                target_date: $('#target_date_input').val()},
+            type: 'POST',
+            error: function(xhr, text_status, error_thrown) {
+                console.log('ERROR: ' + text_status);
+                $('#add_project_modal').modal('hide');
+            },
+            success: function(data, text_status, xhr) {
+                console.log('Success!');
+                console.log(data)
+                $('#add_project_modal').modal('hide');
+                location.reload();
+            }
+        })
+    });
+</script>
+
+{# Modal: Rank projects #}
+<div id='rank_projects_modal' class='modal hide fade' tabindex='-1' role='dialog'>
+    <div class='modal-header'>
+        <button type='button' class='close' data-dismiss='modal'>x</button>
+        <h3>Rank projects</h3>
+    </div>
+    <div class='modal-body'>
+        <form class='horizontal'>
+            <div class=control-group>
+                <label class='control-label'
+                    for='rank_projects_text_area'>Projects (most important at top)</label>
+                <div class='controls'>
+                    <textarea class='span5' rows='10'
+                        wrap='off'
+                        id='rank_projects_text_area'>{{ project_rank_data }}</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class='modal-footer'>
+        <button id='rank_projects_modal_save' class='btn btn-primary'>Save changes</button>
+        <button class='btn' data-dismiss='modal'>Close</button>
+    </div>
+</div>
+
+<script>
+    $('#rank_projects_modal_save').on('click', function() {
+        $.ajax('/api/projects/rankings', {
+            data: {
+                project_lines: $('#rank_projects_text_area').val(),
+                original_project_ids: '{{ project_ids }}'
+            },
+            type: 'POST',
+            error: function(xhr, text_status, error_thrown) {
+                console.log('ERROR: ' + text_status);
+                $('#rank_projects_modal').modal('hide');
+            },
+            success: function(data, text_status, xhr) {
+                console.log('Success!');
+                console.log(data)
+                $('#rank_projects_modal').modal('hide');
+                location.reload();
+            }
+        })
+    });
+</script>
+
+<script>
+    $('#reschedule_button').on('click', function() {
+        $.ajax('/projects/reschedule', {
+            type: 'POST',
+            error: function(xhr, text_status, error_thrown) {
+            },
+            success: function(data, text_status, xhr) {
+                console.log("Rescheduled!");
+                location.reload();
+            }
+        });
+    })
+</script>
+
+{% endblock %}
+

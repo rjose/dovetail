@@ -1,0 +1,22 @@
+{% extends "layout/projects/collection.html" %}
+
+{% block content2 %}
+<script type='text/javascript' src='../assets/js/dovetail_chart.js'></script>
+
+<div class='row-fluid'>
+    <div id='timeline-chart' class='viewer'></div>
+</div>
+
+<script>
+    $('#nav-timeline').addClass('active');
+
+//    {% autoescape off %}
+//    var timelineData = {{ timeline_data }}
+//    {% endautoescape %}
+//
+//    var chart = DovetailChart('timeline-chart');
+//    chart.renderData(timelineData);
+</script>
+
+{% endblock %}
+
