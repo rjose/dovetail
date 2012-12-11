@@ -1,0 +1,36 @@
+{% extends "layout/base.html" %}
+{% block title %}{{ person.name }}{% endblock %}
+
+{%block content %}
+
+<div class="container-fluid">
+
+    <div class="row-fluid">
+        <div class="span2 well">
+            <div class="sidebar-nav">
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active"><a href="#">Table</a></li>
+                    <li><a href="#">Timeline</a></li>
+                </ul>
+            </div><!--/.well -->
+
+            <ul class="nav">
+                <li><a class="btn" href='#edit_project_modal' role='button'
+                    data-toggle='modal' data-backdrop='static'>Edit person</a></li>
+            </ul>
+        </div><!--/span-->
+        <div class="span10">
+            <div class='row-fluid'>
+                <h2>{{ person.name }}</h2>
+            </div>
+            <div class='row-fluid'>
+                <div class='span9'>
+                    {% block content2 %}{% endblock %}
+                </div>
+            </div>
+        </div><!--/span-->
+    </div><!--/row-->
+</div><!--/.fluid-container-->
+
+{% endblock %}
+
