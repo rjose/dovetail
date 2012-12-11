@@ -13,6 +13,7 @@ from dovetail.projects.project import Project
 from dovetail.work.work import Work
 
 from dovetail.charts.project_timeline_chart import ProjectTimelineChart
+from dovetail.charts.project_collection_timeline_chart import ProjectCollectionTimelineChart
 
 mod = Blueprint('projects', __name__)
 
@@ -43,9 +44,15 @@ def projects():
 
     is_timeline = request.args.get('timeline')
     if is_timeline:
+        chart = ProjectCollectionTimelineChart(datetime.now(), projects)
         return render_template('projects/collection_timeline.html',
+                project_data = data,
                 projects_url = '/projects',
-                projects_timeline_url = '/projects?timeline=true'
+                projects_timeline_url = '/projects?timeline=true',
+                timeline_data = chart.as_json(),
+                project_rank_data = '\n'.join(project_rank_data),
+                project_ids = project_ids,
+                done_projects = done_projects
                 )
     else:
         return render_template('projects/collection.html',
@@ -54,7 +61,8 @@ def projects():
                 projects_timeline_url = '/projects?timeline=true',
                 project_rank_data = '\n'.join(project_rank_data),
                 project_ids = project_ids,
-                done_projects = done_projects)
+                done_projects = done_projects
+                )
 
 
 @mod.route('/projects/<int:project_id>')

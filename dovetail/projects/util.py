@@ -49,6 +49,7 @@ def parse_workline(connection, workline):
             }
     return result
 
+# TODO: Abstract the early and lateness and use with ProjectCollectionTimelineChart
 def compute_status(target_date, est_date):
     if not est_date:
         return {'label': 'UNKNOWN', 'class': '', 'date_class': ''}

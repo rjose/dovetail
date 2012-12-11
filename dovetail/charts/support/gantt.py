@@ -56,6 +56,9 @@ class Gantt:
         }
 
         for b in row['bars']:
+            if not b['start'] or not b['end']:
+                continue
+
             # Figure out start and ending x values for each bar
             x_start = self.date_to_x(b['start'])
             x_end = self.date_to_x(b['end'])
