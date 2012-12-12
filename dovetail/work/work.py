@@ -27,6 +27,8 @@ class Work():
     def earliest_start_date(self, work_dict, cur_day):
         result = cur_day
         for work_id in self.prereqs:
+            if not work_dict.has_key(work_id):
+                continue
             end_date = work_dict[work_id].est_end_date()
             if end_date and end_date > result:
                 result = end_date

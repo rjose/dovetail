@@ -27,6 +27,8 @@ class Project:
 
         for w in my_work:
             for p in w.prereqs:
+                if not work_dict.has_key(p):
+                    continue
                 if work_dict[p]:
                     graph.add_edge((work_dict[p], w))
         self.work = topological_sorting(graph)
