@@ -36,6 +36,9 @@ class ProjectCollectionTimelineChart:
         return gantt.as_json()
 
     def get_project_color(self, project):
+        if not project.est_end_date:
+            return '#000'
+
         delta = project.est_end_date - project.target_date
         if (delta.days <= -5):
             color = '#468847' # Green
