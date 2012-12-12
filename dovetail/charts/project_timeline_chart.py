@@ -31,6 +31,7 @@ class ProjectTimelineChart:
             else:
                 color = 'gray'
             result.append({
+                'id': w['work_id'],
                 'start': w['start_date'],
                 'end': w['end_date'],
                 'effort_d': w['effort_left_d'],

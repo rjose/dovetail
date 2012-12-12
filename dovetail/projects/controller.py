@@ -99,12 +99,30 @@ def project(project_id):
     if request.args.get('timeline'):
         assignee_ids = set([w.assignee.person_id for w in project.work])
         timelines = work_db.select_timelines_for_people(g.connection, assignee_ids)
+        timeline_aux_data = {}
+        for bars in timelines.values():
+            for bar in bars:
+                timeline_aux_data[bar['work_id']] = {
+                    'title': '[%s] %s' % (bar['project_name'], bar['label']),
+                    'content': '''
+                    <p>%s</p>
+                    <p>%s</p>
+                    <p>Start: %s</p>
+                    <p>Finish: %s</p>
+                    ''' % (
+                        bar['assignee_name'],
+                        dovetail.util.format_effort_left(bar['effort_left_d']),
+                        dovetail.util.format_date(bar['start_date']),
+                        dovetail.util.format_date(bar['end_date'])
+                        )
+                }
 
         chart = ProjectTimelineChart(project_id, datetime.now(), timelines)
 
         return render_template('projects/details_timeline.html',
                 project_data = project_data,
                 timeline_data = chart.as_json(),
+                timeline_aux_data = json.dumps(timeline_aux_data),
                 work_data = projects_util.project_work_to_string(project.work),
                 participants = people_db.select_project_participants(g.connection, project_id),
                 people = people_db.select_people(g.connection))
