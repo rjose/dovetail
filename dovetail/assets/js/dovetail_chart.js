@@ -12,6 +12,7 @@ function DovetailChart(viewerId) {
     var svgViewer = createSvgNode('svg');
     var chartHeight = svgViewer.getAttribute('height');
     viewerElement.appendChild(svgViewer);
+    var popover = null;
 
     function addRectangle(x, y, width, height, color) {
         var result = createSvgNode("rect");
@@ -49,6 +50,47 @@ function DovetailChart(viewerId) {
        return result;
    }
 
+   function hidePopover() {
+       if (popover) {
+          popover.remove();
+       }
+   }
+
+   function showPopover(x, y) {
+       hidePopover();
+       popover = $(document.createElement('div'));
+       popover.addClass('popover fade bottom in');
+
+       var popoverInner = $(document.createElement('div'));
+       popoverInner.addClass('popover-inner');
+
+       var title = $(document.createElement('h3'));
+       title.addClass('popover-title');
+       title.html('A title');
+
+       var content = $(document.createElement('div'));
+       content.addClass('popover-content');
+       content.html('Howdy');
+
+       popoverInner.append(title);
+       popoverInner.append(content);
+
+       popover.append(popoverInner);
+
+       // TODO: Send this ID in
+       var chart = $('#timeline-chart');
+       var chartX = chart[0].offsetLeft;
+       var chartY = chart[0].offsetTop;
+       y += chartY;
+       x = x + chartX;
+       popover.attr('style', 'top: ' + y + 'px; left: ' + x + 'px; display: block;');
+       $('#timeline-chart').append(popover);
+
+       popover.click(function () {
+          hidePopover();
+       })
+   }
+
     function renderData(data) {
         // Set chart height from data
         chartHeight = data.chart_height;
@@ -60,7 +102,11 @@ function DovetailChart(viewerId) {
             addText(textX, textY, r.label, '#333');
 
             r.bars.forEach(function(b) {
-                addRectangle(b.x, r.y, b.width, b.height, b.color);
+                var rect = addRectangle(b.x, r.y, b.width, b.height, b.color);
+                rect.onclick = function(event) {
+                    // TODO: Call handler that shows info
+                    showPopover(event.offsetX, event.offsetY);
+                }
             });
         });
         data.dates.forEach(function(d) {
