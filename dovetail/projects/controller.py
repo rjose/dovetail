@@ -28,6 +28,7 @@ def projects():
         status = projects_util.compute_status(p.target_date, p.est_end_date)
         target_date = dovetail.util.format_date(p.target_date)
         est_end_date = dovetail.util.format_date(p.est_end_date)
+        effort_left_d = dovetail.util.format_effort_left(p.total_effort(), 0)
         d = {
             'project_id': p.project_id,
             'rank': i + 1,
@@ -35,7 +36,7 @@ def projects():
             'target_date': target_date,
             'est_end_date': est_end_date,
             'status': status,
-            'effort_left_d': dovetail.util.format_effort_left(p.total_effort(), 0),
+            'effort_left_d': effort_left_d,
             'detail_url': '/projects/%d' % p.project_id
         }
         data.append(d)
@@ -45,9 +46,10 @@ def projects():
             'title': p.name,
             'content': '''
             <p class="label %s">%s</p>
+            <p>Total effort left: %s</p>
             <p>%s (estimated)</p>
             <p>%s (target)</p>
-            ''' % (status['class'], status['label'], est_end_date, target_date)
+            ''' % (status['class'], status['label'], effort_left_d, est_end_date, target_date)
         }
 
     project_ids = json.dumps([p.project_id for p in projects])

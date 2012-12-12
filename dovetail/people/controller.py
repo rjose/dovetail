@@ -32,7 +32,6 @@ def person_details(person_id):
     work = work_db.select_work_for_person(g.connection, person_id)
     timeline_aux_data = {}
     for w in work:
-        w.effort_left_d = dovetail.util.format_effort_left(w.effort_left_d)
         w.est_end_date = dovetail.util.format_date(w.end_date)
         w.key_date = dovetail.util.format_date(w.key_date)
         w.project_url = '/projects/%d' % int(w.project_id)
