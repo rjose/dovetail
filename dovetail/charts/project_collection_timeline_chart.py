@@ -22,6 +22,7 @@ class ProjectCollectionTimelineChart:
 
     def project_to_bar(self, project):
         result = {
+            'id': project.project_id,
             'start': project.est_start_date,
             'end': project.est_end_date,
             'effort_d': project.total_effort(),

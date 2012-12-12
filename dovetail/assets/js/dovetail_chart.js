@@ -1,5 +1,5 @@
 
-function DovetailChart(viewerId) {
+function DovetailChart(viewerId, data, auxData) {
     // Creates an svg node. The `svgType` should be things like `svg`, `rect`, etc.
     // See [SVG Shapes](http://www.w3.org/TR/SVG11/shapes.html) for more info.
     function createSvgNode(svgType) {
@@ -12,6 +12,8 @@ function DovetailChart(viewerId) {
     var svgViewer = createSvgNode('svg');
     var chartHeight = svgViewer.getAttribute('height');
     viewerElement.appendChild(svgViewer);
+    var data = data;
+    var auxData = auxData;
     var popover = null;
 
     function addRectangle(x, y, width, height, color) {
@@ -56,8 +58,12 @@ function DovetailChart(viewerId) {
        }
    }
 
-   function showPopover(x, y) {
+   function showPopover(x, y, itemId) {
        hidePopover();
+       if (!auxData) {
+          return;
+       }
+
        popover = $(document.createElement('div'));
        popover.addClass('popover fade bottom in');
 
@@ -66,11 +72,11 @@ function DovetailChart(viewerId) {
 
        var title = $(document.createElement('h3'));
        title.addClass('popover-title');
-       title.html('A title');
+       title.html(auxData[itemId].title);
 
        var content = $(document.createElement('div'));
        content.addClass('popover-content');
-       content.html('Howdy');
+       content.html(auxData[itemId].content);
 
        popoverInner.append(title);
        popoverInner.append(content);
@@ -91,7 +97,7 @@ function DovetailChart(viewerId) {
        })
    }
 
-    function renderData(data) {
+    function renderData() {
         // Set chart height from data
         chartHeight = data.chart_height;
         svgViewer.setAttribute('height', chartHeight);
@@ -104,8 +110,7 @@ function DovetailChart(viewerId) {
             r.bars.forEach(function(b) {
                 var rect = addRectangle(b.x, r.y, b.width, b.height, b.color);
                 rect.onclick = function(event) {
-                    // TODO: Call handler that shows info
-                    showPopover(event.offsetX, event.offsetY);
+                    showPopover(event.offsetX, event.offsetY, b.id);
                 }
             });
         });

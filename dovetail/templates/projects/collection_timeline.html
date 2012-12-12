@@ -11,11 +11,12 @@
     $('#nav-timeline').addClass('active');
 
     {% autoescape off %}
-    var timelineData = {{ timeline_data }}
+    var timelineData = {{ timeline_data }};
+    var timelineAuxData = {{ timeline_aux_data }};
     {% endautoescape %}
 
-    var chart = DovetailChart('timeline-chart');
-    chart.renderData(timelineData);
+    var chart = DovetailChart('timeline-chart', timelineData, timelineAuxData);
+    chart.renderData();
 </script>
 
 {% endblock %}

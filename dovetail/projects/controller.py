@@ -23,19 +23,32 @@ def projects():
     projects = projects_db.select_project_collection(g.connection)
     data = []
     project_rank_data = []
+    timeline_aux_data = {}
     for i, p in enumerate(projects):
+        status = projects_util.compute_status(p.target_date, p.est_end_date)
+        target_date = dovetail.util.format_date(p.target_date)
+        est_end_date = dovetail.util.format_date(p.est_end_date)
         d = {
             'project_id': p.project_id,
             'rank': i + 1,
             'name': p.name,
-            'target_date': dovetail.util.format_date(p.target_date),
-            'est_end_date': dovetail.util.format_date(p.est_end_date),
-            'status': projects_util.compute_status(p.target_date, p.est_end_date),
+            'target_date': target_date,
+            'est_end_date': est_end_date,
+            'status': status,
             'effort_left_d': dovetail.util.format_effort_left(p.total_effort(), 0),
             'detail_url': '/projects/%d' % p.project_id
         }
         data.append(d)
         project_rank_data.append('%d %s' % (p.project_id, p.name))
+
+        timeline_aux_data[p.project_id] = {
+            'title': p.name,
+            'content': '''
+            <p class="label %s">%s</p>
+            <p>%s (estimated)</p>
+            <p>%s (target)</p>
+            ''' % (status['class'], status['label'], est_end_date, target_date)
+        }
 
     project_ids = json.dumps([p.project_id for p in projects])
 
@@ -49,6 +62,7 @@ def projects():
                 projects_url = '/projects',
                 projects_timeline_url = '/projects?timeline=true',
                 timeline_data = chart.as_json(),
+                timeline_aux_data = json.dumps(timeline_aux_data),
                 project_rank_data = '\n'.join(project_rank_data),
                 project_ids = project_ids,
                 done_projects = done_projects

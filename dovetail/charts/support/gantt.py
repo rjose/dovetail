@@ -67,6 +67,7 @@ class Gantt:
             x_end -= self.X_MARGIN
 
             result['bars'].append({
+                'id': b['id'],
                 'x': x_start,
                 'width': x_end - x_start,
                 'height': self.BAR_HEIGHT,
