@@ -19,6 +19,7 @@ class PersonTimelineChart:
         color = '#08C'
         for w in work:
             result.append({
+                'id': w.work_id,
                 'start': w.start_date,
                 'end': w.end_date,
                 'effort_d': w.effort_left_d,
