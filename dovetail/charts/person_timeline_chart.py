@@ -12,7 +12,7 @@ class PersonTimelineChart:
         return
 
     def work_to_bars(self, work):
-        colors = ['#08C', 'purple', 'CadetBlue', 'orange', 'blue', 'brown', 'indigo']
+        colors = ['#08C', '#1531AE', '#FF8300', '#024E68', '#2D3C82', '#A65500', '#2D3C82']
         project_color = {}
 
         result = []
