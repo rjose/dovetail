@@ -66,7 +66,7 @@ def compute_status(target_date, est_date):
 
 def format_work_dates(work_collection):
     for w in work_collection:
-        if w.key_date and w.end_date > w.key_date:
+        if w.key_date and w.end_date and w.end_date > w.key_date:
             w.title_class = 'text-error'
             w.key_date_class = 'text-error'
         w.key_date_str = dovetail.util.format_date(w.key_date)
