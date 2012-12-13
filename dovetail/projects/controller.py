@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask import (Blueprint, Response, json, render_template, request,
-                   redirect, url_for, g)
+                   redirect, g)
 
 import dovetail.util
 import dovetail.projects.db as projects_db
@@ -10,7 +10,6 @@ import dovetail.projects.util as projects_util
 import dovetail.scheduler
 
 from dovetail.projects.project import Project
-from dovetail.work.work import Work
 
 from dovetail.charts.project_timeline_chart import ProjectTimelineChart
 from dovetail.charts.project_collection_timeline_chart import ProjectCollectionTimelineChart
@@ -174,7 +173,7 @@ def edit_project(project_id):
     project.work = work
     project.topo_sort_work()
     work_db.update_work_topo_order(g.connection, project.work)
-    dovetail.scheduler.reschedule_world(g.connection)
+    #dovetail.scheduler.reschedule_world(g.connection)
 
     # Update project info
     projects_db.update_project(g.connection, project)
@@ -228,7 +227,7 @@ def rank_projects():
 
     # Update project info
     projects_db.update_project_collection_value(g.connection, projects)
-    dovetail.scheduler.reschedule_world(g.connection)
+    #dovetail.scheduler.reschedule_world(g.connection)
 
     response_data = {}
     result = Response(json.dumps(response_data), status=200, mimetype='application/json')

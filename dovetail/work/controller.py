@@ -25,7 +25,7 @@ def api_work():
            effort_left_d = effort_left_d)
 
     response_data = {'work_id': insert_result.inserted_primary_key}
-    dovetail.scheduler.reschedule_world(g.connection)
+    #dovetail.scheduler.reschedule_world(g.connection)
     return Response(json.dumps(response_data), status=200, mimetype='application/json')
 
 @mod.route('/api/work/<int:work_id>/mark_undone', methods=['POST'])
