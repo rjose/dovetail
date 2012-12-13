@@ -26,6 +26,10 @@ def close_connection(exeption=None):
 def root():
     return redirect('/projects')
 
+@app.route('/home')
+def root():
+    return render_template('home/index.html')
+
 # Static files
 
 
